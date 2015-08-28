@@ -35,21 +35,18 @@ public class CommentListFragment extends BaseSwipeListFragment<CommentEntity> {
 
     @Override
     protected RecyclerView.Adapter<RecyclerView.ViewHolder> bindArrayAdapter(List<CommentEntity> list) {
-        return new CommentAdapter(mBaseActionBarActivity, list);
+        return new CommentAdapter(mBaseActivity, list);
     }
 
     @Override
     protected List<CommentEntity> loadData(int pageIndex, int pageSize) {
-        return CommentDal.getCommentList(mBaseApplication, mCategory, mDataID, pageIndex, pageSize);
+        return CommentDal.getCommentList(mBaseApp, mCategory, mDataID, pageIndex, pageSize);
     }
 
     @Override
-    protected void onPreLoadMore() {
-
-    }
-
-    @Override
-    protected void onPostLoadMore() {
-
+    protected CommentEntity getLoadMorePlaceHolder() {
+        CommentEntity entity = new CommentEntity();
+        entity.setEntityType(ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER);
+        return entity;
     }
 }

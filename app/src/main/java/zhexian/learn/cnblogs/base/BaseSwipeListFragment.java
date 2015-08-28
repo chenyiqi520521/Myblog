@@ -25,18 +25,19 @@ import zhexian.learn.cnblogs.util.Utils;
  */
 public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> extends Fragment
         implements PullToRefreshView.OnRefreshListener {
-    protected BaseApplication mBaseApplication;
-    protected BaseActivity mBaseActionBarActivity;
+    protected BaseApplication mBaseApp;
+    protected BaseActivity mBaseActivity;
     protected ActionBar mActionBar;
 
     private PullToRefreshView mPullToRefresh;
     private RecyclerView mRecyclerView;
 
-    private RecyclerView.Adapter<RecyclerView.ViewHolder> mViewAdapter;
+    private RecyclerView.Adapter<RecyclerView.ViewHolder> mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private List<DataEntity> mDataList = new ArrayList<>();
     private boolean mIsRequestingData = false;
     private boolean mIsLoadAllData = false;
+    private DataEntity mLoadMorePlaceHolder;
 
     /**
      * 绑定列表的数据源
@@ -52,45 +53,35 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
      */
     protected abstract List<DataEntity> loadData(int pageIndex, int pageSize);
 
-    /**
-     * 上拉加载更多,在数组末尾添加载入图标
-     */
-    protected abstract void onPreLoadMore();
-
-
-    /**
-     * 上拉加载更多，在数组末尾，移除载入图标
-     */
-    protected abstract void onPostLoadMore();
-
+    protected abstract DataEntity getLoadMorePlaceHolder();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mBaseActionBarActivity = (BaseActivity) getActivity();
-        mBaseApplication = mBaseActionBarActivity.getApp();
-        mActionBar = mBaseActionBarActivity.getSupportActionBar();
+        mBaseActivity = (BaseActivity) getActivity();
+        mBaseApp = mBaseActivity.getApp();
+        mActionBar = mBaseActivity.getSupportActionBar();
+        mLoadMorePlaceHolder = getLoadMorePlaceHolder();
         return inflater.inflate(R.layout.base_swipe_list, null);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mPullToRefresh = (PullToRefreshView) view.findViewById(R.id.base_swipe_container);
-        mPullToRefresh.setTextColor(mBaseApplication.isNightMode() ? R.color.green_light : R.color.gray);
+        mPullToRefresh.setTextColor(mBaseApp.isNightMode() ? R.color.green_light : R.color.gray);
         mPullToRefresh.setOnRefreshListener(this);
-
         mRecyclerView = (RecyclerView) view.findViewById(R.id.base_swipe_list);
         initListView();
     }
 
     public void initListView() {
-        mLinearLayoutManager = new LinearLayoutManager(mBaseActionBarActivity);
+        mLinearLayoutManager = new LinearLayoutManager(mBaseActivity);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         ZOnScrollListener scrollListener = new ZOnScrollListener();
         mRecyclerView.setOnScrollListener(scrollListener);
 
-        mViewAdapter = bindArrayAdapter(mDataList);
-        mRecyclerView.setAdapter(mViewAdapter);
+        mAdapter = bindArrayAdapter(mDataList);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -105,13 +96,23 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mBaseActionBarActivity = null;
-        mBaseApplication = null;
+        mBaseActivity = null;
+        mBaseApp = null;
         mActionBar = null;
     }
 
     private int getNextPageIndex() {
-        return mDataList.size() / mBaseApplication.getPageSize() + 1;
+        return mDataList.size() / mBaseApp.getPageSize() + 1;
+    }
+
+    private void onPreLoadMore() {
+        mDataList.add(mLoadMorePlaceHolder);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void onPostLoadMore() {
+        mDataList.remove(mLoadMorePlaceHolder);
+        mAdapter.notifyDataSetChanged();
     }
 
     private class ZOnScrollListener extends RecyclerView.OnScrollListener {
@@ -122,7 +123,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            mBaseActionBarActivity.switchActionBar(dy);
+            mBaseActivity.switchActionBar(dy);
 
             if (mIsRequestingData || mIsLoadAllData)
                 return;
@@ -169,7 +170,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
             }
 
             pageIndex = isRefresh ? 1 : getNextPageIndex();
-            return loadData(pageIndex, mBaseApplication.getPageSize());
+            return loadData(pageIndex, mBaseApp.getPageSize());
         }
 
         @Override
@@ -182,7 +183,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
             mIsRequestingData = false;
 
             if (baseBusinessListEntity == null) {
-                Utils.toast(mBaseApplication, getResources().getString(R.string.load_error));
+                Utils.toast(mBaseApp, getResources().getString(R.string.load_error));
 
                 if (isRefresh)
                     mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_FAIL);
@@ -197,18 +198,18 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
             else
                 onPostLoadMore();
 
-            if (baseBusinessListEntity.size() < mBaseApplication.getPageSize()) {
+            if (baseBusinessListEntity.size() < mBaseApp.getPageSize()) {
                 mIsLoadAllData = true;
                 //页码大于1，则是用户手动触发的加载的，则提示已经加载完毕
                 if (pageIndex > 1)
-                    Utils.toast(mBaseApplication, getResources().getString(R.string.load_all_load));
+                    Utils.toast(mBaseApp, getResources().getString(R.string.load_all_load));
             }
 
             if (isRefresh)
                 mDataList.clear();
 
             mDataList.addAll(baseBusinessListEntity);
-            mViewAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
         }
     }
 }

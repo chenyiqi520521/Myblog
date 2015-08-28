@@ -12,6 +12,8 @@ import java.util.List;
 
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseActivity;
+import zhexian.learn.cnblogs.common.LoadingViewHolder;
+import zhexian.learn.cnblogs.util.ConfigConstant;
 
 /**
  * Created by Administrator on 2015/8/28.
@@ -29,12 +31,18 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        if (viewType == ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER)
+            return new LoadingViewHolder(mLayoutInflater, parent);
+
         return new CommentViewHolder(mLayoutInflater.inflate(R.layout.base_comment_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((CommentViewHolder) holder).bind(mDataList.get(position));
+
+        if (holder instanceof CommentViewHolder)
+            ((CommentViewHolder) holder).bind(mDataList.get(position));
     }
 
     @Override
@@ -42,6 +50,17 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return mDataList.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+
+        CommentEntity entity = mDataList.get(position);
+
+        if (entity.getEntityType() == ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER)
+            return ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER;
+
+        return ConfigConstant.ENTITY_TYPE_NORMAL_ITEM;
+
+    }
 
     public class CommentViewHolder extends RecyclerView.ViewHolder {
         TextView commentAuthor;

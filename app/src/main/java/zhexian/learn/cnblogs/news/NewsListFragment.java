@@ -19,53 +19,42 @@ import zhexian.learn.cnblogs.util.ConfigConstant;
 public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> implements TabActionBarView.ITabActionCallback {
 
     private ConfigConstant.InfoCategory mCategory;
-    private RecyclerView.Adapter<RecyclerView.ViewHolder> mAdapter;
-    private List<NewsListEntity> mList;
-    private NewsListEntity mPlaceHolder;
 
     public static NewsListFragment newInstance() {
         return new NewsListFragment();
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TabActionBarView actionBarView = new TabActionBarView((BaseActivity) getActivity(), this);
         actionBarView.bindTab("精选", "最新");
-        mPlaceHolder = new NewsListEntity();
-        mPlaceHolder.setEntityType(ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER);
     }
 
     @Override
     protected RecyclerView.Adapter<RecyclerView.ViewHolder> bindArrayAdapter(List<NewsListEntity> list) {
-        mList = list;
-        mAdapter = new NewsListAdapter((BaseActivity) getActivity(), mList);
-        return mAdapter;
+        return new NewsListAdapter((BaseActivity) getActivity(), list);
     }
 
     @Override
     protected List<NewsListEntity> loadData(int pageIndex, int pageSize) {
-        List<NewsListEntity> list = NewsDal.getNewsList(mBaseApplication, mCategory, pageIndex, pageSize);
+        List<NewsListEntity> list = NewsDal.getNewsList(mBaseApp, mCategory, pageIndex, pageSize);
 
-        if (mBaseApplication == null)
+        if (mBaseApp == null)
             return null;
 
-        if (list != null && mCategory == ConfigConstant.InfoCategory.Recommend && mBaseApplication.isNetworkWifi() && mBaseApplication.isAutoLoadRecommend())
+        if (list != null && mCategory == ConfigConstant.InfoCategory.Recommend && mBaseApp.isNetworkWifi() && mBaseApp.isAutoLoadRecommend())
             new AsyncCacheNews().execute(list);
 
         return list;
     }
 
     @Override
-    protected void onPreLoadMore() {
-        mList.add(mPlaceHolder);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onPostLoadMore() {
-        mList.remove(mPlaceHolder);
-        mAdapter.notifyDataSetChanged();
+    protected NewsListEntity getLoadMorePlaceHolder() {
+        NewsListEntity entity = new NewsListEntity();
+        entity.setEntityType(ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER);
+        return entity;
     }
 
     @Override
@@ -93,7 +82,7 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
 
             for (NewsListEntity entity : list) {
 
-                if (mBaseApplication.isNetworkWifi() == false)
+                if (mBaseApp.isNetworkWifi() == false)
                     break;
 
                 NewsDal.CacheNews(entity.getNewsID());

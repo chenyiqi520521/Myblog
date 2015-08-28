@@ -125,7 +125,6 @@ public class Utils {
         return ConfigConstant.NetworkStatus.DisConnect;
     }
 
-
     public static String getHTMLCSS(BaseApplication baseApplication) {
         return baseApplication.isNightMode() ? "style_night.css" : "style_day.css";
     }

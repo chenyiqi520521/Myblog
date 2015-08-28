@@ -5,6 +5,8 @@ public class ConfigConstant {
 
     public static final int ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER = -1;
 
+    public static final int ENTITY_TYPE_NORMAL_ITEM = 0;
+
     public static final double HTML_FONT_SIZE_NORMAL = 1.2;
     public static final double HTML_FONT_SIZE_BIG = 1.4;
     public static final long MIN_CHANGE_DURATION_MILLION_SECONDS = 500;
