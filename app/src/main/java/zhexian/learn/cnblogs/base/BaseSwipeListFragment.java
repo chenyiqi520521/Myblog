@@ -131,8 +131,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
             if (mDataList.size() == 0)
                 return;
 
-            int lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
-
+            int lastVisibleItem = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
             if (lastVisibleItem == mDataList.size() - 1) {
                 new AsyncLoadDataTask(false).execute();
             }
