@@ -27,6 +27,7 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         setContentView(R.layout.activity_main);
         mIsNightMode = getApp().isNightMode();
 
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawerLayout);
         mDrawerLayout.setDrawerShadow(R.mipmap.drawer_shadow, GravityCompat.START);
         mNavigatorView = findViewById(R.id.main_navigator);

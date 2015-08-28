@@ -143,7 +143,7 @@ public class NavigatorFragment extends Fragment implements View.OnClickListener 
     void InitDrawToggle(DrawerLayout drawerLayout) {
         ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.mipmap.ic_drawer);
 
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, R.mipmap.ic_drawer, R.string.open_navigator, R.string.close_navigator) {
             @Override
