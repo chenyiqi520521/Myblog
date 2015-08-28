@@ -1,6 +1,7 @@
 **知乎日报风格的博客园**  
-![输入图片说明](http://git.oschina.net/uploads/images/2015/0606/105040_3af12226_331643.png "在这里输入图片标题")
-![输入图片说明](http://git.oschina.net/uploads/images/2015/0606/105100_6ddfbaf5_331643.png "在这里输入图片标题")  
+ ![输入图片说明](http://git.oschina.net/uploads/images/2015/0828/134016_060bd3be_331643.png "在这里输入图片标题")
+![输入图片说明](http://git.oschina.net/uploads/images/2015/0828/134030_52e4c62a_331643.png "在这里输入图片标题")
+![输入图片说明](http://git.oschina.net/uploads/images/2015/0828/134040_31d507a6_331643.png "在这里输入图片标题")  
 使用androidStudio  
 涵盖一个“正经”的资讯类app开发过程中遇到的点点滴滴  
 适合新手入门，在这里你可以：  
