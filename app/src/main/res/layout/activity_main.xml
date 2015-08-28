@@ -1,0 +1,23 @@
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/main_drawerLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?containerBackground">
+
+    <!--内容fragment-->
+    <FrameLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!--抽屉式导航栏-->
+    <fragment
+        android:id="@+id/main_navigator"
+        android:name="zhexian.learn.cnblogs.main.NavigatorFragment"
+        android:layout_width="260dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"/>
+
+
+</android.support.v4.widget.DrawerLayout>

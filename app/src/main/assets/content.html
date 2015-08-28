@@ -1,0 +1,29 @@
+<html>
+<head>
+    <title>Cnblogs</title>
+    <link rel="stylesheet" type="text/css" href="{style}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,
+    minimum-scale=1.0, user-scalable=no"/>
+    <script type="text/javascript">
+function showImage (obj,src) {
+	if (obj.src.indexOf('click_load.png')<0)
+	  Android.displayImage(src);
+	else
+	  obj.src=src;
+}
+
+
+    </script>
+</head>
+<body>
+<h2>
+    {title}
+</h2>
+
+<p id="source">{source}</p>
+
+<div id="content" style="font-size: {fontSize}rem;">
+    {html}
+</div>
+</body>
+</html>

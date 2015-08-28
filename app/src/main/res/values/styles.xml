@@ -1,0 +1,81 @@
+<resources>
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+    </style>
+    <!-- 日间模式 -->
+    <style name="AppTheme.day" parent="AppTheme">
+        <item name="containerBackground">@color/white_dark</item>
+        <item name="titleColor">@color/gray_dark</item>
+        <item name="textColor">@color/gray</item>
+        <item name="descriptionColor">@color/green_light</item>
+        <item name="selectorBtn">@drawable/navigator_list_item_day</item>
+        <item name="selectorListItem">@drawable/list_item_day</item>
+    </style>
+    <!-- 夜间模式 -->
+    <style name="AppTheme.night" parent="AppTheme">
+        <item name="containerBackground">@color/green_dark</item>
+        <item name="titleColor">@color/white_dark</item>
+        <item name="textColor">@color/green_light</item>
+        <item name="descriptionColor">@color/gray</item>
+        <item name="selectorBtn">@drawable/navigator_list_item_night</item>
+        <item name="selectorListItem">@drawable/list_item_night</item>
+    </style>
+
+    <style name="setting_title_font">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">?titleColor</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="setting_sub_font">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?textColor</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="split_list_horizontal_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/gray_light</item>
+    </style>
+
+
+    <style name="split_horizontal_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/gray_light</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
+
+    <style name="split_vertical_view">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/gray_light</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+    </style>
+
+    <style name="comment_title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">?titleColor</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="comment_content">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?textColor</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="comment_time">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">?descriptionColor</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>
