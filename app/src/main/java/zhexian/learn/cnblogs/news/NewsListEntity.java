@@ -1,9 +1,5 @@
 package zhexian.learn.cnblogs.news;
 
-/**
- * Created by Administrator on 2015/8/28.
- */
-
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 

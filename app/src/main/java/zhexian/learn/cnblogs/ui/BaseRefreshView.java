@@ -11,7 +11,8 @@ import zhexian.learn.cnblogs.R;
 
 
 /**
- * Created by Administrator on 2015/8/28.
+ * 本代码源于github上一个知名的下拉刷新控件https://github.com/Yalantis/Phoenix
+ * 在此基础山进行修改以用于本项目
  */
 public abstract class BaseRefreshView extends Drawable implements Drawable.Callback, Animatable {
 
@@ -43,6 +44,8 @@ public abstract class BaseRefreshView extends Drawable implements Drawable.Callb
     public abstract void setPercent(float percent, boolean invalidate);
 
     public abstract void offsetTopAndBottom(int offset);
+
+    public abstract void setTextColor(int color);
 
     @Override
     public void invalidateDrawable(@NonNull Drawable who) {

@@ -30,7 +30,6 @@ public class CommentListFragment extends BaseSwipeListFragment<CommentEntity> {
         super.onViewCreated(view, savedInstanceState);
         mCategory = (ConfigConstant.CommentCategory) getArguments().getSerializable(CommentActivity.PARAM_CATEGORY);
         mDataID = getArguments().getLong(CommentActivity.PARAM_DATA_ID);
-        showLoadingIndicatorTask();
         onRefresh();
     }
 
@@ -42,5 +41,15 @@ public class CommentListFragment extends BaseSwipeListFragment<CommentEntity> {
     @Override
     protected List<CommentEntity> loadData(int pageIndex, int pageSize) {
         return CommentDal.getCommentList(mBaseApplication, mCategory, mDataID, pageIndex, pageSize);
+    }
+
+    @Override
+    protected void onPreLoadMore() {
+
+    }
+
+    @Override
+    protected void onPostLoadMore() {
+
     }
 }

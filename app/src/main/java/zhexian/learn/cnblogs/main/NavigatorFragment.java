@@ -8,7 +8,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -141,7 +141,7 @@ public class NavigatorFragment extends Fragment implements View.OnClickListener 
     }
 
     void InitDrawToggle(DrawerLayout drawerLayout) {
-        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.mipmap.ic_drawer);
 

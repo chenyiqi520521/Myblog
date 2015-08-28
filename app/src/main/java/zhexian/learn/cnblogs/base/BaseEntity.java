@@ -5,22 +5,13 @@ package zhexian.learn.cnblogs.base;
  * 数据父类
  */
 public class BaseEntity {
-    private String dataText;
-    private int dataType;
+    private int entityType;
 
-    public String getDataText() {
-        return dataText;
+    public int getEntityType() {
+        return entityType;
     }
 
-    public void setDataText(String dataText) {
-        this.dataText = dataText;
-    }
-
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(int dataType) {
-        this.dataType = dataType;
+    public void setEntityType(int entityType) {
+        this.entityType = entityType;
     }
 }

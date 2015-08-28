@@ -135,4 +135,12 @@ public class TabActionBarView implements View.OnClickListener {
 
         mSelectTabIndex = THIRD_TAB_INDEX;
     }
+
+    public interface ITabActionCallback {
+        void onFirstTabClick();
+
+        void onSecondTabClick();
+
+        void onThirdClick();
+    }
 }

@@ -13,6 +13,6 @@
         android:textColor="?textColor"
         android:textSize="17sp"/>
 
-    <include layout="@layout/fragment_base_swipe_item"></include>
+    <include layout="@layout/base_swipe_item"></include>
 
 </LinearLayout>

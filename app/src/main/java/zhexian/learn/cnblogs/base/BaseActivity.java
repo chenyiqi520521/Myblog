@@ -6,7 +6,7 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -18,7 +18,7 @@ import zhexian.learn.cnblogs.lib.ZBroadcast;
 import zhexian.learn.cnblogs.receiver.NetWorkChangeReceiver;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends AppCompatActivity {
 
     private BaseApplication mBaseApp = null;
     private WindowManager mWindowManager = null;
@@ -82,7 +82,6 @@ public class BaseActivity extends ActionBarActivity {
             return;
 
         mLastChangeTime = curChangeTime;
-
 
         if (deltaY < 0 && mIsActionbarHide) {
             mActionbar.show();

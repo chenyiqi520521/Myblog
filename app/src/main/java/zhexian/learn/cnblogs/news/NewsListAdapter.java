@@ -12,6 +12,7 @@ import java.util.List;
 
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseActivity;
+import zhexian.learn.cnblogs.common.LoadingViewHolder;
 import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 
@@ -39,12 +40,13 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        if (i == ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER)
+            return new LoadingViewHolder(mLayoutInflater, viewGroup);
 
-        if (i == NORMAL_ITEM) {
-            return new NormalItemHolder(mLayoutInflater.inflate(R.layout.fragment_base_swipe_item, viewGroup, false));
-        } else {
-            return new GroupItemHolder(mLayoutInflater.inflate(R.layout.fragment_base_swipe_group_item, viewGroup, false));
-        }
+        if (i == NORMAL_ITEM)
+            return new NormalItemHolder(mLayoutInflater.inflate(R.layout.base_swipe_item, viewGroup, false));
+        else
+            return new GroupItemHolder(mLayoutInflater.inflate(R.layout.base_swipe_group_item, viewGroup, false));
     }
 
     /**
@@ -62,7 +64,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (viewHolder instanceof GroupItemHolder) {
             bindGroupItem(entity, (GroupItemHolder) viewHolder);
-        } else {
+        } else if (viewHolder instanceof NormalItemHolder) {
             NormalItemHolder holder = (NormalItemHolder) viewHolder;
             bindNormalItem(entity, holder.newsTitle, holder.newsIcon);
         }
@@ -85,7 +87,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (position == 0)
             return GROUP_ITEM;
 
-        String currentDate = mDataList.get(position).getPublishDate();
+        NewsListEntity entity = mDataList.get(position);
+
+        if (entity.getEntityType() == ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER)
+            return ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER;
+
+        String currentDate = entity.getPublishDate();
         int prevIndex = position - 1;
         boolean isDifferent = !mDataList.get(prevIndex).getPublishDate().equals(currentDate);
         return isDifferent ? GROUP_ITEM : NORMAL_ITEM;

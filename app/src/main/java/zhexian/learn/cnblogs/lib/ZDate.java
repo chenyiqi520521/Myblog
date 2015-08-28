@@ -15,7 +15,7 @@ public class ZDate {
     /**
      * 手机流量下，缓存有效时间
      */
-    private static final int CACHED_TIME_MOBILE_MINUTE = 5;
+    private static final int CACHED_TIME_MOBILE_MINUTE = 3;
     /**
      * wifi下，缓存有效时间
      */

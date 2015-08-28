@@ -1,9 +1,5 @@
 package zhexian.learn.cnblogs.news;
 
-/**
- * Created by Administrator on 2015/8/28.
- */
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -31,12 +27,12 @@ public class NewsDetailActivity extends BaseActivity {
     private static final String PARAM_NEWS_LIKE_COUNT = "PARAM_NEWS_LIKE_COUNT";
     private static final String PARAM_NEWS_COMMENT_COUNT = "PARAM_NEWS_COMMENT_COUNT";
 
-    private int mPreviousYPos = 0;
     private ScrollWebView mNewsContent;
     private View mProgress;
     private long mDataID;
     private int mLikeCount;
     private int mCommentCount;
+    private int mPreviousYPos;
     private String mTitle;
 
     public static void actionStart(Context context, long newsID, int recommendCount, int commentCount, String title) {
@@ -56,7 +52,6 @@ public class NewsDetailActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mProgress = findViewById(R.id.news_detail_progress);
-
         mNewsContent = (ScrollWebView) findViewById(R.id.news_detail_content);
         mNewsContent.getSettings().setJavaScriptEnabled(true);
         mNewsContent.addJavascriptInterface(new WebViewJsInterface(this), "Android");
@@ -64,12 +59,10 @@ public class NewsDetailActivity extends BaseActivity {
         mNewsContent.setOnScrollListener(new ScrollWebView.OnScrollListener() {
             @Override
             public void onScroll(int x, int y) {
-                int deltaY = y - mPreviousYPos;
-                switchActionBar(deltaY);
+                switchActionBar(y - mPreviousYPos);
                 mPreviousYPos = y;
             }
         });
-
 
         Intent intent = getIntent();
         mDataID = intent.getLongExtra(PARAM_NEWS_ID, -1);

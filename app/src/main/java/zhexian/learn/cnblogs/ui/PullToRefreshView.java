@@ -19,7 +19,8 @@ import android.widget.ImageView;
 import zhexian.learn.cnblogs.lib.ZDisplay;
 
 /**
- * Created by Administrator on 2015/8/28.
+ * 本代码源于github上一个知名的下拉刷新控件https://github.com/Yalantis/Phoenix
+ * 在此基础山进行修改以用于本项目
  */
 public class PullToRefreshView extends ViewGroup {
 
@@ -27,15 +28,11 @@ public class PullToRefreshView extends ViewGroup {
 
     public static final int STATUS_PULL_TO_REFRESH = 1;
 
-
     public static final int STATUS_RELEASE_TO_LOAD = 2;
-
 
     public static final int STATUS_REFRESHING = 3;
 
-
     public static final int STATUS_REFRESH_SUCCESS = 4;
-
 
     public static final int STATUS_REFRESH_FAIL = 5;
 
@@ -70,6 +67,7 @@ public class PullToRefreshView extends ViewGroup {
             setTargetOffsetTop(offset, false /* requires update */);
         }
     };
+    private int mCurrentTextColor = -1;
     private OnRefreshListener mListener;
     private int mTargetPaddingTop;
     private int mTargetPaddingBottom;
@@ -257,6 +255,7 @@ public class PullToRefreshView extends ViewGroup {
     }
 
     private void animateOffsetToCorrectPosition() {
+        ensureTarget();
         mFrom = mCurrentOffsetTop;
         mFromDragPercent = mCurrentDragPercent;
         mAnimateToCorrectPosition.reset();
@@ -307,6 +306,16 @@ public class PullToRefreshView extends ViewGroup {
                 animateOffsetToStartPosition();
                 break;
         }
+    }
+
+
+    public void setTextColor(int color) {
+
+        if (mCurrentTextColor == color)
+            return;
+
+        mCurrentTextColor = color;
+        mBaseRefreshView.setTextColor(mCurrentTextColor);
     }
 
     public int getStatus() {

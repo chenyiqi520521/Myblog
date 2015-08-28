@@ -17,12 +17,8 @@ import zhexian.learn.cnblogs.R;
 
 
 /**
- * Created by Administrator on 2015/8/28.
- */
-
-/**
- * Created by 陈俊杰 on 2015/8/25.
- * 通用的刷新控件
+ * 本代码源于github上一个知名的下拉刷新控件https://github.com/Yalantis/Phoenix
+ * 在此基础山进行修改以用于本项目
  */
 public class NormalRefreshView extends BaseRefreshView implements Animatable {
     private static final int ANIMATION_DURATION = 1000;
@@ -56,12 +52,10 @@ public class NormalRefreshView extends BaseRefreshView implements Animatable {
         });
         textPaint = new Paint();
         textPaint.setTextSize(context.getResources().getDimensionPixelSize(R.dimen.loading_text_size));
-        textPaint.setColor(context.getResources().getColor(R.color.gray));
         textPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mIndicatorBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.mipmap.load_indicator);
         mIndicatorBitmap = Bitmap.createScaledBitmap(mIndicatorBitmap, mIndicatorHalfSize * 2, mIndicatorHalfSize * 2, true);
         mMatrix = new Matrix();
-
     }
 
     public void initiateDimens(int viewWidth) {
@@ -86,6 +80,11 @@ public class NormalRefreshView extends BaseRefreshView implements Animatable {
     public void offsetTopAndBottom(int offset) {
         mTop += offset;
         invalidateSelf();
+    }
+
+    @Override
+    public void setTextColor(int color) {
+        textPaint.setColor(mParent.getResources().getColor(color));
     }
 
     @Override

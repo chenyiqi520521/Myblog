@@ -1,7 +1,6 @@
 package zhexian.learn.cnblogs.base;
 
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,28 +52,33 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
      */
     protected abstract List<DataEntity> loadData(int pageIndex, int pageSize);
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mBaseActionBarActivity = (BaseActivity) activity;
-        mBaseApplication = mBaseActionBarActivity.getApp();
+    /**
+     * 上拉加载更多,在数组末尾添加载入图标
+     */
+    protected abstract void onPreLoadMore();
 
-        mActionBar = mBaseActionBarActivity.getSupportActionBar();
-    }
+
+    /**
+     * 上拉加载更多，在数组末尾，移除载入图标
+     */
+    protected abstract void onPostLoadMore();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_base_swipe_list, null);
+        mBaseActionBarActivity = (BaseActivity) getActivity();
+        mBaseApplication = mBaseActionBarActivity.getApp();
+        mActionBar = mBaseActionBarActivity.getSupportActionBar();
+        return inflater.inflate(R.layout.base_swipe_list, null);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
         mPullToRefresh = (PullToRefreshView) view.findViewById(R.id.base_swipe_container);
-
+        mPullToRefresh.setTextColor(mBaseApplication.isNightMode() ? R.color.green_light : R.color.gray);
         mPullToRefresh.setOnRefreshListener(this);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.base_swipe_list);
         initListView();
     }
@@ -95,58 +99,20 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         if (mIsRequestingData)
             return;
 
-        new AsyncLoadDataTask().execute(true);
+        new AsyncLoadDataTask(true).execute();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBaseActionBarActivity = null;
+        mBaseApplication = null;
+        mActionBar = null;
     }
 
     private int getNextPageIndex() {
         return mDataList.size() / mBaseApplication.getPageSize() + 1;
     }
-
-    /**
-     * 改变列表底部展示状态
-     *
-     * @param status
-     */
-    public void showStatus(QuestStatus status) {
-        switch (status) {
-            case Error:
-                Utils.toast(mBaseApplication, getResources().getString(R.string.load_error));
-                break;
-            case LoadedAll:
-                Utils.toast(mBaseApplication, getResources().getString(R.string.load_all_load));
-                break;
-        }
-    }
-
-    /**
-     * 在程序刚开始进入的时候，载入图标不会显示，需要等待初始化完成。
-     */
-    public void showLoadingIndicatorTask() {
-        mPullToRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESHING);
-            }
-        });
-    }
-
-    /**
-     * 列表底部提示文字
-     */
-    protected enum QuestStatus {
-        //准备好，上滑获取数据
-        Ready,
-
-        //载入中
-        Running,
-
-        //加载数据出错
-        Error,
-
-        //已经加载全部数据
-        LoadedAll
-    }
-
 
     private class ZOnScrollListener extends RecyclerView.OnScrollListener {
         @Override
@@ -161,10 +127,13 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
             if (mIsRequestingData || mIsLoadAllData)
                 return;
 
+            if (mDataList.size() == 0)
+                return;
+
             int lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
 
             if (lastVisibleItem == mDataList.size() - 1) {
-                new AsyncLoadDataTask().execute(false);
+                new AsyncLoadDataTask(false).execute();
             }
         }
     }
@@ -173,19 +142,32 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
      * 异步载入请求列表的数据
      * 第一个参数，true：刷新列表 false：追加数据
      */
-    private class AsyncLoadDataTask extends AsyncTask<Boolean, Void, List<DataEntity>> {
+    private class AsyncLoadDataTask extends AsyncTask<Void, Void, List<DataEntity>> {
         boolean isRefresh = false;
         int pageIndex = 1;
 
-        @Override
-        protected void onPreExecute() {
-            showStatus(QuestStatus.Running);
-            mIsRequestingData = true;
+        public AsyncLoadDataTask(boolean isRefresh) {
+            this.isRefresh = isRefresh;
         }
 
         @Override
-        protected List<DataEntity> doInBackground(Boolean... params) {
-            isRefresh = params[0];
+        protected void onPreExecute() {
+            mIsRequestingData = true;
+
+            if (isRefresh)
+                mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESHING);
+            else
+                onPreLoadMore();
+        }
+
+        @Override
+        protected List<DataEntity> doInBackground(Void... params) {
+            //activity重建时，提前返回
+            if (getActivity() == null) {
+                cancel(true);
+                return null;
+            }
+
             pageIndex = isRefresh ? 1 : getNextPageIndex();
             return loadData(pageIndex, mBaseApplication.getPageSize());
         }
@@ -193,26 +175,33 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         @Override
         protected void onPostExecute(List<DataEntity> baseBusinessListEntity) {
             //activity重建时，提前返回
-            if (getActivity() == null)
+            if (getActivity() == null) {
+                cancel(true);
                 return;
-
+            }
             mIsRequestingData = false;
 
-
             if (baseBusinessListEntity == null) {
-                showStatus(QuestStatus.Error);
-                mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_FAIL);
-                return;
-            } else
-                showStatus(QuestStatus.Ready);
+                Utils.toast(mBaseApplication, getResources().getString(R.string.load_error));
 
-            mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_SUCCESS);
+                if (isRefresh)
+                    mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_FAIL);
+                else
+                    onPostLoadMore();
+
+                return;
+            }
+
+            if (isRefresh)
+                mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_SUCCESS);
+            else
+                onPostLoadMore();
 
             if (baseBusinessListEntity.size() < mBaseApplication.getPageSize()) {
                 mIsLoadAllData = true;
                 //页码大于1，则是用户手动触发的加载的，则提示已经加载完毕
                 if (pageIndex > 1)
-                    showStatus(QuestStatus.LoadedAll);
+                    Utils.toast(mBaseApplication, getResources().getString(R.string.load_all_load));
             }
 
             if (isRefresh)
