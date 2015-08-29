@@ -70,11 +70,7 @@ public class NewsDal {
         return entity;
     }
 
-    public static void CacheNews(long newsID) {
-        String key = String.format("news_content_%d", newsID);
-
-        if (DBHelper.cache().exist(key))
-            return;
+    public static void CacheNews(long newsID, String key) {
 
         String xmlStr = ZHttp.getString(String.format("%s%d", newsDetailUrl, newsID));
         NewsDetailEntity entity = NewsDetailEntity.ParseXML(xmlStr);
@@ -83,6 +79,7 @@ public class NewsDal {
             return;
 
         DBHelper.cache().save(key, entity);
+
         String imageUrls = entity.getImageUrls();
 
         if (TextUtils.isEmpty(imageUrls))
@@ -94,7 +91,7 @@ public class NewsDal {
             return;
 
         for (String url : imageUrlList) {
-            ZImage.ready().want(url).save();
+            ZImage.ready().want(url).lowPriority().save();
         }
     }
 }

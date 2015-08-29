@@ -309,6 +309,9 @@ public class ZImage {
          * 下载图片
          */
         public void save() {
+            if (DBHelper.cache().exist(url))
+                return;
+
             ImageTaskManager.getInstance().addTask(new SaveImageTask(mBaseApp, url, width, height), priority);
         }
     }

@@ -25,6 +25,7 @@ public class SaveImageTask extends BaseImageAsyncTask {
 
     @Override
     public void run() {
+
         if (baseApp.isNetworkWifi()) {
             Bitmap bitmap = ZHttp.getBitmap(url, width, height);
 

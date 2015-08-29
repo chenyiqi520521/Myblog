@@ -112,7 +112,7 @@ public class HtmlHelper {
             else {
 
                 if (mApp.isNetworkWifi())
-                    ZImage.ready().want(imageUrl).save();
+                    ZImage.ready().want(imageUrl).lowPriority().save();
 
                 if (canRequest)
                     src = "$2";

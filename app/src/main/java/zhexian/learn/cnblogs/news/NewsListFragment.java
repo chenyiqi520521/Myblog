@@ -12,6 +12,7 @@ import zhexian.learn.cnblogs.base.BaseSwipeListFragment;
 import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.ui.TabActionBarView;
 import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.DBHelper;
 
 
 /**
@@ -86,8 +87,18 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
                 if (mBaseApp.isNetworkWifi() == false)
                     break;
 
-                ZImage.ready().want(entity.getIconUrl()).save();
-                NewsDal.CacheNews(entity.getNewsID());
+                String key = String.format("news_content_%d", entity.getNewsID());
+
+                if (DBHelper.cache().exist(key))
+                    continue;
+
+                ZImage.ready().want(entity.getIconUrl()).lowPriority().save();
+
+                //自动缓存三天内的新闻
+                boolean isNeedCache = entity.getPublishDate().equals(ConfigConstant.TODAY_STRING) || entity.getPublishDate().equals(ConfigConstant.YESTERDAY_STRING) || entity.getPublishDate().equals(ConfigConstant.THE_DAY_BEFORE_YESTERDAY_STRING);
+
+                if (isNeedCache)
+                    NewsDal.CacheNews(entity.getNewsID(), key);
             }
             return null;
         }

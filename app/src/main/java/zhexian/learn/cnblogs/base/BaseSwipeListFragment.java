@@ -125,15 +125,20 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             mBaseActivity.switchActionBar(dy);
 
-            if (mIsRequestingData || mIsLoadAllData)
+            if (mIsRequestingData)
                 return;
 
             if (mDataList.size() == 0)
                 return;
 
             int lastVisibleItem = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+
             if (lastVisibleItem == mDataList.size() - 1) {
-                new AsyncLoadDataTask(false).execute();
+
+                if (mIsLoadAllData)
+                    Utils.toast(mBaseApp, getResources().getString(R.string.load_all_load));
+                else
+                    new AsyncLoadDataTask(false).execute();
             }
         }
     }
@@ -153,6 +158,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         @Override
         protected void onPreExecute() {
             mIsRequestingData = true;
+            mIsLoadAllData = false;
 
             if (isRefresh)
                 mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESHING);
@@ -199,9 +205,6 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
 
             if (baseBusinessListEntity.size() < mBaseApp.getPageSize()) {
                 mIsLoadAllData = true;
-                //页码大于1，则是用户手动触发的加载的，则提示已经加载完毕
-                if (pageIndex > 1)
-                    Utils.toast(mBaseApp, getResources().getString(R.string.load_all_load));
             }
 
             if (isRefresh)

@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import java.util.Date;
+
 /**
  * Created by Administrator on 2015/8/28.
  */
@@ -86,6 +88,9 @@ public class Utils {
         return url;
     }
 
+    public static int daysOfTwo(Date originalDate, Date compareDateDate) {
+        return (int) (originalDate.getTime() / 86400000L - compareDateDate.getTime() / 86400000L);
+    }
 }
 
 

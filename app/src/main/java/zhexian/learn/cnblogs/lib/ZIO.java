@@ -19,6 +19,18 @@ import zhexian.learn.cnblogs.util.ConfigConstant;
 public class ZIO {
 
     /**
+     * 清空所有子文件
+     * @param dir
+     * @return
+     */
+    public static boolean emptyChildDir(File dir) {
+        for (File f : dir.listFiles())
+            f.delete();
+
+        return true;
+    }
+
+    /**
      * 清空文件夹
      *
      * @param dir

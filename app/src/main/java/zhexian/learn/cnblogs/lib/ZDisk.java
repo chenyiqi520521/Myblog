@@ -296,6 +296,7 @@ public class ZDisk {
             return t;
         } catch (IOException e) {
             e.printStackTrace();
+            ZIO.deleteFile(url);
         }
         return null;
     }
@@ -321,6 +322,7 @@ public class ZDisk {
             return t;
         } catch (IOException e) {
             e.printStackTrace();
+            ZIO.deleteFile(url);
         }
         return null;
     }
@@ -339,7 +341,7 @@ public class ZDisk {
      * 清空文件夹
      */
     public void clean() {
-        ZIO.emptyDir(new File(mStoreDir));
+        ZIO.emptyChildDir(new File(mStoreDir));
     }
 
 

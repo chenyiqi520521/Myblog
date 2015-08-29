@@ -92,11 +92,11 @@ public class ZDate {
         int dayDiff = daysOfTwo(nowDate, compareDate);
 
         if (dayDiff <= 0)
-            return "今日";
+            return ConfigConstant.TODAY_STRING;
         else if (dayDiff == 1)
-            return "昨日";
+            return ConfigConstant.YESTERDAY_STRING;
         else if (dayDiff == 2)
-            return "前日";
+            return ConfigConstant.THE_DAY_BEFORE_YESTERDAY_STRING;
         else
             return new SimpleDateFormat("M月d日 E").format(compareDate);
     }
