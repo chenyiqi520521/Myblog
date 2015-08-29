@@ -8,13 +8,13 @@ import android.widget.ImageView;
 
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseApplication;
-import zhexian.learn.cnblogs.lib.DBHelper;
+import zhexian.learn.cnblogs.util.DBHelper;
 
 
 /**
  * 图片管理类，访问网络图片，保存在本地
  * 使用方式参考RequestCreator内部类
- * 完整的使用方式ZImage.ready().want("请求地址").reSize(图片尺寸).cache(缓存方式).empty(图片占位符).into(图片空间);
+ * 完整的使用方式ZImage.ready().want("请求地址").reSize(图片尺寸).cache(缓存方式).empty(图片占位符).into(图片控件);
  */
 public class ZImage {
 
@@ -34,7 +34,7 @@ public class ZImage {
         };
     }
 
-    public static void Init(BaseApplication baseApp) {
+    public static void init(BaseApplication baseApp) {
         if (mZImage == null)
             mZImage = new ZImage(baseApp);
     }

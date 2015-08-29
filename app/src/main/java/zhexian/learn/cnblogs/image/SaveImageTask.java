@@ -3,8 +3,8 @@ package zhexian.learn.cnblogs.image;
 import android.graphics.Bitmap;
 
 import zhexian.learn.cnblogs.base.BaseApplication;
-import zhexian.learn.cnblogs.lib.DBHelper;
 import zhexian.learn.cnblogs.lib.ZHttp;
+import zhexian.learn.cnblogs.util.DBHelper;
 
 
 /**

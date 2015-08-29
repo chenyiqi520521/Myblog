@@ -1,4 +1,6 @@
-package zhexian.learn.cnblogs.lib;
+package zhexian.learn.cnblogs.util;
+
+import zhexian.learn.cnblogs.lib.ZDisk;
 
 /**
  * Created by 陈俊杰 on 2015/8/20.

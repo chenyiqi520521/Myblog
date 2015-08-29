@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
-import java.io.IOException;
-
-import zhexian.learn.cnblogs.lib.ZIO;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.Utils;
 
@@ -38,7 +35,6 @@ public class BaseApplication extends Application {
     private int mScreenHeight;
 
     private ConfigConstant.NetworkStatus mNetWorkStatus;
-    private String mHtmlString;
     private int mScreenWidthDP;
     private String mFileRootDir;
 
@@ -59,15 +55,8 @@ public class BaseApplication extends Application {
         mScreenHeight = mSp.getInt(PARAM_SCREEN_HEIGHT, 0);
         mScreenWidthDP = mSp.getInt(PARAM_SCREEN_WIDTH_DP, 0);
 
-        try {
-            mHtmlString = ZIO.readString(getAssets().open("content.html"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         if (mImageCachePoolSize == 0)
             setImageCachePoolSize();
-
 
     }
 
@@ -152,9 +141,6 @@ public class BaseApplication extends Application {
                 (mNetWorkStatus == ConfigConstant.NetworkStatus.Mobile && !mIsImgOnlyWifi);
     }
 
-    public String getHtmlString() {
-        return mHtmlString;
-    }
 
     public int getScreenWidthInDP() {
         return mScreenWidthDP;

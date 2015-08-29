@@ -11,18 +11,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+
+import zhexian.learn.cnblogs.util.Utils;
 
 /**
  * Created by 陈俊杰 on 2015/8/20.
  * 本地磁盘管理类
  */
 public class ZDisk {
-    /**
-     * https://
-     */
-    private static final int HTTP_FIRST_SPLIT_POS = 8;
-
     /**
      * 存储绝对路径的地址
      */
@@ -41,15 +39,16 @@ public class ZDisk {
      * @return
      */
     public String trans2Local(String url) {
+        return Utils.transToLocal(url, mStoreDir);
+    }
 
-        //不用截取
-        if (url.indexOf(':') < 0)
-            return mStoreDir + url;
-
-        url = url.substring(url.indexOf('/', HTTP_FIRST_SPLIT_POS) + 1);
-        url = url.replace('/', '_');
-        url = mStoreDir + url;
-        return url;
+    /**
+     * 获取根目录文件
+     *
+     * @return
+     */
+    public String getRootDir() {
+        return mStoreDir;
     }
 
     /**
@@ -65,6 +64,53 @@ public class ZDisk {
     }
 
     /**
+     * 保存输入流到本地
+     *
+     * @param url
+     * @param inputStream
+     * @return
+     */
+    public boolean save(String url, InputStream inputStream) {
+        return save(url, ZIO.InputStreamToByte(inputStream));
+    }
+
+    /**
+     * 写入bytes
+     *
+     * @param url
+     * @param bytes
+     * @return
+     */
+    public boolean save(String url, byte[] bytes) {
+        if (bytes == null || bytes.length == 0)
+            return false;
+
+        url = trans2Local(url);
+        File file = new File(url);
+
+        if (file.exists())
+            return true;
+
+        ZIO.createNewFile(file);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(bytes);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("存储出错", e.getMessage());
+        } finally {
+            try {
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    /**
      * 写入Bitmap
      *
      * @param url
@@ -77,6 +123,10 @@ public class ZDisk {
 
         url = trans2Local(url);
         File file = new File(url);
+
+        if (file.exists())
+            return true;
+
         ZIO.createNewFile(file);
         FileOutputStream fos = null;
 
@@ -84,7 +134,6 @@ public class ZDisk {
             fos = new FileOutputStream(file);
             Bitmap.CompressFormat format = url.toLowerCase().indexOf("png") > 0 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG;
             bitmap.compress(format, 75, fos);
-            fos.close();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,17 +160,27 @@ public class ZDisk {
 
         url = trans2Local(url);
         File file = new File(url);
+
+        if (file.exists())
+            return true;
+
         ZIO.createNewFile(file);
-        FileOutputStream fos;
+        FileOutputStream fos = null;
 
         try {
             fos = new FileOutputStream(file);
             LoganSquare.serialize(obj, fos);
-            fos.close();
+            return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
@@ -141,17 +200,27 @@ public class ZDisk {
 
         url = trans2Local(url);
         File file = new File(url);
+
+        if (file.exists())
+            return true;
+
         ZIO.createNewFile(file);
-        FileOutputStream fos;
+        FileOutputStream fos = null;
 
         try {
             fos = new FileOutputStream(file);
             LoganSquare.serialize(list, fos, tClass);
-            fos.close();
+            return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }

@@ -17,7 +17,7 @@ import android.widget.TextView;
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseActivity;
 import zhexian.learn.cnblogs.base.BaseApplication;
-import zhexian.learn.cnblogs.lib.DBHelper;
+import zhexian.learn.cnblogs.util.DBHelper;
 import zhexian.learn.cnblogs.util.Utils;
 
 

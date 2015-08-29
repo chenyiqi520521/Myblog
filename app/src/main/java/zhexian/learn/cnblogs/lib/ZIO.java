@@ -3,12 +3,15 @@ package zhexian.learn.cnblogs.lib;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import zhexian.learn.cnblogs.util.ConfigConstant;
 
 /**
  * Created by Administrator on 2015/8/28.
@@ -111,6 +114,7 @@ public class ZIO {
             while ((content = reader.readLine()) != null) {
                 sb.append(content);
             }
+            in.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -181,4 +185,32 @@ public class ZIO {
         }
         return count;
     }
+
+    /**
+     * 将InputStream转换成byte数组
+     *
+     * @param in InputStream
+     * @return byte[]
+     * @throws IOException
+     */
+    public static byte[] InputStreamToByte(InputStream in) {
+
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        byte[] data = new byte[ConfigConstant.BUFFER_SIZE];
+        int count;
+        try {
+            while ((count = in.read(data, 0, ConfigConstant.BUFFER_SIZE)) != -1)
+                outStream.write(data, 0, count);
+
+            data = null;
+            in.close();
+            byte[] buffer = outStream.toByteArray();
+            outStream.close();
+            return buffer;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -3,9 +3,9 @@ package zhexian.learn.cnblogs.comment;
 import java.util.List;
 
 import zhexian.learn.cnblogs.base.BaseApplication;
-import zhexian.learn.cnblogs.lib.DBHelper;
 import zhexian.learn.cnblogs.lib.ZHttp;
 import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.DBHelper;
 
 /**
  * Created by Administrator on 2015/8/28.

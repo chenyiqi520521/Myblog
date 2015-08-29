@@ -14,9 +14,9 @@ import android.widget.TextView;
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseActivity;
 import zhexian.learn.cnblogs.comment.CommentActivity;
-import zhexian.learn.cnblogs.lib.ZDate;
 import zhexian.learn.cnblogs.ui.ScrollWebView;
 import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.HtmlHelper;
 import zhexian.learn.cnblogs.util.Utils;
 import zhexian.learn.cnblogs.util.WebViewJsInterface;
 
@@ -141,12 +141,7 @@ public class NewsDetailActivity extends BaseActivity {
             if (newsDetailEntity == null)
                 return;
 
-            double fontSize = getApp().isBigFont() ? ConfigConstant.HTML_FONT_SIZE_BIG : ConfigConstant.HTML_FONT_SIZE_NORMAL;
-            String source = String.format("%s %s %s", newsDetailEntity.getSource(), ZDate.FriendlyTime(newsDetailEntity.getPublishTime()), getResources().getString(R.string.publish));
-            String content = getApp().getHtmlString().replace("{style}", Utils.getHTMLCSS(getApp())).replace("{title}", newsDetailEntity.getTitle())
-                    .replace("{source}", source).replace("{fontSize}", String.valueOf(fontSize)).replace("{html}", newsDetailEntity.getContent());
-            mNewsContent.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "utf-8", null);
-
+            HtmlHelper.getInstance().render(mNewsContent, newsDetailEntity);
         }
     }
 }

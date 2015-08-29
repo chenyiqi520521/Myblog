@@ -3,10 +3,9 @@ package zhexian.learn.cnblogs.news;
 import java.util.List;
 
 import zhexian.learn.cnblogs.base.BaseApplication;
-import zhexian.learn.cnblogs.lib.DBHelper;
 import zhexian.learn.cnblogs.lib.ZHttp;
 import zhexian.learn.cnblogs.util.ConfigConstant;
-import zhexian.learn.cnblogs.util.Utils;
+import zhexian.learn.cnblogs.util.DBHelper;
 
 /**
  * 新闻数据操作类，pageindex从1开始
@@ -65,9 +64,6 @@ public class NewsDal {
             String xmlStr = ZHttp.getString(String.format("%s%d", newsDetailUrl, newsID));
             entity = NewsDetailEntity.ParseXML(xmlStr);
         }
-        String htmlContent = Utils.decorateIMGTag(entity.getContent(), baseApp.getScreenWidthInDP(), baseApp.canRequestImage(), baseApp.canRequestImage());
-        entity.setContent(htmlContent);
-
         return entity;
     }
 
