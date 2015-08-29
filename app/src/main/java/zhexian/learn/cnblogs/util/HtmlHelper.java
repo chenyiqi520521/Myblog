@@ -60,7 +60,7 @@ public class HtmlHelper {
      * @return
      */
     public String processHtml(NewsDetailEntity entity) {
-        String content = decorateIMGTag(entity.getContent(), mApp.getScreenWidthInDP(), mApp.canRequestImage(), mApp.isNightMode());
+        String content = decorateIMGTag(entity.getContent(), mApp.getScreenWidthInDP(), mApp.isNightMode());
         String source = String.format("%s %s 发布", entity.getSource(), ZDate.FriendlyTime(entity.getPublishTime()));
         String htmlString = new String(mHtmlString);
         htmlString = htmlString.replace("{style}", getHtmlCssString()).replace("{title}", entity.getTitle()).replace("{fontSize}", getFontSize()).replace("{source}", source).replace("{html}", content);
@@ -92,7 +92,7 @@ public class HtmlHelper {
     }
 
 
-    public String decorateIMGTag(String htmlContent, int screenWidth, boolean canRequest, boolean isNight) {
+    public String decorateIMGTag(String htmlContent, int screenWidth, boolean isNight) {
         Pattern patternImgSrc = Pattern.compile("<img(.+?)src=\"(.+?)\"(.+?)/>");
         Matcher localMatcher = patternImgSrc.matcher(htmlContent);
 
@@ -114,7 +114,7 @@ public class HtmlHelper {
                 if (mApp.isNetworkWifi())
                     ZImage.ready().want(imageUrl).lowPriority().save();
 
-                if (canRequest)
+                if (mApp.canRequestImage())
                     src = "$2";
                 else
                     src = placeHolder;

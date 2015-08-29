@@ -8,10 +8,10 @@
     </style>
     <script type="text/javascript">
 function showImage (obj,src) {
-	if (obj.src.indexOf('click_load_day.png')<0 ||obj.src.indexOf('click_load_night.png')<0 )
-	  Android.displayImage(src);
-	else
-	  obj.src=src;
+    if (obj.src.indexOf('click_load_day.png')<0 && obj.src.indexOf('click_load_night.png')<0)
+        Android.displayImage(src);
+    else
+        obj.src=src;
 }
     </script>
 </head>
