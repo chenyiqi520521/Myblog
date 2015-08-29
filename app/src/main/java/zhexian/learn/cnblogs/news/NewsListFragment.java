@@ -9,6 +9,7 @@ import java.util.List;
 
 import zhexian.learn.cnblogs.base.BaseActivity;
 import zhexian.learn.cnblogs.base.BaseSwipeListFragment;
+import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.ui.TabActionBarView;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 
@@ -85,6 +86,7 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
                 if (mBaseApp.isNetworkWifi() == false)
                     break;
 
+                ZImage.ready().want(entity.getIconUrl()).save();
                 NewsDal.CacheNews(entity.getNewsID());
             }
             return null;

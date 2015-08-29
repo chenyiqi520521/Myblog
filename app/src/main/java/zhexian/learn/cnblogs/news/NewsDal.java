@@ -1,8 +1,11 @@
 package zhexian.learn.cnblogs.news;
 
+import android.text.TextUtils;
+
 import java.util.List;
 
 import zhexian.learn.cnblogs.base.BaseApplication;
+import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZHttp;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.DBHelper;
@@ -80,5 +83,18 @@ public class NewsDal {
             return;
 
         DBHelper.cache().save(key, entity);
+        String imageUrls = entity.getImageUrls();
+
+        if (TextUtils.isEmpty(imageUrls))
+            return;
+
+        String[] imageUrlList = imageUrls.split(";");
+
+        if (imageUrlList.length == 0)
+            return;
+
+        for (String url : imageUrlList) {
+            ZImage.ready().want(url).save();
+        }
     }
 }

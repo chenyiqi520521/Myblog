@@ -110,7 +110,9 @@ public class HtmlHelper {
             if (DBHelper.cache().exist(imageUrl))
                 src = Utils.transToLocal(imageUrl);
             else {
-                ZImage.ready().want(imageUrl).save();
+
+                if (mApp.isNetworkWifi())
+                    ZImage.ready().want(imageUrl).save();
 
                 if (canRequest)
                     src = "$2";
