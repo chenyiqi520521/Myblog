@@ -6,7 +6,6 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import zhexian.learn.cnblogs.lib.ZDate;
  * 评论类，新闻与博客通用
  */
 @JsonObject
-public class CommentEntity extends BaseEntity implements Serializable {
+public class CommentEntity extends BaseEntity {
     @JsonField
     private String publishTime;
     @JsonField

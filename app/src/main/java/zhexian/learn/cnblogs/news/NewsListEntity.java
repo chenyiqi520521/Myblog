@@ -6,7 +6,6 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import zhexian.learn.cnblogs.lib.ZDate;
  * 新闻列表数据类
  */
 @JsonObject
-public class NewsListEntity extends BaseEntity implements Serializable {
+public class NewsListEntity extends BaseEntity {
     @JsonField
     private long newsID;
     @JsonField
