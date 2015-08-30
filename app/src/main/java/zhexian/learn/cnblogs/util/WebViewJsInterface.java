@@ -41,7 +41,6 @@ public class WebViewJsInterface {
                 DBHelper.cache().save(strings[0], bitmap);
             }
             return strings[0];
-
         }
 
         @Override

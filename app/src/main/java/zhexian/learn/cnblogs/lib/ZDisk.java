@@ -21,6 +21,7 @@ import zhexian.learn.cnblogs.util.Utils;
  * 本地磁盘管理类
  */
 public class ZDisk {
+
     /**
      * 存储绝对路径的地址
      */
@@ -344,6 +345,14 @@ public class ZDisk {
         ZIO.emptyChildDir(new File(mStoreDir));
     }
 
+    /**
+     * 清空文件夹中过期的文件
+     *
+     * @param days 距离当前有效天数，比如30，代表30天以前的文件要被清除
+     */
+    public void cleanExpireFile(int days) {
+        ZIO.emptyChildDir(new File(mStoreDir), days);
+    }
 
     /**
      * 获取文件夹容量描述

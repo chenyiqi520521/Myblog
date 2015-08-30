@@ -9,6 +9,7 @@ import zhexian.learn.cnblogs.lib.ZDisk;
 public class DBHelper {
     public static final String DIR_CORE = "core";
     public static final String DIR_CACHE = "zCache";
+
     private static ZDisk diskCore;
     private static ZDisk diskCache;
 

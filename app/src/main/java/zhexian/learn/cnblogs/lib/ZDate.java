@@ -2,24 +2,24 @@ package zhexian.learn.cnblogs.lib;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-
-import zhexian.learn.cnblogs.util.ConfigConstant;
 
 
 /**
  * Created by kimmy on 2015/5/16.
  */
 public class ZDate {
+
+
+    public static final String TODAY_STRING = "今日";
+    public static final String YESTERDAY_STRING = "昨日";
+    public static final String THE_DAY_BEFORE_YESTERDAY_STRING = "前日";
+
     /**
-     * 手机流量下，缓存有效时间
+     * 一天中的毫秒数
      */
-    private static final int CACHED_TIME_MOBILE_MINUTE = 3;
-    /**
-     * wifi下，缓存有效时间
-     */
-    private static final int CACHED_TIME_WIFI_MINUTE = 1;
+    public static final long MILLISECONDS_DAY = 86400000L;
+
 
     /**
      * 返回 刚刚、xx分钟前、xx小时前，否则返回x月x日x点
@@ -78,13 +78,11 @@ public class ZDate {
     }
 
     public static int daysOfTwo(Date originalDate, Date compareDateDate) {
-        Calendar aCalendar = Calendar.getInstance();
-        aCalendar.setTime(originalDate);
-        int originalDay = aCalendar.get(Calendar.DAY_OF_YEAR);
-        aCalendar.setTime(compareDateDate);
-        int compareDay = aCalendar.get(Calendar.DAY_OF_YEAR);
+        return daysOfTwo(originalDate.getTime() / MILLISECONDS_DAY, compareDateDate.getTime() / MILLISECONDS_DAY);
+    }
 
-        return originalDay - compareDay;
+    public static int daysOfTwo(long originalDay, long compareDay) {
+        return (int) (originalDay - compareDay);
     }
 
     public static String FriendlyDate(Date compareDate) {
@@ -92,23 +90,22 @@ public class ZDate {
         int dayDiff = daysOfTwo(nowDate, compareDate);
 
         if (dayDiff <= 0)
-            return ConfigConstant.TODAY_STRING;
+            return TODAY_STRING;
         else if (dayDiff == 1)
-            return ConfigConstant.YESTERDAY_STRING;
+            return YESTERDAY_STRING;
         else if (dayDiff == 2)
-            return ConfigConstant.THE_DAY_BEFORE_YESTERDAY_STRING;
+            return THE_DAY_BEFORE_YESTERDAY_STRING;
         else
             return new SimpleDateFormat("M月d日 E").format(compareDate);
     }
 
+
     /**
-     * 获取不同网络状态下的有效缓存时间，单位毫秒
+     * 获取当前距离1970-01-01的天数
      *
-     * @param status
      * @return
      */
-    public static int getCacheMilliSeconds(ConfigConstant.NetworkStatus status) {
-        int cacheMinutes = status == ConfigConstant.NetworkStatus.Wifi ? CACHED_TIME_WIFI_MINUTE : CACHED_TIME_MOBILE_MINUTE;
-        return cacheMinutes * 60000;
+    public static int getCurrentDate() {
+        return (int) (new Date().getTime() / MILLISECONDS_DAY);
     }
 }

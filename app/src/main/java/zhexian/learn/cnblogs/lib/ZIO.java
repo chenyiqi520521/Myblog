@@ -20,6 +20,7 @@ public class ZIO {
 
     /**
      * 清空所有子文件
+     *
      * @param dir
      * @return
      */
@@ -27,6 +28,24 @@ public class ZIO {
         for (File f : dir.listFiles())
             f.delete();
 
+        return true;
+    }
+
+
+    /**
+     * 清空所有子文件中过期的文件
+     *
+     * @param dir          清空目录
+     * @param availableDay 有效期
+     * @return
+     */
+    public static boolean emptyChildDir(File dir, int availableDay) {
+        long currentDay = ZDate.getCurrentDate();
+
+        for (File f : dir.listFiles()) {
+            if (isFileExpiry(f, currentDay, availableDay))
+                f.delete();
+        }
         return true;
     }
 
@@ -225,4 +244,28 @@ public class ZIO {
         return null;
     }
 
+    /**
+     * 检查文件是否过期
+     *
+     * @param file         文件
+     * @param availableDay 有效天数
+     * @return
+     */
+    public static boolean isFileExpiry(File file, int availableDay) {
+        long fileDay = file.lastModified() / ZDate.MILLISECONDS_DAY;
+        return ZDate.daysOfTwo(ZDate.getCurrentDate(), fileDay) > availableDay;
+    }
+
+    /**
+     * 检查文件是否过期
+     *
+     * @param file         文件
+     * @param currentDay   当前日期
+     * @param availableDay 有效天数
+     * @return
+     */
+    public static boolean isFileExpiry(File file, long currentDay, int availableDay) {
+        long fileDay = file.lastModified() / ZDate.MILLISECONDS_DAY;
+        return ZDate.daysOfTwo(currentDay, fileDay) > availableDay;
+    }
 }

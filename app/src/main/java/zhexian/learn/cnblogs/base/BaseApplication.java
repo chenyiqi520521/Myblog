@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
+import zhexian.learn.cnblogs.lib.ZDate;
 import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.DBHelper;
 import zhexian.learn.cnblogs.util.Utils;
 
 /**
@@ -23,6 +25,7 @@ public class BaseApplication extends Application {
     private static final String PARAM_SCREEN_WIDTH = "PARAM_SCREEN_WIDTH";
     private static final String PARAM_SCREEN_HEIGHT = "PARAM_SCREEN_HEIGHT";
     private static final String PARAM_SCREEN_WIDTH_DP = "PARAM_SCREEN_WIDTH_DP";
+    private static final String PARAM_LAST_MODIFY_DAYS = "PARAM_LAST_MODIFY_DAYS";
 
     private SharedPreferences mSp;
     private int mImageCachePoolSize;
@@ -33,7 +36,7 @@ public class BaseApplication extends Application {
     private int mPageSize;
     private int mScreenWidth;
     private int mScreenHeight;
-
+    private int mLastModifyDays;
     private ConfigConstant.NetworkStatus mNetWorkStatus;
     private int mScreenWidthDP;
     private String mFileRootDir;
@@ -54,6 +57,7 @@ public class BaseApplication extends Application {
         mScreenWidth = mSp.getInt(PARAM_SCREEN_WIDTH, 0);
         mScreenHeight = mSp.getInt(PARAM_SCREEN_HEIGHT, 0);
         mScreenWidthDP = mSp.getInt(PARAM_SCREEN_WIDTH_DP, 0);
+        mLastModifyDays = mSp.getInt(PARAM_LAST_MODIFY_DAYS, ZDate.getCurrentDate());
 
         if (mImageCachePoolSize == 0)
             setImageCachePoolSize();
@@ -192,5 +196,19 @@ public class BaseApplication extends Application {
 
         mScreenHeight = screenHeight;
         mSp.edit().putInt(PARAM_SCREEN_HEIGHT, mScreenHeight).apply();
+    }
+
+    /**
+     * 自动清理过期缓存,每个指定天执行一次，每次清理指定天前的文件
+     */
+    public void autoCleanCache(int availableDays) {
+        int currentDays = ZDate.getCurrentDate();
+
+        if (ZDate.daysOfTwo(mLastModifyDays, currentDays) < availableDays)
+            return;
+
+        DBHelper.cache().cleanExpireFile(availableDays);
+        mLastModifyDays = currentDays;
+        mSp.edit().putInt(PARAM_LAST_MODIFY_DAYS, mLastModifyDays).apply();
     }
 }

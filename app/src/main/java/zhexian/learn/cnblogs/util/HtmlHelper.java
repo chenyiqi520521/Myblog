@@ -31,14 +31,6 @@ public class HtmlHelper {
             mHtmlString = ZIO.readString(mApp.getAssets().open("content.html"));
             mDayCssString = ZIO.readString(mApp.getAssets().open("style_day.css"));
             mNightCssString = ZIO.readString(mApp.getAssets().open("style_night.css"));
-
-            //将占位图片拷贝到缓存目录
-            if (!DBHelper.cache().exist(mDayImagePlaceHolderName))
-                DBHelper.cache().save(mDayImagePlaceHolderName, mApp.getAssets().open(mDayImagePlaceHolderName));
-
-            if (!DBHelper.cache().exist(mNightImagePlaceHolderName))
-                DBHelper.cache().save(mNightImagePlaceHolderName, mApp.getAssets().open(mNightImagePlaceHolderName));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,6 +43,19 @@ public class HtmlHelper {
     public static void init(BaseApplication baseApp) {
         if (ourInstance == null)
             ourInstance = new HtmlHelper(baseApp);
+    }
+
+    private void ensurePlaceHolder() {
+        try {
+            //将占位图片拷贝到缓存目录
+            if (!DBHelper.cache().exist(mDayImagePlaceHolderName))
+                DBHelper.cache().save(mDayImagePlaceHolderName, mApp.getAssets().open(mDayImagePlaceHolderName));
+
+            if (!DBHelper.cache().exist(mNightImagePlaceHolderName))
+                DBHelper.cache().save(mNightImagePlaceHolderName, mApp.getAssets().open(mNightImagePlaceHolderName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -74,6 +79,8 @@ public class HtmlHelper {
      * @param entity
      */
     public void render(WebView webView, NewsDetailEntity entity) {
+        ensurePlaceHolder();
+
         String htmlContent = HtmlHelper.getInstance().processHtml(entity);
         webView.loadDataWithBaseURL(String.format("file://%s", DBHelper.cache().getRootDir()), htmlContent, "text/html", "utf-8", null);
     }

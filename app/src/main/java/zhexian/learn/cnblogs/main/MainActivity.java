@@ -13,6 +13,7 @@ import zhexian.learn.cnblogs.base.BaseActivity;
 import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZDisplay;
 import zhexian.learn.cnblogs.news.NewsListFragment;
+import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.DBHelper;
 import zhexian.learn.cnblogs.util.HtmlHelper;
 
@@ -47,6 +48,7 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         ZImage.init(getApp());
         DBHelper.init(getApp().getFileRootDir());
         HtmlHelper.init(getApp());
+        getApp().autoCleanCache(ConfigConstant.FILE_AVAILABLE_DAYS);
     }
 
     @Override

@@ -3,12 +3,13 @@ package zhexian.learn.cnblogs.util;
 
 public class ConfigConstant {
 
-    public static final String TODAY_STRING = "今日";
-    public static final String YESTERDAY_STRING = "昨日";
-    public static final String THE_DAY_BEFORE_YESTERDAY_STRING = "前日";
-
     public static final int BUFFER_SIZE = 4096;
     public static final int ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER = -1;
+
+    /**
+     * 缓存文件有效日期
+     */
+    public static final int FILE_AVAILABLE_DAYS = 30;
 
     public static final int ENTITY_TYPE_NORMAL_ITEM = 0;
 
