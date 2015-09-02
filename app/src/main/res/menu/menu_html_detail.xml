@@ -4,12 +4,6 @@
       tools:context="zhexian.app.zoschina.news.NewsDetailActivity">
 
     <item
-        android:id="@+id/action_detail_share"
-        android:icon="@mipmap/share"
-        android:title=""
-        app:showAsAction="always|withText"></item>
-
-    <item
         android:id="@+id/action_detail_like"
         android:title=""
         app:actionLayout="@layout/action_item_like"

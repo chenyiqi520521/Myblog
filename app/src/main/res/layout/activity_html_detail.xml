@@ -6,7 +6,7 @@
              tools:context="zhexian.app.zoschina.news.NewsDetailActivity">
 
     <zhexian.learn.cnblogs.ui.ScrollWebView
-        android:id="@+id/news_detail_content"
+        android:id="@+id/html_detail_web_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></zhexian.learn.cnblogs.ui.ScrollWebView>
 

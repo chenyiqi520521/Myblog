@@ -3,6 +3,7 @@ package zhexian.learn.cnblogs.image;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.LruCache;
 import android.widget.ImageView;
 
@@ -14,7 +15,7 @@ import zhexian.learn.cnblogs.util.DBHelper;
 /**
  * 图片管理类，访问网络图片，保存在本地
  * 使用方式参考RequestCreator内部类
- * 完整的使用方式ZImage.ready().want("请求地址").reSize(图片尺寸).cache(缓存方式).empty(图片占位符).into(图片控件);
+ * 完整的使用方式ZImage.ready().want("请求地址").reSize(图片尺寸).cache(缓存方式).canQueryByHttp(是否可以走流量访问图片).lowPriority(将请求放到栈的底部).empty(图片占位符).into(图片控件);
  */
 public class ZImage {
 
@@ -133,19 +134,20 @@ public class ZImage {
             mMemoryCache.put(url, bitmap);
     }
 
+
     /**
      * 加载图片，经过内存、磁盘、两层缓存如果还没找到，则走http访问网络资源
-     *
-     * @param url
-     * @param imageView
-     * @param width
-     * @param height
-     * @param cacheType
-     * @param workType
-     * @param placeHolder
+     * @param url 地址
+     * @param imageView 图片控件
+     * @param width 图片宽度
+     * @param height 图片高度
+     * @param cacheType 缓存类型
+     * @param workType 队列优先级
+     * @param placeHolder 占位图片
+     * @param canQueryHttp 是否可以走流量获取图片
      */
     private void load(String url, ImageView imageView, int width, int height, CacheType cacheType, ImageTaskManager.WorkType workType, int placeHolder, boolean canQueryHttp) {
-        if (url.isEmpty()) {
+        if (TextUtils.isEmpty(url)) {
             loadResource(imageView, placeHolder);
             return;
         }
@@ -225,7 +227,7 @@ public class ZImage {
         /**
          * 缓存类型，默认内存缓存，基于LRU算法，不用担心内存爆炸
          */
-        CacheType cacheType = CacheType.Memory;
+        CacheType cacheType = CacheType.DiskMemory;
 
         /**
          * 图片的宽度
@@ -244,6 +246,7 @@ public class ZImage {
 
         public RequestCreator(String url) {
             this.url = url;
+            this.canQueryByHttp = mBaseApp.canRequestImage();
         }
 
         /**
@@ -260,7 +263,7 @@ public class ZImage {
         /**
          * 缓存
          *
-         * @param cacheType 缓存类型，默认不缓存
+         * @param cacheType 缓存类型
          * @return
          */
         public RequestCreator cache(CacheType cacheType) {

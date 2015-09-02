@@ -1,6 +1,8 @@
 package zhexian.learn.cnblogs.news;
 
 
+import android.text.TextUtils;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
@@ -30,6 +32,9 @@ public class NewsDetailEntity implements Serializable {
     private String imageUrls;
 
     public static NewsDetailEntity ParseXML(String xmlStr) {
+        if (TextUtils.isEmpty(xmlStr))
+            return null;
+
         XmlPullParser parser;
 
         try {

@@ -10,6 +10,6 @@ public interface INavigatorCallback {
 
     void OnClickNews();
 
-    void OnClickOpenSource();
+    void OnClickBlog();
 }
 

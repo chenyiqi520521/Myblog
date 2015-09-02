@@ -1,5 +1,7 @@
 package zhexian.learn.cnblogs.news;
 
+import android.text.TextUtils;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
@@ -32,6 +34,9 @@ public class NewsListEntity extends BaseEntity {
     private int commentAmount;
 
     public static List<NewsListEntity> ParseXML(String xmlStr) {
+        if (TextUtils.isEmpty(xmlStr))
+            return null;
+
         XmlPullParser parser;
 
         try {
@@ -45,7 +50,6 @@ public class NewsListEntity extends BaseEntity {
 
         List<NewsListEntity> newsList = null;
         NewsListEntity newsEntity = null;
-
 
         try {
             int type = parser.getEventType();

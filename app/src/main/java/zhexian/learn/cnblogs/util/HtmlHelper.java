@@ -1,5 +1,6 @@
 package zhexian.learn.cnblogs.util;
 
+import android.text.TextUtils;
 import android.webkit.WebView;
 
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import zhexian.learn.cnblogs.base.BaseApplication;
+import zhexian.learn.cnblogs.blog.BlogEntity;
 import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZDate;
 import zhexian.learn.cnblogs.lib.ZIO;
@@ -72,17 +74,40 @@ public class HtmlHelper {
         return htmlString;
     }
 
+    public String processHtml(BlogEntity entity) {
+        String content = decorateIMGTag(entity.getContent(), mApp.getScreenWidthInDP(), mApp.isNightMode());
+        String source = String.format("%s %s 发布   浏览%d", entity.getAuthorName(), ZDate.FriendlyTime(entity.getPublished()), entity.getViewAmount());
+        String htmlString = new String(mHtmlString);
+        htmlString = htmlString.replace("{style}", getHtmlCssString()).replace("{title}", entity.getTitle()).replace("{fontSize}", getFontSize()).replace("{source}", source).replace("{html}", content);
+        return htmlString;
+    }
+
+
+    public void render(WebView webView, String htmlContent) {
+        ensurePlaceHolder();
+        webView.loadDataWithBaseURL(String.format("file://%s", DBHelper.cache().getRootDir()), htmlContent, "text/html", "utf-8", null);
+    }
+
     /**
-     * 将数据渲染到webView上
+     * 将新闻渲染到webView上
      *
      * @param webView
      * @param entity
      */
     public void render(WebView webView, NewsDetailEntity entity) {
-        ensurePlaceHolder();
+        String htmlContent = processHtml(entity);
+        render(webView, htmlContent);
+    }
 
-        String htmlContent = HtmlHelper.getInstance().processHtml(entity);
-        webView.loadDataWithBaseURL(String.format("file://%s", DBHelper.cache().getRootDir()), htmlContent, "text/html", "utf-8", null);
+    /**
+     * 将博客渲染到webView上
+     *
+     * @param webView
+     * @param entity
+     */
+    public void render(WebView webView, BlogEntity entity) {
+        String htmlContent = processHtml(entity);
+        render(webView, htmlContent);
     }
 
     public String getHtmlString() {
@@ -100,6 +125,9 @@ public class HtmlHelper {
 
 
     public String decorateIMGTag(String htmlContent, int screenWidth, boolean isNight) {
+        if (TextUtils.isEmpty(htmlContent))
+            return null;
+
         Pattern patternImgSrc = Pattern.compile("<img(.+?)src=\"(.+?)\"(.+?)/>");
         Matcher localMatcher = patternImgSrc.matcher(htmlContent);
 

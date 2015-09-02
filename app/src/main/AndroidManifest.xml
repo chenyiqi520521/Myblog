@@ -34,7 +34,11 @@
         </activity>
         <activity
             android:name=".comment.CommentActivity"
-            android:label="@string/title_activity_comment">
+            android:label="">
+        </activity>
+        <activity
+            android:name=".blog.BlogDetailActivity"
+            android:label="">
         </activity>
     </application>
 

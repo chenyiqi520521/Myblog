@@ -10,6 +10,7 @@ import android.view.View;
 
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseActivity;
+import zhexian.learn.cnblogs.blog.BlogListFragment;
 import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZDisplay;
 import zhexian.learn.cnblogs.news.NewsListFragment;
@@ -76,8 +77,8 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
     }
 
     @Override
-    public void OnClickOpenSource() {
-        ReplaceFragment(NewsListFragment.newInstance());
+    public void OnClickBlog() {
+        ReplaceFragment(BlogListFragment.newInstance());
     }
 
     public void ReplaceFragment(Fragment fragment) {

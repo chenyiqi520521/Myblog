@@ -19,7 +19,7 @@ public class NewsDal {
     static final String endPoint = "http://wcf.open.cnblogs.com/news";
     static final String recommendNewsUrl = String.format("%s/%s/paged/", endPoint, RECOMMEND_STRING);
     static final String recentNewsUrl = String.format("%s/%s/paged/", endPoint, RECENT_STRING);
-    static final String newsDetailUrl = String.format("%s/item/", endPoint, RECENT_STRING);
+    static final String newsDetailUrl = String.format("%s/item/", endPoint);
 
     /**
      * 获取推荐新闻
@@ -29,30 +29,31 @@ public class NewsDal {
      * @param pageSize
      * @return
      */
-    public static List<NewsListEntity> getNewsList(BaseApplication baseApp, ConfigConstant.InfoCategory category, int pageIndex, int pageSize) {
+    public static List<NewsListEntity> getNewsList(BaseApplication baseApp, ConfigConstant.NewsCategory category, int pageIndex, int pageSize) {
         if (baseApp == null)
             return null;
 
-        List<NewsListEntity> listEntity;
+        List<NewsListEntity> newsList = null;
         //默认使用最新
         String prefix = RECENT_STRING;
         String requestUrl = recentNewsUrl;
 
-        if (category == ConfigConstant.InfoCategory.Recommend) {
+        if (category == ConfigConstant.NewsCategory.Recommend) {
             prefix = RECOMMEND_STRING;
             requestUrl = recommendNewsUrl;
         }
 
         String key = String.format("%s_news_%d_%d", prefix, pageIndex, pageSize);
 
-        if (baseApp.isNetworkAvailable() == false && DBHelper.cache().exist(key)) {
-            listEntity = DBHelper.cache().getList(key, NewsListEntity.class);
+        if (baseApp.isNetworkAvailable() == false) {
+            if (DBHelper.cache().exist(key))
+                newsList = DBHelper.cache().getList(key, NewsListEntity.class);
         } else {
             String xmlStr = ZHttp.getString(String.format("%s%d/%d", requestUrl, pageIndex, pageSize));
-            listEntity = NewsListEntity.ParseXML(xmlStr);
-            DBHelper.cache().save(key, listEntity, NewsListEntity.class);
+            newsList = NewsListEntity.ParseXML(xmlStr);
+            DBHelper.cache().save(key, newsList, NewsListEntity.class);
         }
-        return listEntity;
+        return newsList;
     }
 
     public static NewsDetailEntity getNewsDetail(BaseApplication baseApp, long newsID) {

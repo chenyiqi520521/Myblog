@@ -23,7 +23,6 @@ public class BaseActivity extends AppCompatActivity {
     private BaseApplication mBaseApp = null;
     private WindowManager mWindowManager = null;
     private View mNightView = null;
-    private LayoutParams mNightViewParam;
     private ActionBar mActionbar;
 
     private boolean mIsAddedView;
@@ -122,9 +121,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void initNightView() {
-        if (mIsAddedView == true)
+        if (mIsAddedView)
             return;
-        mNightViewParam = new LayoutParams(
+        LayoutParams mNightViewParam = new LayoutParams(
                 LayoutParams.TYPE_APPLICATION,
                 LayoutParams.FLAG_NOT_TOUCHABLE | LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSPARENT);

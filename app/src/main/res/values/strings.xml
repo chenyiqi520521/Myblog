@@ -27,4 +27,5 @@
     <string name="notify_refresh_fail">刷新失败</string>
 
     <string name="alert_is_cleaned">已清空</string>
+    <string name="title_activity_blog_detail">BlogDetailActivity</string>
 </resources>

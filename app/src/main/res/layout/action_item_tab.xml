@@ -7,13 +7,13 @@
               android:orientation="horizontal">
 
     <FrameLayout
-        android:id="@+id/action_tab_first"
+        android:id="@+id/action_tab_left"
         android:layout_width="76dp"
         android:layout_height="32dp"
         android:background="@mipmap/tab_left_normal">
 
         <TextView
-            android:id="@+id/action_tab_first_text"
+            android:id="@+id/action_tab_left_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -21,14 +21,14 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/action_tab_third"
+        android:id="@+id/action_tab_middle"
         android:layout_width="76dp"
         android:layout_height="32dp"
         android:background="@mipmap/tab_middle_normal"
         android:visibility="gone">
 
         <TextView
-            android:id="@+id/action_tab_third_text"
+            android:id="@+id/action_tab_middle_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -36,13 +36,13 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/action_tab_second"
+        android:id="@+id/action_tab_right"
         android:layout_width="76dp"
         android:layout_height="32dp"
         android:background="@mipmap/tab_right_normal">
 
         <TextView
-            android:id="@+id/action_tab_second_text"
+            android:id="@+id/action_tab_right_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

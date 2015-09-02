@@ -17,7 +17,6 @@ public class ConfigConstant {
     public static final double HTML_FONT_SIZE_BIG = 1.4;
     public static final long MIN_CHANGE_DURATION_MILLION_SECONDS = 500;
     public static final long MIN_TRIGGER_ACTION_BAR_DISTANCE = 10;
-    public static final int LIST_ITEM_IMAGE_SIZE_DP = 90;
 
     public enum NetworkStatus {
         DisConnect,
@@ -27,8 +26,26 @@ public class ConfigConstant {
         Wifi
     }
 
+    public enum BlogCategory {
 
-    public enum InfoCategory {
+        /**
+         * 首页
+         */
+        HOME,
+
+        /**
+         * 推荐
+         */
+        RECOMMEND,
+
+
+        /**
+         * 热门
+         */
+        HOT
+    }
+
+    public enum NewsCategory {
         Recommend,
 
         Recent

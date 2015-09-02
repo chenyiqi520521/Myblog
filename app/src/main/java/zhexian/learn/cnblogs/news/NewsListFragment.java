@@ -21,12 +21,11 @@ import zhexian.learn.cnblogs.util.DBHelper;
  */
 public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> implements TabActionBarView.ITabActionCallback {
 
-    private ConfigConstant.InfoCategory mCategory;
+    private ConfigConstant.NewsCategory mCategory;
 
     public static NewsListFragment newInstance() {
         return new NewsListFragment();
     }
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -37,7 +36,7 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
 
     @Override
     protected RecyclerView.Adapter<RecyclerView.ViewHolder> bindArrayAdapter(List<NewsListEntity> list) {
-        return new NewsListAdapter((BaseActivity) getActivity(), list);
+        return new NewsListAdapter(mBaseActivity, list);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
         if (mBaseApp == null)
             return null;
 
-        if (list != null && mCategory == ConfigConstant.InfoCategory.Recommend && mBaseApp.isNetworkWifi() && mBaseApp.isAutoLoadRecommend())
+        if (list != null && mCategory == ConfigConstant.NewsCategory.Recommend && mBaseApp.isNetworkWifi() && mBaseApp.isAutoLoadRecommend())
             new AsyncCacheNews().execute(list);
 
         return list;
@@ -61,20 +60,20 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
     }
 
     @Override
-    public void onFirstTabClick() {
-        mCategory = ConfigConstant.InfoCategory.Recommend;
+    public void onLeftTabClick() {
+        mCategory = ConfigConstant.NewsCategory.Recommend;
         onRefresh();
     }
 
     @Override
-    public void onSecondTabClick() {
-        mCategory = ConfigConstant.InfoCategory.Recent;
-        onRefresh();
+    public void onMiddleTabClick() {
+
     }
 
     @Override
-    public void onThirdClick() {
-
+    public void onRightClick() {
+        mCategory = ConfigConstant.NewsCategory.Recent;
+        onRefresh();
     }
 
     private class AsyncCacheNews extends AsyncTask<List<NewsListEntity>, Void, Void> {
@@ -85,8 +84,12 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
 
             for (NewsListEntity entity : list) {
 
-                if (mBaseApp.isNetworkWifi() == false)
+                if (mBaseApp == null || mBaseApp.isNetworkWifi() == false)
                     break;
+
+                if (entity == null)
+                    continue;
+
 
                 String key = String.format("news_content_%d", entity.getNewsID());
 
@@ -96,7 +99,7 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
                 ZImage.ready().want(entity.getIconUrl()).lowPriority().save();
 
                 //自动缓存三天内的新闻
-                boolean isNeedCache = entity.getPublishDate().equals(ZDate.TODAY_STRING) || entity.getPublishDate().equals(ZDate.YESTERDAY_STRING) || entity.getPublishDate().equals(ZDate.THE_DAY_BEFORE_YESTERDAY_STRING);
+                boolean isNeedCache = entity.getPublishDate().equals(ZDate.TODAY_STRING) || entity.getPublishDate().equals(ZDate.YESTERDAY_STRING);
 
                 if (isNeedCache)
                     NewsDal.CacheNews(entity.getNewsID(), key);

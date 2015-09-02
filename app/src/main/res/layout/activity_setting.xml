@@ -22,7 +22,7 @@
             style="@style/setting_sub_font"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:text="仅Wi-Fi下可用，自动下载精选新闻、博客"/>
+            android:text="仅Wi-Fi下可用，自动下载两天内精选新闻"/>
 
         <CheckBox
             android:id="@+id/setting_is_auto_load_news"

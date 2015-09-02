@@ -76,6 +76,18 @@ public class ZDisk {
     }
 
     /**
+     * 保存字符串到文件
+     *
+     * @param url
+     * @param content
+     * @return
+     */
+    public boolean save(String url, String content) {
+        url = trans2Local(url);
+        return ZIO.writeToFile(url, content);
+    }
+
+    /**
      * 写入bytes
      *
      * @param url
@@ -132,6 +144,7 @@ public class ZDisk {
         FileOutputStream fos = null;
 
         try {
+
             fos = new FileOutputStream(file);
             Bitmap.CompressFormat format = url.toLowerCase().indexOf("png") > 0 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG;
             bitmap.compress(format, 75, fos);
@@ -239,6 +252,15 @@ public class ZDisk {
             return null;
 
         return BitmapFactory.decodeFile(url);
+    }
+
+    public String getString(String url) {
+        url = trans2Local(url);
+
+        if (!new File(url).exists())
+            return null;
+
+        return ZIO.readFromFile(url);
     }
 
     /**

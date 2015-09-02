@@ -24,11 +24,13 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private BaseActivity mContext;
     private List<NewsListEntity> mDataList;
     private LayoutInflater mLayoutInflater;
+    private int mImgSize;
 
-    public NewsListAdapter(BaseActivity mContext, List<NewsListEntity> mDataList) {
-        this.mContext = mContext;
+    public NewsListAdapter(BaseActivity context, List<NewsListEntity> mDataList) {
+        this.mContext = context;
         this.mDataList = mDataList;
         mLayoutInflater = LayoutInflater.from(mContext);
+        mImgSize = mContext.getResources().getDimensionPixelSize(R.dimen.news_img_size);
     }
 
     /**
@@ -44,9 +46,9 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return new LoadingViewHolder(mLayoutInflater, viewGroup);
 
         if (i == NORMAL_ITEM)
-            return new NormalItemHolder(mLayoutInflater.inflate(R.layout.base_swipe_item, viewGroup, false));
+            return new NormalItemHolder(mLayoutInflater.inflate(R.layout.news_list_item, viewGroup, false));
         else
-            return new GroupItemHolder(mLayoutInflater.inflate(R.layout.base_swipe_group_item, viewGroup, false));
+            return new GroupItemHolder(mLayoutInflater.inflate(R.layout.news_list_group_item, viewGroup, false));
     }
 
     /**
@@ -110,8 +112,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 newsIcon.setVisibility(View.GONE);
         } else {
 
-            ZImage.ready().want(entity.getIconUrl()).reSize(ConfigConstant.LIST_ITEM_IMAGE_SIZE_DP, ConfigConstant.LIST_ITEM_IMAGE_SIZE_DP).cache(ZImage.CacheType.DiskMemory).canQueryByHttp(mContext.getApp().canRequestImage()).into(newsIcon);
-
+            ZImage.ready().want(entity.getIconUrl()).reSize(mImgSize, mImgSize).into(newsIcon);
 
             if (newsIcon.getVisibility() != View.VISIBLE)
                 newsIcon.setVisibility(View.VISIBLE);
@@ -138,9 +139,9 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public NormalItemHolder(View itemView) {
             super(itemView);
-            newsTitle = (TextView) itemView.findViewById(R.id.base_swipe_item_title);
-            newsIcon = (ImageView) itemView.findViewById(R.id.base_swipe_item_icon);
-            itemView.findViewById(R.id.base_swipe_item_container).setOnClickListener(new View.OnClickListener() {
+            newsTitle = (TextView) itemView.findViewById(R.id.news_item_title);
+            newsIcon = (ImageView) itemView.findViewById(R.id.news_item_icon);
+            itemView.findViewById(R.id.news_item_container).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showNewsDetail(getPosition());
@@ -157,7 +158,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public GroupItemHolder(View itemView) {
             super(itemView);
-            newsTime = (TextView) itemView.findViewById(R.id.base_swipe_group_item_time);
+            newsTime = (TextView) itemView.findViewById(R.id.news_item_time);
         }
     }
 }

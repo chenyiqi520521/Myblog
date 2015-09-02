@@ -30,8 +30,6 @@ public class NavigatorFragment extends Fragment implements View.OnClickListener 
     private static final String PARAM_NAVIGATOR_SELECTED_POSITION = "PARAM_NAVIGATOR_SELECTED_POSITION";
 
     private BaseActivity mBaseActivity;
-    private View mSettingBtn;
-    private View mFavoriteBtn;
     private ListView mNavigatorItemList;
     private NavigatorArrayAdapter mNavigatorAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -89,8 +87,8 @@ public class NavigatorFragment extends Fragment implements View.OnClickListener 
         });
 
         mNavigatorItemList.setItemChecked(mCurrentSelectedPosition, true);
-        mSettingBtn = view.findViewById(R.id.navigator_setting);
-        mFavoriteBtn = view.findViewById(R.id.navigator_my_favorite);
+        View mSettingBtn = view.findViewById(R.id.navigator_setting);
+        View mFavoriteBtn = view.findViewById(R.id.navigator_my_favorite);
 
         mSettingBtn.setOnClickListener(this);
         mFavoriteBtn.setOnClickListener(this);
@@ -135,7 +133,7 @@ public class NavigatorFragment extends Fragment implements View.OnClickListener 
                 mINavigatorCallBack.OnClickNews();
                 break;
             case NavigatorDal.ID_BLOGS:
-                mINavigatorCallBack.OnClickOpenSource();
+                mINavigatorCallBack.OnClickBlog();
                 break;
         }
     }

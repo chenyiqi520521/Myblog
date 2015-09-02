@@ -88,6 +88,16 @@ public class Utils {
         return url;
     }
 
+    public static String transHtmlTag(String htmlTag) {
+        htmlTag = htmlTag.replace("&apos;", "'");
+        htmlTag = htmlTag.replace("&quot;", "\"");
+        htmlTag = htmlTag.replace("&gt;", ">");
+        htmlTag = htmlTag.replace("&lt;", "<");
+        htmlTag = htmlTag.replace("&amp;", "&");
+        return htmlTag;
+    }
+
+
     public static int daysOfTwo(Date originalDate, Date compareDateDate) {
         return (int) (originalDate.getTime() / 86400000L - compareDateDate.getTime() / 86400000L);
     }

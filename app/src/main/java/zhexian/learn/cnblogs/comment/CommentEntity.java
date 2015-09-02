@@ -1,5 +1,7 @@
 package zhexian.learn.cnblogs.comment;
 
+import android.text.TextUtils;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
@@ -29,6 +31,9 @@ public class CommentEntity extends BaseEntity {
     private String content;
 
     public static List<CommentEntity> ParseXML(String xmlStr) {
+        if (TextUtils.isEmpty(xmlStr))
+            return null;
+
         XmlPullParser parser;
 
         try {

@@ -23,8 +23,8 @@ public class ZHttp {
         if (mOkHttpClient == null) {
             synchronized (ZHttp.class) {
                 mOkHttpClient = new OkHttpClient();
-                mOkHttpClient.setConnectTimeout(6, TimeUnit.SECONDS);
-                mOkHttpClient.setReadTimeout(6, TimeUnit.SECONDS);
+                mOkHttpClient.setConnectTimeout(12, TimeUnit.SECONDS);
+                mOkHttpClient.setReadTimeout(12, TimeUnit.SECONDS);
             }
         }
         return mOkHttpClient;

@@ -1,4 +1,4 @@
-package zhexian.learn.cnblogs.news;
+package zhexian.learn.cnblogs.blog;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,27 +20,19 @@ import zhexian.learn.cnblogs.util.HtmlHelper;
 import zhexian.learn.cnblogs.util.Utils;
 import zhexian.learn.cnblogs.util.WebViewJsInterface;
 
-public class NewsDetailActivity extends BaseActivity {
+public class BlogDetailActivity extends BaseActivity {
+    private static final String PARAM_BLOG_ENTITY = "PARAM_BLOG_ENTITY";
+    private ScrollWebView mWebView;
+    private BlogEntity mEntity;
 
-    private static final String PARAM_NEWS_TITLE = "PARAM_NEWS_TITLE";
-    private static final String PARAM_NEWS_ID = "PARAM_NEWS_ID";
-    private static final String PARAM_NEWS_LIKE_COUNT = "PARAM_NEWS_LIKE_COUNT";
-    private static final String PARAM_NEWS_COMMENT_COUNT = "PARAM_NEWS_COMMENT_COUNT";
-
-    private ScrollWebView mNewsContent;
     private View mProgress;
-    private long mDataID;
-    private int mLikeCount;
-    private int mCommentCount;
     private int mPreviousYPos;
-    private String mTitle;
 
-    public static void actionStart(Context context, long newsID, int recommendCount, int commentCount, String title) {
-        Intent intent = new Intent(context, NewsDetailActivity.class);
-        intent.putExtra(PARAM_NEWS_ID, newsID);
-        intent.putExtra(PARAM_NEWS_LIKE_COUNT, recommendCount);
-        intent.putExtra(PARAM_NEWS_COMMENT_COUNT, commentCount);
-        intent.putExtra(PARAM_NEWS_TITLE, title);
+    public static void actionStart(Context context, BlogEntity entity) {
+        Intent intent = new Intent(context, BlogDetailActivity.class);
+        Bundle bundle = new Bundle(1);
+        bundle.putSerializable(PARAM_BLOG_ENTITY, entity);
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
@@ -51,25 +43,25 @@ public class NewsDetailActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        mEntity = (BlogEntity) getIntent().getSerializableExtra(PARAM_BLOG_ENTITY);
+
+        if (mEntity == null)
+            return;
+
         mProgress = findViewById(R.id.news_detail_progress);
-        mNewsContent = (ScrollWebView) findViewById(R.id.html_detail_web_view);
-        mNewsContent.getSettings().setJavaScriptEnabled(true);
-        mNewsContent.addJavascriptInterface(new WebViewJsInterface(this), "Android");
-        mNewsContent.getSettings().setPluginState(WebSettings.PluginState.ON);
-        mNewsContent.setOnScrollListener(new ScrollWebView.OnScrollListener() {
+        mWebView = (ScrollWebView) findViewById(R.id.html_detail_web_view);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.addJavascriptInterface(new WebViewJsInterface(this), "Android");
+        mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        mWebView.setOnScrollListener(new ScrollWebView.OnScrollListener() {
             @Override
             public void onScroll(int x, int y) {
                 switchActionBar(y - mPreviousYPos);
                 mPreviousYPos = y;
             }
         });
+        new BlogDetailTask().execute(mEntity.getId());
 
-        Intent intent = getIntent();
-        mDataID = intent.getLongExtra(PARAM_NEWS_ID, -1);
-        mLikeCount = intent.getIntExtra(PARAM_NEWS_LIKE_COUNT, 0);
-        mCommentCount = intent.getIntExtra(PARAM_NEWS_COMMENT_COUNT, 0);
-        mTitle = intent.getStringExtra(PARAM_NEWS_TITLE);
-        new NewsDetailTask().execute(mDataID);
     }
 
     @Override
@@ -78,7 +70,7 @@ public class NewsDetailActivity extends BaseActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_html_detail, menu);
         View likeItem = menu.findItem(R.id.action_detail_like).getActionView();
-        ((TextView) likeItem.findViewById(R.id.action_item_like_text)).setText(String.valueOf(mLikeCount));
+        ((TextView) likeItem.findViewById(R.id.action_item_like_text)).setText(String.valueOf(mEntity.getRecommendAmount()));
         likeItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,16 +79,16 @@ public class NewsDetailActivity extends BaseActivity {
         });
 
         View commentItem = menu.findItem(R.id.action_detail_comment).getActionView();
-        ((TextView) commentItem.findViewById(R.id.action_item_comment_text)).setText(String.valueOf(mCommentCount));
+        ((TextView) commentItem.findViewById(R.id.action_item_comment_text)).setText(String.valueOf(mEntity.getCommentAmount()));
 
         commentItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mCommentCount == 0) {
+                if (mEntity.getCommentAmount() == 0) {
                     Utils.toast(getApp(), R.string.alert_no_comment);
                     return;
                 }
-                CommentActivity.actionStart(NewsDetailActivity.this, ConfigConstant.CommentCategory.News, mDataID, mTitle);
+                CommentActivity.actionStart(BlogDetailActivity.this, ConfigConstant.CommentCategory.Blog, mEntity.getId(), mEntity.getTitle());
             }
         });
         return true;
@@ -118,8 +110,7 @@ public class NewsDetailActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    private class NewsDetailTask extends AsyncTask<Long, Void, NewsDetailEntity> {
+    private class BlogDetailTask extends AsyncTask<Long, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -127,18 +118,17 @@ public class NewsDetailActivity extends BaseActivity {
         }
 
         @Override
-        protected NewsDetailEntity doInBackground(Long... longs) {
-            return NewsDal.getNewsDetail(getApp(), longs[0]);
+        protected String doInBackground(Long... params) {
+            return BlogDal.getBlogContent(getApp(), mEntity.getId());
         }
 
         @Override
-        protected void onPostExecute(NewsDetailEntity newsDetailEntity) {
+        protected void onPostExecute(String s) {
             mProgress.setVisibility(View.GONE);
+            super.onPostExecute(s);
+            mEntity.setContent(s);
 
-            if (newsDetailEntity == null)
-                return;
-
-            HtmlHelper.getInstance().render(mNewsContent, newsDetailEntity);
+            HtmlHelper.getInstance().render(mWebView, mEntity);
         }
     }
 }

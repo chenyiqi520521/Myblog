@@ -55,6 +55,15 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
 
     protected abstract DataEntity getLoadMorePlaceHolder();
 
+    /**
+     * 获取每页的数据条数，子类可以重写
+     *
+     * @return
+     */
+    protected int getPageSize() {
+        return mBaseApp.getPageSize();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -90,6 +99,8 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         if (mIsRequestingData)
             return;
 
+        mPullToRefresh.changeStatus(PullToRefreshView.STATUS_IDLE);
+
         new AsyncLoadDataTask(true).execute();
     }
 
@@ -102,15 +113,21 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
     }
 
     private int getNextPageIndex() {
-        return mDataList.size() / mBaseApp.getPageSize() + 1;
+        return mDataList.size() / getPageSize() + 1;
     }
 
-    private void onPreLoadMore() {
+    protected void onPreLoadMore() {
+        if (mLoadMorePlaceHolder == null)
+            return;
+
         mDataList.add(mLoadMorePlaceHolder);
         mAdapter.notifyDataSetChanged();
     }
 
-    private void onPostLoadMore() {
+    protected void onPostLoadMore() {
+        if (mLoadMorePlaceHolder == null)
+            return;
+
         mDataList.remove(mLoadMorePlaceHolder);
         mAdapter.notifyDataSetChanged();
     }
@@ -135,9 +152,10 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
 
             if (lastVisibleItem == mDataList.size() - 1) {
 
-                if (mIsLoadAllData)
-                    Utils.toast(mBaseApp, getResources().getString(R.string.load_all_load));
-                else
+                if (mIsLoadAllData) {
+                    if (dy > 0)
+                        Utils.toast(mBaseApp, getResources().getString(R.string.load_all_load));
+                } else
                     new AsyncLoadDataTask(false).execute();
             }
         }
@@ -175,7 +193,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
             }
 
             pageIndex = isRefresh ? 1 : getNextPageIndex();
-            return loadData(pageIndex, mBaseApp.getPageSize());
+            return loadData(pageIndex, getPageSize());
         }
 
         @Override
@@ -198,12 +216,13 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
                 return;
             }
 
-            if (isRefresh)
+            if (isRefresh) {
+                mLinearLayoutManager.scrollToPosition(0);
                 mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_SUCCESS);
-            else
+            } else
                 onPostLoadMore();
 
-            if (baseBusinessListEntity.size() < mBaseApp.getPageSize()) {
+            if (baseBusinessListEntity.size() < getPageSize()) {
                 mIsLoadAllData = true;
             }
 
