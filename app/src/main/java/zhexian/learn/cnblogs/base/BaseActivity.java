@@ -98,12 +98,12 @@ public class BaseActivity extends AppCompatActivity {
         return mBaseApp;
     }
 
-    public void ChangeToDay() {
+    protected void ChangeToDay() {
         mBaseApp.setIsNightMode(false);
         mNightView.setBackgroundResource(android.R.color.transparent);
     }
 
-    public void ChangeToNight() {
+    protected void ChangeToNight() {
         mBaseApp.setIsNightMode(true);
         initNightView();
         mNightView.setBackgroundResource(R.color.night_mask);
@@ -112,7 +112,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * wait a time until the onresume finish
      */
-    public void recreateOnResume() {
+    protected void recreateOnResume() {
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 recreate();

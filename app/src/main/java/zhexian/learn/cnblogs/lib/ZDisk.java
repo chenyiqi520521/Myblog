@@ -25,7 +25,7 @@ public class ZDisk {
     /**
      * 存储绝对路径的地址
      */
-    private String mStoreDir;
+    private final String mStoreDir;
 
     public ZDisk(String mStoreDir) {
         this.mStoreDir = mStoreDir;

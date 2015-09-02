@@ -1,5 +1,6 @@
 package zhexian.learn.cnblogs.blog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -36,6 +37,7 @@ public class BlogDetailActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    @SuppressLint("AddJavascriptInterface")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

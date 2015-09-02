@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.webkit.WebView;
 
 /**
- * Created by Administrator on 2015/8/28.
+ * 可以滚动的webView
  */
 public class ScrollWebView extends WebView {
     private OnScrollListener mOnScrollListener;

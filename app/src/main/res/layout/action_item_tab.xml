@@ -16,8 +16,7 @@
             android:id="@+id/action_tab_left_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="推荐"/>
+            android:layout_gravity="center"/>
     </FrameLayout>
 
     <FrameLayout
@@ -31,8 +30,7 @@
             android:id="@+id/action_tab_middle_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="最新"/>
+            android:layout_gravity="center"/>
     </FrameLayout>
 
     <FrameLayout
@@ -45,7 +43,6 @@
             android:id="@+id/action_tab_right_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="热门"/>
+            android:layout_gravity="center"/>
     </FrameLayout>
 </LinearLayout>

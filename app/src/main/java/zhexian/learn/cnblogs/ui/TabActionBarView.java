@@ -29,7 +29,6 @@ public class TabActionBarView implements View.OnClickListener {
     private int mTextSelectedColor;
     private int mTextNormalColor;
     private ITabActionCallback mCallback;
-    private View tabView;
 
     public TabActionBarView(BaseActivity activity, ITabActionCallback callback) {
         ActionBar actionBar = activity.getSupportActionBar();
@@ -40,7 +39,7 @@ public class TabActionBarView implements View.OnClickListener {
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(R.layout.action_item_tab);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        tabView = actionBar.getCustomView();
+        View tabView = actionBar.getCustomView();
 
         mLeftView = tabView.findViewById(R.id.action_tab_left);
         mLeftTextView = (TextView) tabView.findViewById(R.id.action_tab_left_text);

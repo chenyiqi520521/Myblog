@@ -1,24 +1,14 @@
 <resources>
     <string name="app_name">博客园</string>
-    <string name="action_settings">设置</string>
     <string name="open_navigator">打开导航菜单</string>
     <string name="close_navigator">关闭导航菜单</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_news_detail"></string>
-
-    <string name="load_ready">上滑获取数据</string>
-    <string name="load_running">加载中···</string>
-    <string name="load_error">数据获取失败，请检查网络并重试</string>
-    <string name="load_all_load">没有更多了</string>
 
     <string name="title_activity_setting">系统设置</string>
-    <string name="publish">发布</string>
     <string name="dir_empty">空空如也</string>
-    <string name="title_activity_favorite">FavoriteActivity</string>
-    <string name="alert_no_comment">还没有评论哦</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_comment">CommentActivity</string>
 
+    <string name="alert_no_comment">还没有评论哦</string>
+    <string name="alert_error">数据获取失败，请检查网络并重试</string>
+    <string name="alert_load_all_load">没有更多了</string>
 
     <string name="notify_pull_to_refresh">下拉刷新</string>
     <string name="notify_release_to_load">松手刷新</string>
@@ -27,5 +17,4 @@
     <string name="notify_refresh_fail">刷新失败</string>
 
     <string name="alert_is_cleaned">已清空</string>
-    <string name="title_activity_blog_detail">BlogDetailActivity</string>
 </resources>

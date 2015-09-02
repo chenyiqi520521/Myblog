@@ -9,7 +9,7 @@ import zhexian.learn.cnblogs.util.Utils;
 
 
 /**
- * Created by Administrator on 2015/8/28.
+ * 监听网络改变
  */
 public class NetWorkChangeReceiver extends BroadcastReceiver {
     private BaseApplication mBaseApplication;

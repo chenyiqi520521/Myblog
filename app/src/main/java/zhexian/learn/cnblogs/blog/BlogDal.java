@@ -14,7 +14,7 @@ import zhexian.learn.cnblogs.util.Utils;
  * Created by 陈俊杰 on 2015/8/30.
  * 博客数据层
  */
-public class BlogDal {
+class BlogDal {
     private static final String endPoint = "http://wcf.open.cnblogs.com/blog";
     private static final String HOME_STRING = "sitehome";
     private static final String RECOMMEND_STRING = "TenDaysTopDiggPosts";

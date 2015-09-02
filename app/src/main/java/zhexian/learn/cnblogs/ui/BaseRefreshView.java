@@ -14,17 +14,17 @@ import zhexian.learn.cnblogs.R;
  * 本代码源于github上一个知名的下拉刷新控件https://github.com/Yalantis/Phoenix
  * 在此基础山进行修改以用于本项目
  */
-public abstract class BaseRefreshView extends Drawable implements Drawable.Callback, Animatable {
+abstract class BaseRefreshView extends Drawable implements Drawable.Callback, Animatable {
 
-    private String statusPullToRefresh;
-    private String statusReleaseToLoad;
-    private String statusRefreshing;
-    private String statusRefreshSuccess;
-    private String statusRefreshFail;
+    private final String statusPullToRefresh;
+    private final String statusReleaseToLoad;
+    private final String statusRefreshing;
+    private final String statusRefreshSuccess;
+    private final String statusRefreshFail;
 
     private PullToRefreshView mRefreshLayout;
 
-    public BaseRefreshView(Context context, PullToRefreshView layout) {
+    BaseRefreshView(Context context, PullToRefreshView layout) {
         mRefreshLayout = layout;
         statusPullToRefresh = context.getString(R.string.notify_pull_to_refresh);
         statusReleaseToLoad = context.getString(R.string.notify_release_to_load);
@@ -33,7 +33,7 @@ public abstract class BaseRefreshView extends Drawable implements Drawable.Callb
         statusRefreshFail = context.getString(R.string.notify_refresh_fail);
     }
 
-    public Context getContext() {
+    Context getContext() {
         return mRefreshLayout != null ? mRefreshLayout.getContext() : null;
     }
 
@@ -86,7 +86,7 @@ public abstract class BaseRefreshView extends Drawable implements Drawable.Callb
 
     }
 
-    protected String getDescription(int status) {
+    String getDescription(int status) {
         switch (status) {
             case PullToRefreshView.STATUS_IDLE:
                 return statusPullToRefresh;

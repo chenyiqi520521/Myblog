@@ -4,7 +4,6 @@ package zhexian.learn.cnblogs.base;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,7 +26,6 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         implements PullToRefreshView.OnRefreshListener {
     protected BaseApplication mBaseApp;
     protected BaseActivity mBaseActivity;
-    protected ActionBar mActionBar;
 
     private PullToRefreshView mPullToRefresh;
     private RecyclerView mRecyclerView;
@@ -69,7 +67,6 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
                              Bundle savedInstanceState) {
         mBaseActivity = (BaseActivity) getActivity();
         mBaseApp = mBaseActivity.getApp();
-        mActionBar = mBaseActivity.getSupportActionBar();
         mLoadMorePlaceHolder = getLoadMorePlaceHolder();
         return inflater.inflate(R.layout.base_swipe_list, null);
     }
@@ -83,7 +80,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         initListView();
     }
 
-    public void initListView() {
+    private void initListView() {
         mLinearLayoutManager = new LinearLayoutManager(mBaseActivity);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         ZOnScrollListener scrollListener = new ZOnScrollListener();
@@ -109,14 +106,13 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         super.onDestroy();
         mBaseActivity = null;
         mBaseApp = null;
-        mActionBar = null;
     }
 
     private int getNextPageIndex() {
         return mDataList.size() / getPageSize() + 1;
     }
 
-    protected void onPreLoadMore() {
+    private void onPreLoadMore() {
         if (mLoadMorePlaceHolder == null)
             return;
 
@@ -124,7 +120,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         mAdapter.notifyDataSetChanged();
     }
 
-    protected void onPostLoadMore() {
+    private void onPostLoadMore() {
         if (mLoadMorePlaceHolder == null)
             return;
 
@@ -154,7 +150,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
 
                 if (mIsLoadAllData) {
                     if (dy > 0)
-                        Utils.toast(mBaseApp, getResources().getString(R.string.load_all_load));
+                        Utils.toast(mBaseApp, getResources().getString(R.string.alert_load_all_load));
                 } else
                     new AsyncLoadDataTask(false).execute();
             }
@@ -206,7 +202,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
             mIsRequestingData = false;
 
             if (baseBusinessListEntity == null) {
-                Utils.toast(mBaseApp, getResources().getString(R.string.load_error));
+                Utils.toast(mBaseApp, getResources().getString(R.string.alert_error));
 
                 if (isRefresh)
                     mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_FAIL);
