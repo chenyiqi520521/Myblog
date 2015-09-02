@@ -133,7 +133,9 @@ public class BlogDal {
             if (TextUtils.isEmpty(result))
                 return null;
 
-            return Utils.transHtmlTag(result.substring(startLength, result.length() - endLength));
+            String contentStr = Utils.transHtmlTag(result.substring(startLength, result.length() - endLength));
+            DBHelper.cache().save(key, contentStr);
+            return contentStr;
         }
         return null;
     }
