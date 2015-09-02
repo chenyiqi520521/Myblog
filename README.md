@@ -1,6 +1,6 @@
 ### **知乎日报风格的博客园**  
-[开发的初衷是为了**赏心悦目**的阅读体验   
-下载地址](http://git.oschina.net/yso/CNBlogs/attach_files/download?i=15549&u=http%3A%2F%2Ffiles.git.oschina.net%2Fgroup1%2FM00%2F00%2F9C%2FfMqNk1Xmw9OAbVRZABfllKPAApI337.apk%3Ftoken%3Dce93030bb2483f6dbda390858629ed0c%26ts%3D1441186894)
+开发的初衷是为了**赏心悦目**的阅读体验   
+[下载地址](http://git.oschina.net/yso/CNBlogs/attach_files/download?i=15549&u=http%3A%2F%2Ffiles.git.oschina.net%2Fgroup1%2FM00%2F00%2F9C%2FfMqNk1Xmw9OAbVRZABfllKPAApI337.apk%3Ftoken%3Dce93030bb2483f6dbda390858629ed0c%26ts%3D1441186894)
  
 **1. 赏心**  
 精心设计的夜间模式，不单单是改变配色，更进一步改变屏幕色温，白底的图片因此变得柔和。  
