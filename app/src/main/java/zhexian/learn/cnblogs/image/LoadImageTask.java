@@ -15,6 +15,7 @@ import java.lang.ref.WeakReference;
 import zhexian.learn.cnblogs.base.BaseApplication;
 import zhexian.learn.cnblogs.lib.ZHttp;
 import zhexian.learn.cnblogs.util.DBHelper;
+import zhexian.learn.cnblogs.util.Utils;
 
 
 /**
@@ -43,12 +44,15 @@ public class LoadImageTask extends BaseImageAsyncTask {
     public void run() {
         Bitmap bitmap = DBHelper.cache().getBitmap(url, width, height);
 
-        if (bitmap == null && baseApp.isNetworkWifi()) {
-            bitmap = ZHttp.getBitmap(url, width, height);
+        if (bitmap == null && baseApp.canRequestImage()) {
+            byte[] bytes = ZHttp.getByte(url);
 
-            boolean isCacheToDisk = mCacheType == ZImage.CacheType.Disk || mCacheType == ZImage.CacheType.DiskMemory;
-            if (isCacheToDisk && bitmap != null && bitmap.getByteCount() > 0) {
-                DBHelper.cache().save(url, bitmap);
+            if (bytes != null && bytes.length > 0) {
+                bitmap = Utils.getScaledBitMap(bytes, width, height);
+                boolean isCacheDisk = mCacheType == ZImage.CacheType.Disk || mCacheType == ZImage.CacheType.DiskMemory;
+
+                if (isCacheDisk)
+                    DBHelper.cache().save(url, bytes);
             }
         }
 
@@ -73,7 +77,6 @@ public class LoadImageTask extends BaseImageAsyncTask {
         WeakReference<Bitmap> bitmap;
         WeakReference<String> url;
         ZImage.CacheType cacheType;
-
 
         ImageDoneHandler(Looper looper, ImageView _imageView, Bitmap _bitmap, String url, ZImage.CacheType cacheType) {
             super(looper);

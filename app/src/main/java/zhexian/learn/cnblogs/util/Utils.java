@@ -33,25 +33,26 @@ public class Utils {
     }
 
     public static Bitmap getScaledBitMap(byte[] data, int width, int height) {
-
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(data, 0, data.length, options);
 
         float srcWidth = options.outWidth;
         float srcHeight = options.outHeight;
-        int inSampleSize = 1;
 
-        if (srcHeight > height || srcWidth > width) {
-            if (srcWidth > srcHeight)
-                inSampleSize = Math.round(srcHeight / height);
-            else
-                inSampleSize = Math.round(srcWidth / width);
-        }
+        if (srcWidth < width && srcHeight < height)
+            return BitmapFactory.decodeByteArray(data, 0, data.length);
+
+
+        int inSampleSize;
+
+        if (srcWidth > srcHeight)
+            inSampleSize = Math.round(srcHeight / height);
+        else
+            inSampleSize = Math.round(srcWidth / width);
 
         options = new BitmapFactory.Options();
         options.inSampleSize = inSampleSize;
-
         return BitmapFactory.decodeByteArray(data, 0, data.length, options);
     }
 

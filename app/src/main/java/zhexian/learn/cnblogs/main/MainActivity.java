@@ -50,6 +50,8 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         DBHelper.init(getApp().getFileRootDir());
         HtmlHelper.init(getApp());
         getApp().autoCleanCache(ConfigConstant.FILE_AVAILABLE_DAYS);
+
+        ZImage.ready().want("http://images0.cnblogs.com/blog2015/417688/201508/221448556443356.jpg").save();
     }
 
     @Override

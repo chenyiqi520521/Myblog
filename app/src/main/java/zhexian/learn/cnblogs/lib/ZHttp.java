@@ -70,18 +70,25 @@ public class ZHttp {
      * @return
      */
     public static Bitmap getBitmap(String url, int width, int height) {
-        Bitmap bitmap = null;
+        byte[] bytes = getByte(url);
 
+        if (bytes == null || bytes.length == 0)
+            return null;
+
+        return Utils.getScaledBitMap(bytes, width, height);
+    }
+
+    public static byte[] getByte(String url) {
         try {
             Response response = execute(url);
 
             if (null == response)
                 return null;
 
-            bitmap = Utils.getScaledBitMap(response.body().bytes(), width, height);
+            return response.body().bytes();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return bitmap;
+        return null;
     }
 }

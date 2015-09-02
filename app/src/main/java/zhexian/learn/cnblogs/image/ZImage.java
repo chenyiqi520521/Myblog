@@ -93,38 +93,6 @@ public class ZImage {
         imageView.setImageBitmap(placeHolderBitmap);
     }
 
-    /**
-     * 从本地获取BitMap
-     *
-     * @param url
-     * @return
-     */
-
-    public Bitmap getLocalBitMap(String url) {
-        if (url.isEmpty())
-            return placeHolderBitmap;
-
-        Bitmap bitmap = getFromMemoryCache(url);
-
-        if (bitmap != null)
-            return bitmap;
-
-        bitmap = DBHelper.cache().getBitmap(url);
-        return bitmap == null ? placeHolderBitmap : bitmap;
-    }
-
-
-    /**
-     * 从本地删除图片
-     *
-     * @param httpUrl
-     */
-    public void deleteFromLocal(String httpUrl) {
-        mMemoryCache.remove(httpUrl);
-        DBHelper.cache().delete(httpUrl);
-
-    }
-
     Bitmap getFromMemoryCache(String url) {
         return mMemoryCache.get(url);
     }

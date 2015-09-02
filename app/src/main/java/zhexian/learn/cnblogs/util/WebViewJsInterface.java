@@ -2,12 +2,10 @@ package zhexian.learn.cnblogs.util;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.webkit.JavascriptInterface;
 
-import zhexian.learn.cnblogs.base.BaseApplication;
 import zhexian.learn.cnblogs.lib.ZHttp;
 
 
@@ -34,12 +32,10 @@ public class WebViewJsInterface {
             if (DBHelper.cache().exist(strings[0]))
                 return strings[0];
 
-            BaseApplication app = (BaseApplication) mActivity.getApplication();
-            Bitmap bitmap = ZHttp.getBitmap(strings[0], app.getScreenWidth(), app.getScreenHeight());
+            byte[] bytes = ZHttp.getByte(strings[0]);
+            if (bytes != null && bytes.length > 0)
+                DBHelper.cache().save(strings[0], bytes);
 
-            if (bitmap != null && bitmap.getByteCount() > 0) {
-                DBHelper.cache().save(strings[0], bitmap);
-            }
             return strings[0];
         }
 

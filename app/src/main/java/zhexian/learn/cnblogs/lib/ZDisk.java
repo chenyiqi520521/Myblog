@@ -124,45 +124,6 @@ public class ZDisk {
     }
 
     /**
-     * 写入Bitmap
-     *
-     * @param url
-     * @param bitmap
-     * @return
-     */
-    public boolean save(String url, Bitmap bitmap) {
-        if (bitmap == null || bitmap.getByteCount() == 0)
-            return true;
-
-        url = trans2Local(url);
-        File file = new File(url);
-
-        if (file.exists())
-            return true;
-
-        ZIO.createNewFile(file);
-        FileOutputStream fos = null;
-
-        try {
-
-            fos = new FileOutputStream(file);
-            Bitmap.CompressFormat format = url.toLowerCase().indexOf("png") > 0 ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG;
-            bitmap.compress(format, 75, fos);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("存储出错", e.getMessage());
-        } finally {
-            try {
-                fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    /**
      * 写入对象
      *
      * @param url
@@ -237,21 +198,6 @@ public class ZDisk {
             }
         }
         return false;
-    }
-
-    /**
-     * 获取本地图片
-     *
-     * @param url 路径
-     * @return
-     */
-    public Bitmap getBitmap(String url) {
-        url = trans2Local(url);
-
-        if (!new File(url).exists())
-            return null;
-
-        return BitmapFactory.decodeFile(url);
     }
 
     public String getString(String url) {

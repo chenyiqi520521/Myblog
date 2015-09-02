@@ -1,7 +1,5 @@
 package zhexian.learn.cnblogs.image;
 
-import android.graphics.Bitmap;
-
 import zhexian.learn.cnblogs.base.BaseApplication;
 import zhexian.learn.cnblogs.lib.ZHttp;
 import zhexian.learn.cnblogs.util.DBHelper;
@@ -25,12 +23,11 @@ public class SaveImageTask extends BaseImageAsyncTask {
 
     @Override
     public void run() {
-
         if (baseApp.isNetworkWifi()) {
-            Bitmap bitmap = ZHttp.getBitmap(url, width, height);
+            byte[] bytes = ZHttp.getByte(url);
 
-            if (bitmap != null && bitmap.getByteCount() > 0) {
-                DBHelper.cache().save(url, bitmap);
+            if (bytes != null && bytes.length > 0) {
+                DBHelper.cache().save(url, bytes);
             }
         }
         ImageTaskManager.getInstance().Done(getTaskId());
