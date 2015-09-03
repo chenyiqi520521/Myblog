@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.DisplayMetrics;
+import android.util.SparseArray;
 import android.view.View;
 
 import zhexian.learn.cnblogs.R;
@@ -20,9 +21,14 @@ import zhexian.learn.cnblogs.util.HtmlHelper;
 
 
 public class MainActivity extends BaseActivity implements INavigatorCallback {
+    private static final int STATE_NEWS = 1;
+    private static final int STATE_BLOG = 2;
     private DrawerLayout mDrawerLayout;
     private View mNavigatorView;
     private boolean mIsNightMode = false;
+    private int currentState = -1;
+
+    private SparseArray<Fragment> fragmentArray = new SparseArray<>(2);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +57,6 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         HtmlHelper.init(getApp());
         getApp().autoCleanCache(ConfigConstant.FILE_AVAILABLE_DAYS);
 
-        ZImage.ready().want("http://images0.cnblogs.com/blog2015/417688/201508/221448556443356.jpg").save();
     }
 
     @Override
@@ -75,12 +80,27 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
 
     @Override
     public void OnClickNews() {
-        ReplaceFragment(NewsListFragment.newInstance());
+
+        if (currentState == STATE_NEWS)
+            return;
+
+        currentState = STATE_NEWS;
+        if (fragmentArray.get(STATE_NEWS) == null)
+            fragmentArray.put(STATE_NEWS, NewsListFragment.newInstance());
+
+        ReplaceFragment(fragmentArray.get(STATE_NEWS));
     }
 
     @Override
     public void OnClickBlog() {
-        ReplaceFragment(BlogListFragment.newInstance());
+        if (currentState == STATE_BLOG)
+            return;
+
+        currentState = STATE_BLOG;
+        if (fragmentArray.get(STATE_BLOG) == null)
+            fragmentArray.put(STATE_BLOG, BlogListFragment.newInstance());
+
+        ReplaceFragment(fragmentArray.get(STATE_BLOG));
     }
 
     public void ReplaceFragment(Fragment fragment) {
