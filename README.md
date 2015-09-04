@@ -1,6 +1,6 @@
 ### **知乎日报风格的博客园**  
 开发的初衷是为了**赏心悦目**的阅读体验   
-[下载地址](http://git.oschina.net/yso/CNBlogs/attach_files/download?i=15549&u=http%3A%2F%2Ffiles.git.oschina.net%2Fgroup1%2FM00%2F00%2F9C%2FfMqNk1Xmw9OAbVRZABfllKPAApI337.apk%3Ftoken%3Dce93030bb2483f6dbda390858629ed0c%26ts%3D1441186894)
+[下载地址](http://git.oschina.net/yso/CNBlogs/attach_files/download?i=15566&u=http%3A%2F%2Ffiles.git.oschina.net%2Fgroup1%2FM00%2F00%2F9D%2FfMqNk1XoBpOALFYJABepf-42zZk734.apk%3Ftoken%3D089b98334e6fe9526ad4ae6b2924efbf%26ts%3D1441269365)
  
 **1. 赏心**  
 精心设计的夜间模式，不单单是改变配色，更进一步改变屏幕色温，白底的图片因此变得柔和。  
@@ -12,8 +12,8 @@
 
 通过本app，你可以学习到  
 1. 如何实现一个通用的图片、存储功能模块  
-2. 何基于第三方实现一个下拉刷新，上拉加载更多容器  
-3. 其余细节不一一列举  
+2. 如何基于第三方实现一个下拉刷新，上拉加载更多的容器  
+3. 其余细节自行体验，不一一列举  
 
 ![输入图片说明](http://git.oschina.net/uploads/images/2015/0828/134016_060bd3be_331643.png "在这里输入图片标题")
 ![输入图片说明](http://git.oschina.net/uploads/images/2015/0828/134030_52e4c62a_331643.png "在这里输入图片标题")
