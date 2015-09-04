@@ -32,7 +32,7 @@ public class WebViewJsInterface {
             if (DBHelper.cache().exist(strings[0]))
                 return strings[0];
 
-            byte[] bytes = ZHttp.getByte(strings[0]);
+            byte[] bytes = ZHttp.getBytes(strings[0]);
             if (bytes != null && bytes.length > 0)
                 DBHelper.cache().save(strings[0], bytes);
 

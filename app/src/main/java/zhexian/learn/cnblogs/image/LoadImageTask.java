@@ -45,7 +45,7 @@ public class LoadImageTask extends BaseImageAsyncTask {
         Bitmap bitmap = DBHelper.cache().getBitmap(url, width, height);
 
         if (bitmap == null && baseApp.canRequestImage()) {
-            byte[] bytes = ZHttp.getByte(url);
+            byte[] bytes = ZHttp.getBytes(url);
 
             if (bytes != null && bytes.length > 0) {
                 bitmap = Utils.getScaledBitMap(bytes, width, height);

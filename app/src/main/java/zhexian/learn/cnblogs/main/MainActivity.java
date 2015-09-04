@@ -56,7 +56,6 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         DBHelper.init(getApp().getFileRootDir());
         HtmlHelper.init(getApp());
         getApp().autoCleanCache(ConfigConstant.FILE_AVAILABLE_DAYS);
-
     }
 
     @Override

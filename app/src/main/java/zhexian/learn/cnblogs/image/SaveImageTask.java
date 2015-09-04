@@ -24,7 +24,7 @@ public class SaveImageTask extends BaseImageAsyncTask {
     @Override
     public void run() {
         if (baseApp.isNetworkWifi()) {
-            byte[] bytes = ZHttp.getByte(url);
+            byte[] bytes = ZHttp.getBytes(url);
 
             if (bytes != null && bytes.length > 0) {
                 DBHelper.cache().save(url, bytes);

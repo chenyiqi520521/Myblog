@@ -1,7 +1,5 @@
 package zhexian.learn.cnblogs.lib;
 
-import android.graphics.Bitmap;
-
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Request.Builder;
@@ -9,8 +7,6 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
-import zhexian.learn.cnblogs.util.Utils;
 
 /**
  * Created by Administrator on 2015/8/28.
@@ -63,22 +59,7 @@ public class ZHttp {
         return null;
     }
 
-    /**
-     * 获取网落图片资源
-     *
-     * @param url
-     * @return
-     */
-    public static Bitmap getBitmap(String url, int width, int height) {
-        byte[] bytes = getByte(url);
-
-        if (bytes == null || bytes.length == 0)
-            return null;
-
-        return Utils.getScaledBitMap(bytes, width, height);
-    }
-
-    public static byte[] getByte(String url) {
+    public static byte[] getBytes(String url) {
         try {
             Response response = execute(url);
 
