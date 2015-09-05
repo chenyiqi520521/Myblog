@@ -30,8 +30,8 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TabActionBarView actionBarView = new TabActionBarView((BaseActivity) getActivity(), this);
-        actionBarView.bindTab("精选", "最新");
+        TabActionBarView actionBarView = new TabActionBarView((BaseActivity) getActivity());
+        actionBarView.bindTab(this, "精选", "最新");
     }
 
     @Override

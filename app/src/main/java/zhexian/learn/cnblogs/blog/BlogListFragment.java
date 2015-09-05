@@ -33,8 +33,8 @@ public class BlogListFragment extends BaseSwipeListFragment<BlogEntity> implemen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TabActionBarView actionBarView = new TabActionBarView((BaseActivity) getActivity(), this);
-        actionBarView.bindTab("推荐", "热门", "首页");
+        TabActionBarView actionBarView = new TabActionBarView((BaseActivity) getActivity());
+        actionBarView.bindTab(this, "推荐", "热门", "首页");
     }
 
     @Override

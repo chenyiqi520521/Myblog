@@ -32,10 +32,12 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
 
     private RecyclerView.Adapter<RecyclerView.ViewHolder> mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
-    private List<DataEntity> mDataList = new ArrayList<>();
+    private List<DataEntity> mDataList;
     private boolean mIsRequestingData = false;
     private boolean mIsLoadAllData = false;
+    private boolean mIsCancelTask = false;
     private DataEntity mLoadMorePlaceHolder;
+    private AsyncLoadDataTask mLoadTask;
 
     /**
      * 绑定列表的数据源
@@ -68,6 +70,10 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         mBaseActivity = (BaseActivity) getActivity();
         mBaseApp = mBaseActivity.getApp();
         mLoadMorePlaceHolder = getLoadMorePlaceHolder();
+        mIsRequestingData = false;
+        mIsLoadAllData = false;
+        mIsCancelTask = false;
+        mDataList = new ArrayList<>();
         return inflater.inflate(R.layout.base_swipe_list, null);
     }
 
@@ -97,15 +103,26 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
             return;
 
         mPullToRefresh.changeStatus(PullToRefreshView.STATUS_IDLE);
-
-        new AsyncLoadDataTask(true).execute();
+        startLoadTask(true);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mLoadMorePlaceHolder = null;
+        mLoadTask = null;
+        mDataList = null;
         mBaseActivity = null;
         mBaseApp = null;
+    }
+
+    public void cancelLoadingTask() {
+        if (mLoadTask != null && !mLoadTask.isCancelled()) {
+            mLoadTask.cancel(true);
+            mPullToRefresh.changeStatus(PullToRefreshView.STATUS_IDLE);
+        }
+
+        mIsCancelTask = true;
     }
 
     private int getNextPageIndex() {
@@ -126,6 +143,14 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
 
         mDataList.remove(mLoadMorePlaceHolder);
         mAdapter.notifyDataSetChanged();
+    }
+
+    private void startLoadTask(boolean isRefresh) {
+        if (mLoadTask != null && !mLoadTask.isCancelled())
+            mLoadTask.cancel(true);
+
+        mLoadTask = new AsyncLoadDataTask(isRefresh);
+        mLoadTask.execute();
     }
 
     private class ZOnScrollListener extends RecyclerView.OnScrollListener {
@@ -152,7 +177,8 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
                     if (dy > 0)
                         Utils.toast(mBaseApp, getResources().getString(R.string.alert_load_all_load));
                 } else
-                    new AsyncLoadDataTask(false).execute();
+                    startLoadTask(false);
+
             }
         }
     }
@@ -183,7 +209,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         @Override
         protected List<DataEntity> doInBackground(Void... params) {
             //activity重建时，提前返回
-            if (getActivity() == null) {
+            if (getActivity() == null || mIsCancelTask) {
                 cancel(true);
                 return null;
             }
@@ -195,12 +221,11 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         @Override
         protected void onPostExecute(List<DataEntity> baseBusinessListEntity) {
             //activity重建时，提前返回
-            if (getActivity() == null) {
+            if (getActivity() == null || mIsCancelTask) {
                 cancel(true);
                 return;
             }
             mIsRequestingData = false;
-
             if (baseBusinessListEntity == null) {
                 Utils.toast(mBaseApp, getResources().getString(R.string.alert_error));
 

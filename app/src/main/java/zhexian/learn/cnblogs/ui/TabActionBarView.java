@@ -30,9 +30,9 @@ public class TabActionBarView implements View.OnClickListener {
     private int mTextNormalColor;
     private ITabActionCallback mCallback;
 
-    public TabActionBarView(BaseActivity activity, ITabActionCallback callback) {
+    public TabActionBarView(BaseActivity activity) {
         ActionBar actionBar = activity.getSupportActionBar();
-        mCallback = callback;
+
         mTextNormalColor = activity.getResources().getColor(R.color.white);
         mTextSelectedColor = activity.getResources().getColor(R.color.green_dark);
 
@@ -49,11 +49,12 @@ public class TabActionBarView implements View.OnClickListener {
         mRightTextView = (TextView) tabView.findViewById(R.id.action_tab_right_text);
     }
 
-    public void bindTab(String leftText, String rightText) {
-        bindTab(leftText, null, rightText);
+    public void bindTab(ITabActionCallback callback, String leftText, String rightText) {
+        bindTab(callback, leftText, null, rightText);
     }
 
-    public void bindTab(String leftText, String middleText, String rightText) {
+    public void bindTab(ITabActionCallback callback, String leftText, String middleText, String rightText) {
+        mCallback = callback;
         mLeftTextView.setText(leftText);
         mLeftView.setOnClickListener(this);
 
@@ -106,7 +107,7 @@ public class TabActionBarView implements View.OnClickListener {
         }
     }
 
-    void leftClick() {
+    public void leftClick() {
         if (mSelectTabIndex == LEFT_TAB_INDEX)
             return;
 
@@ -118,7 +119,7 @@ public class TabActionBarView implements View.OnClickListener {
         mSelectTabIndex = LEFT_TAB_INDEX;
     }
 
-    void middleClick() {
+    public void middleClick() {
         if (mSelectTabIndex == MIDDLE_TAB_INDEX)
             return;
 
@@ -130,7 +131,7 @@ public class TabActionBarView implements View.OnClickListener {
         mSelectTabIndex = MIDDLE_TAB_INDEX;
     }
 
-    void rightClick() {
+    public void rightClick() {
         if (mSelectTabIndex == RIGHT_TAB_INDEX)
             return;
 

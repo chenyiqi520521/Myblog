@@ -3,6 +3,18 @@ package zhexian.learn.cnblogs.util;
 
 public class ConfigConstant {
 
+    public static final int MESSAGE_WHAT_NORMAL = -1;
+
+    /**
+     * 下拉刷新
+     */
+    public static final int SWIPE_LOAD_DATA_REFRESH = 1;
+
+    /**
+     * 上拉加载更多
+     */
+    public static final int SWIPE_LOAD_DATA_LOAD_MORE = 1;
+
     public static final int BUFFER_SIZE = 4096;
     public static final int ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER = -1;
 
@@ -12,6 +24,7 @@ public class ConfigConstant {
     public static final int FILE_AVAILABLE_DAYS = 30;
 
     public static final int ENTITY_TYPE_NORMAL_ITEM = 0;
+
 
     public static final double HTML_FONT_SIZE_NORMAL = 1.2;
     public static final double HTML_FONT_SIZE_BIG = 1.4;

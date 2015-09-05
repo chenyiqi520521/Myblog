@@ -2,7 +2,6 @@ package zhexian.learn.cnblogs.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.DisplayMetrics;
@@ -11,6 +10,7 @@ import android.view.View;
 
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseActivity;
+import zhexian.learn.cnblogs.base.BaseSwipeListFragment;
 import zhexian.learn.cnblogs.blog.BlogListFragment;
 import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZDisplay;
@@ -27,21 +27,25 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
     private View mNavigatorView;
     private boolean mIsNightMode = false;
     private int currentState = -1;
-
-    private SparseArray<Fragment> fragmentArray = new SparseArray<>(2);
+    private Fragment currentFragment;
+    private SparseArray<Fragment> fragmentArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mIsNightMode = getApp().isNightMode();
+        fragmentArray = new SparseArray<>(2);
 
+        addFragment(STATE_BLOG);
+        addFragment(STATE_NEWS);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawerLayout);
         mDrawerLayout.setDrawerShadow(R.mipmap.drawer_shadow, GravityCompat.START);
         mNavigatorView = findViewById(R.id.main_navigator);
         NavigatorFragment navigatorFragment = (NavigatorFragment) getSupportFragmentManager().findFragmentById(R.id.main_navigator);
         navigatorFragment.InitDrawToggle(mDrawerLayout);
+
 
         if (getApp().getScreenWidth() == 0) {
             DisplayMetrics dm = new DisplayMetrics();
@@ -56,6 +60,24 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         DBHelper.init(getApp().getFileRootDir());
         HtmlHelper.init(getApp());
         getApp().autoCleanCache(ConfigConstant.FILE_AVAILABLE_DAYS);
+    }
+
+    private void addFragment(int state) {
+        if (fragmentArray.get(state) == null) {
+            Fragment fragment;
+
+            switch (state) {
+                case STATE_NEWS:
+                    fragment = NewsListFragment.newInstance();
+                    break;
+                case STATE_BLOG:
+                    fragment = BlogListFragment.newInstance();
+                    break;
+                default:
+                    throw new IllegalArgumentException("指定fragment的类型没用命中，出错位置MainActivity=>addFragment()");
+            }
+            fragmentArray.put(state, fragment);
+        }
     }
 
     @Override
@@ -79,15 +101,12 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
 
     @Override
     public void OnClickNews() {
-
         if (currentState == STATE_NEWS)
             return;
 
         currentState = STATE_NEWS;
-        if (fragmentArray.get(STATE_NEWS) == null)
-            fragmentArray.put(STATE_NEWS, NewsListFragment.newInstance());
-
-        ReplaceFragment(fragmentArray.get(STATE_NEWS));
+        Fragment fragment = fragmentArray.get(STATE_NEWS);
+        ReplaceFragment(fragment);
     }
 
     @Override
@@ -96,17 +115,16 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
             return;
 
         currentState = STATE_BLOG;
-        if (fragmentArray.get(STATE_BLOG) == null)
-            fragmentArray.put(STATE_BLOG, BlogListFragment.newInstance());
-
-        ReplaceFragment(fragmentArray.get(STATE_BLOG));
+        Fragment fragment = fragmentArray.get(STATE_BLOG);
+        ReplaceFragment(fragment);
     }
 
     public void ReplaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.main_content, fragment)
-                .commit();
+        if (currentFragment != null && currentFragment instanceof BaseSwipeListFragment)
+            ((BaseSwipeListFragment) currentFragment).cancelLoadingTask();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
+        currentFragment = fragment;
     }
 }
 

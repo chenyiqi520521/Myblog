@@ -102,6 +102,10 @@ class BlogDal {
                 blogList = DBHelper.cache().getList(key, BlogEntity.class);
         } else {
             String xmlStr = ZHttp.getString(String.format("%s100", requestUrl));
+
+            if (TextUtils.isEmpty(xmlStr))
+                return null;
+
             blogList = BlogEntity.ParseXML(xmlStr);
             DBHelper.cache().save(key, blogList, BlogEntity.class);
         }
