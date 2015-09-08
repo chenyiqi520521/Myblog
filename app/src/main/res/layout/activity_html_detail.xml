@@ -1,9 +1,10 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <zhexian.learn.cnblogs.ui.ScrollWebView
+    <FrameLayout
         android:id="@+id/html_detail_web_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></zhexian.learn.cnblogs.ui.ScrollWebView>
+        android:layout_height="match_parent">
+    </FrameLayout>
 
     <ProgressBar
         android:id="@+id/news_detail_progress"

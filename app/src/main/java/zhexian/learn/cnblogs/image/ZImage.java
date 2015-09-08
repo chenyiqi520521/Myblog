@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.util.LruCache;
 import android.widget.ImageView;
 
+import java.lang.ref.WeakReference;
+
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseApplication;
 import zhexian.learn.cnblogs.util.DBHelper;
@@ -20,7 +22,7 @@ import zhexian.learn.cnblogs.util.DBHelper;
 public class ZImage {
 
     private static ZImage mZImage;
-    private LruCache<String, Bitmap> mMemoryCache;
+    private LruCache<String, WeakReference<Bitmap>> mMemoryCache;
     private BaseApplication mBaseApp;
     private Bitmap placeHolderBitmap;
 
@@ -28,7 +30,7 @@ public class ZImage {
         mBaseApp = baseApp;
         placeHolderBitmap = BitmapFactory.decodeResource(mBaseApp.getResources(), R.mipmap.image_place_holder);
 
-        mMemoryCache = new LruCache<String, Bitmap>(mBaseApp.getImageCachePoolSize()) {
+        mMemoryCache = new LruCache<String, WeakReference<Bitmap>>(mBaseApp.getImageCachePoolSize()) {
             protected int sizeOf(String key, Bitmap bitmap) {
                 return bitmap.getByteCount();
             }
@@ -94,24 +96,35 @@ public class ZImage {
     }
 
     Bitmap getFromMemoryCache(String url) {
-        return mMemoryCache.get(url);
+
+        if (mMemoryCache.get(url) == null)
+            return null;
+
+        Bitmap bitmap = mMemoryCache.get(url).get();
+
+        if (bitmap == null) {
+            mMemoryCache.remove(url);
+            return null;
+        }
+        return bitmap;
     }
 
     void putToMemoryCache(String url, Bitmap bitmap) {
         if (bitmap != null && bitmap.getByteCount() > 0)
-            mMemoryCache.put(url, bitmap);
+            mMemoryCache.put(url, new WeakReference<>(bitmap));
     }
 
 
     /**
      * 加载图片，经过内存、磁盘、两层缓存如果还没找到，则走http访问网络资源
-     * @param url 地址
-     * @param imageView 图片控件
-     * @param width 图片宽度
-     * @param height 图片高度
-     * @param cacheType 缓存类型
-     * @param workType 队列优先级
-     * @param placeHolder 占位图片
+     *
+     * @param url          地址
+     * @param imageView    图片控件
+     * @param width        图片宽度
+     * @param height       图片高度
+     * @param cacheType    缓存类型
+     * @param workType     队列优先级
+     * @param placeHolder  占位图片
      * @param canQueryHttp 是否可以走流量获取图片
      */
     private void load(String url, ImageView imageView, int width, int height, CacheType cacheType, ImageTaskManager.WorkType workType, int placeHolder, boolean canQueryHttp) {

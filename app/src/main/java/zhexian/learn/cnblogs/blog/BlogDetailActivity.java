@@ -1,33 +1,25 @@
 package zhexian.learn.cnblogs.blog;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebSettings;
 import android.widget.TextView;
 
 import zhexian.learn.cnblogs.R;
-import zhexian.learn.cnblogs.base.BaseActivity;
+import zhexian.learn.cnblogs.base.BaseSingleWebView;
 import zhexian.learn.cnblogs.comment.CommentActivity;
-import zhexian.learn.cnblogs.ui.ScrollWebView;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.HtmlHelper;
 import zhexian.learn.cnblogs.util.Utils;
-import zhexian.learn.cnblogs.util.WebViewJsInterface;
 
-public class BlogDetailActivity extends BaseActivity {
+public class BlogDetailActivity extends BaseSingleWebView {
     private static final String PARAM_BLOG_ENTITY = "PARAM_BLOG_ENTITY";
-    private ScrollWebView mWebView;
     private BlogEntity mEntity;
 
-    private View mProgress;
-    private int mPreviousYPos;
 
     public static void actionStart(Context context, BlogEntity entity) {
         Intent intent = new Intent(context, BlogDetailActivity.class);
@@ -37,33 +29,12 @@ public class BlogDetailActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    @SuppressLint("AddJavascriptInterface")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_html_detail);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
         mEntity = (BlogEntity) getIntent().getSerializableExtra(PARAM_BLOG_ENTITY);
-
-        if (mEntity == null)
-            return;
-
-        mProgress = findViewById(R.id.news_detail_progress);
-        mWebView = (ScrollWebView) findViewById(R.id.html_detail_web_view);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.addJavascriptInterface(new WebViewJsInterface(this), "Android");
-        mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
-        mWebView.setOnScrollListener(new ScrollWebView.OnScrollListener() {
-            @Override
-            public void onScroll(int x, int y) {
-                switchActionBar(y - mPreviousYPos);
-                mPreviousYPos = y;
-            }
-        });
         new BlogDetailTask().execute(mEntity.getId());
-
     }
 
     @Override
@@ -98,9 +69,6 @@ public class BlogDetailActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id) {
@@ -116,7 +84,7 @@ public class BlogDetailActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            mProgress.setVisibility(View.VISIBLE);
+            renderProgress(true);
         }
 
         @Override
@@ -126,10 +94,8 @@ public class BlogDetailActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            mProgress.setVisibility(View.GONE);
-            super.onPostExecute(s);
+            renderProgress(false);
             mEntity.setContent(s);
-
             HtmlHelper.getInstance().render(mWebView, mEntity);
         }
     }
