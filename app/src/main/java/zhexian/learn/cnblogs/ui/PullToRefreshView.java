@@ -104,7 +104,7 @@ public class PullToRefreshView extends ViewGroup {
         super(context, attrs);
         mDecelerateInterpolator = new DecelerateInterpolator(DECELERATE_INTERPOLATION_FACTOR);
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        mTotalDragDistance = ZDisplay.Dp2Px(context, DRAG_MAX_DISTANCE);
+        mTotalDragDistance = ZDisplay.getInstance().Dp2Px(DRAG_MAX_DISTANCE);
         mRefreshView = new ImageView(context);
         mBaseRefreshView = new NormalRefreshView(getContext(), this);
         mRefreshView.setImageDrawable(mBaseRefreshView);

@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.webkit.JavascriptInterface;
 
+import java.lang.ref.WeakReference;
+
 import zhexian.learn.cnblogs.lib.ZHttp;
 
 
@@ -14,10 +16,10 @@ import zhexian.learn.cnblogs.lib.ZHttp;
  */
 public class WebViewJsInterface {
 
-    Activity mActivity;
+    WeakReference<Activity> mActivity;
 
     public WebViewJsInterface(Activity activity) {
-        mActivity = activity;
+        mActivity = new WeakReference<>(activity);
     }
 
     @JavascriptInterface
@@ -41,12 +43,14 @@ public class WebViewJsInterface {
 
         @Override
         protected void onPostExecute(String s) {
-            if (mActivity.isFinishing())
+            Activity activity = mActivity.get();
+
+            if (activity == null || activity.isFinishing())
                 return;
 
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.parse("file://" + DBHelper.cache().trans2Local(s)), "image/*");
-            mActivity.startActivity(intent);
+            activity.startActivity(intent);
         }
     }
 }

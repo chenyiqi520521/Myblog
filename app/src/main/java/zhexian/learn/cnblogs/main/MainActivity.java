@@ -18,6 +18,7 @@ import zhexian.learn.cnblogs.news.NewsListFragment;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.DBHelper;
 import zhexian.learn.cnblogs.util.HtmlHelper;
+import zhexian.learn.cnblogs.util.SQLiteHelper;
 
 
 public class MainActivity extends BaseActivity implements INavigatorCallback {
@@ -46,19 +47,22 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         NavigatorFragment navigatorFragment = (NavigatorFragment) getSupportFragmentManager().findFragmentById(R.id.main_navigator);
         navigatorFragment.InitDrawToggle(mDrawerLayout);
 
+        ZDisplay.init(getApp());
 
         if (getApp().getScreenWidth() == 0) {
             DisplayMetrics dm = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(dm);
             getApp().setScreenWidth(dm.widthPixels);
             getApp().setScreenHeight(dm.heightPixels);
-            int screenWidth = ZDisplay.Px2Dp(getApp(), dm.widthPixels);
+            int screenWidth = ZDisplay.getInstance().Px2Dp(dm.widthPixels);
             getApp().setScreenWidthInDP(screenWidth);
         }
 
         ZImage.init(getApp());
         DBHelper.init(getApp().getFileRootDir());
+        SQLiteHelper.Init(getApp());
         HtmlHelper.init(getApp());
+
         getApp().autoCleanCache(ConfigConstant.FILE_AVAILABLE_DAYS);
     }
 

@@ -14,7 +14,9 @@ import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseActivity;
 import zhexian.learn.cnblogs.common.LoadingViewHolder;
 import zhexian.learn.cnblogs.image.ZImage;
+import zhexian.learn.cnblogs.lib.ZDisplay;
 import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.SQLiteHelper;
 
 
 public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -117,6 +119,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (newsIcon.getVisibility() != View.VISIBLE)
                 newsIcon.setVisibility(View.VISIBLE);
         }
+        boolean isExist = SQLiteHelper.getInstance().isReadNews(entity.getNewsID());
+        newsTitle.setTextColor(ZDisplay.getInstance().getFontColor(isExist));
         newsTitle.setText(Html.fromHtml(entity.getTitle()));
     }
 

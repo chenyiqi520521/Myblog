@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,6 +14,7 @@ import zhexian.learn.cnblogs.base.BaseSingleWebView;
 import zhexian.learn.cnblogs.comment.CommentActivity;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.HtmlHelper;
+import zhexian.learn.cnblogs.util.SQLiteHelper;
 import zhexian.learn.cnblogs.util.Utils;
 
 public class NewsDetailActivity extends BaseSingleWebView {
@@ -54,7 +54,6 @@ public class NewsDetailActivity extends BaseSingleWebView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_html_detail, menu);
         View likeItem = menu.findItem(R.id.action_detail_like).getActionView();
         ((TextView) likeItem.findViewById(R.id.action_item_like_text)).setText(String.valueOf(mLikeCount));
@@ -81,20 +80,6 @@ public class NewsDetailActivity extends BaseSingleWebView {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                this.finish();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
     private class NewsDetailTask extends AsyncTask<Long, Void, NewsDetailEntity> {
 
         @Override
@@ -115,6 +100,7 @@ public class NewsDetailActivity extends BaseSingleWebView {
                 return;
 
             HtmlHelper.getInstance().render(mWebView, newsDetailEntity);
+            SQLiteHelper.getInstance().addNewsHistory(newsDetailEntity.getId());
         }
     }
 }

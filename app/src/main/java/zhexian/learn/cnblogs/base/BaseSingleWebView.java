@@ -3,6 +3,7 @@ package zhexian.learn.cnblogs.base;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.widget.FrameLayout;
@@ -34,7 +35,6 @@ public class BaseSingleWebView extends BaseActivity {
         mWebView = new ScrollWebView(getApp());
         mWebViewContainer.addView(mWebView);
 
-
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new WebViewJsInterface(this), "Android");
         mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
@@ -49,6 +49,19 @@ public class BaseSingleWebView extends BaseActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case android.R.id.home:
+                this.finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mWebViewContainer.removeAllViews();
@@ -60,6 +73,5 @@ public class BaseSingleWebView extends BaseActivity {
             mProgress.setVisibility(View.VISIBLE);
         else
             mProgress.setVisibility(View.GONE);
-
     }
 }

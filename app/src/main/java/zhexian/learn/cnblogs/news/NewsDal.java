@@ -62,11 +62,14 @@ public class NewsDal {
 
         if (DBHelper.cache().exist(key)) {
             entity = DBHelper.cache().getObj(key, NewsDetailEntity.class);
+            entity.setId(newsID);
         }
 
         if (entity == null && baseApp.isNetworkAvailable()) {
             String xmlStr = ZHttp.getString(String.format("%s%d", newsDetailUrl, newsID));
             entity = NewsDetailEntity.ParseXML(xmlStr);
+            entity.setId(newsID);
+            DBHelper.cache().save(key, entity);
         }
         return entity;
     }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +13,7 @@ import zhexian.learn.cnblogs.base.BaseSingleWebView;
 import zhexian.learn.cnblogs.comment.CommentActivity;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.HtmlHelper;
+import zhexian.learn.cnblogs.util.SQLiteHelper;
 import zhexian.learn.cnblogs.util.Utils;
 
 public class BlogDetailActivity extends BaseSingleWebView {
@@ -67,19 +67,6 @@ public class BlogDetailActivity extends BaseSingleWebView {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                this.finish();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private class BlogDetailTask extends AsyncTask<Long, Void, String> {
 
         @Override
@@ -97,6 +84,7 @@ public class BlogDetailActivity extends BaseSingleWebView {
             renderProgress(false);
             mEntity.setContent(s);
             HtmlHelper.getInstance().render(mWebView, mEntity);
+            SQLiteHelper.getInstance().addBlogHistory(mEntity.getId());
         }
     }
 }

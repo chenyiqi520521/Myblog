@@ -14,6 +14,8 @@ import java.util.List;
 
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.image.ZImage;
+import zhexian.learn.cnblogs.lib.ZDisplay;
+import zhexian.learn.cnblogs.util.SQLiteHelper;
 
 /**
  * Created by 陈俊杰 on 2015/8/30.
@@ -49,9 +51,12 @@ public class BlogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         ZImage.ready().want(entity.getAuthorAvatar()).reSize(mAvatarSize, mAvatarSize).empty(R.mipmap.avatar_place_holder).into(blogHolder.imgUserAvatar);
 
-        if (!TextUtils.isEmpty(entity.getTitle()))
-            blogHolder.tvTitle.setText(Html.fromHtml(entity.getTitle()));
+        if (!TextUtils.isEmpty(entity.getTitle())) {
+            boolean isRead = SQLiteHelper.getInstance().isReadBlog(entity.getId());
+            blogHolder.tvTitle.setTextColor(ZDisplay.getInstance().getFontColor(isRead));
 
+            blogHolder.tvTitle.setText(Html.fromHtml(entity.getTitle()));
+        }
         blogHolder.tvDescription.setText(entity.getAuthorName());
         blogHolder.tvComment.setText(String.format("评 %d", entity.getCommentAmount()));
         blogHolder.tvLike.setText(String.format("赞 %d", entity.getRecommendAmount()));

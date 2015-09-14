@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,8 +150,98 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         if (mLoadTask != null && !mLoadTask.isCancelled())
             mLoadTask.cancel(true);
 
-        mLoadTask = new AsyncLoadDataTask(isRefresh);
+        mLoadTask = new AsyncLoadDataTask(isRefresh, BaseSwipeListFragment.this);
         mLoadTask.execute();
+    }
+
+    /**
+     * 异步载入请求列表的数据
+     * 第一个参数，true：刷新列表 false：追加数据
+     */
+    private static class AsyncLoadDataTask<T> extends AsyncTask<Object, Void, List<T>> {
+        boolean isRefresh = false;
+        int pageIndex = 1;
+        WeakReference<BaseSwipeListFragment> swipeFragment;
+
+        public AsyncLoadDataTask(boolean isRefresh, BaseSwipeListFragment baseSwipeListFragment) {
+            this.isRefresh = isRefresh;
+            swipeFragment = new WeakReference<>(baseSwipeListFragment);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            BaseSwipeListFragment fragment = swipeFragment.get();
+
+            if (fragment == null)
+                return;
+
+            fragment.mIsRequestingData = true;
+            fragment.mIsLoadAllData = false;
+
+            if (isRefresh)
+                fragment.mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESHING);
+            else
+                fragment.onPreLoadMore();
+        }
+
+        @Override
+        protected List<T> doInBackground(Object... params) {
+            BaseSwipeListFragment fragment = swipeFragment.get();
+
+            if (fragment == null)
+                return null;
+
+            //activity重建时，提前返回
+            if (fragment.getActivity() == null || fragment.mIsCancelTask) {
+                cancel(true);
+                return null;
+            }
+
+            pageIndex = isRefresh ? 1 : fragment.getNextPageIndex();
+            return fragment.loadData(pageIndex, fragment.getPageSize());
+        }
+
+        @Override
+        protected void onPostExecute(List<T> baseBusinessListEntity) {
+            BaseSwipeListFragment fragment = swipeFragment.get();
+
+            if (fragment == null)
+                return;
+
+            //activity重建时，提前返回
+            if (fragment.getActivity() == null || fragment.mIsCancelTask) {
+                cancel(true);
+                return;
+            }
+
+            fragment.mIsRequestingData = false;
+            if (baseBusinessListEntity == null) {
+                Utils.toast(fragment.mBaseApp, fragment.getResources().getString(R.string.alert_error));
+
+                if (isRefresh)
+                    fragment.mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_FAIL);
+                else
+                    fragment.onPostLoadMore();
+
+                return;
+            }
+
+            if (isRefresh) {
+                fragment.mLinearLayoutManager.scrollToPosition(0);
+                fragment.mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_SUCCESS);
+            } else
+                fragment.onPostLoadMore();
+
+            if (baseBusinessListEntity.size() < fragment.getPageSize()) {
+                fragment.mIsLoadAllData = true;
+            }
+
+            if (isRefresh)
+                fragment.mDataList.clear();
+
+            fragment.mDataList.addAll(baseBusinessListEntity);
+            fragment.mAdapter.notifyDataSetChanged();
+        }
     }
 
     private class ZOnScrollListener extends RecyclerView.OnScrollListener {
@@ -180,78 +271,6 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
                     startLoadTask(false);
 
             }
-        }
-    }
-
-    /**
-     * 异步载入请求列表的数据
-     * 第一个参数，true：刷新列表 false：追加数据
-     */
-    private class AsyncLoadDataTask extends AsyncTask<Void, Void, List<DataEntity>> {
-        boolean isRefresh = false;
-        int pageIndex = 1;
-
-        public AsyncLoadDataTask(boolean isRefresh) {
-            this.isRefresh = isRefresh;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            mIsRequestingData = true;
-            mIsLoadAllData = false;
-
-            if (isRefresh)
-                mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESHING);
-            else
-                onPreLoadMore();
-        }
-
-        @Override
-        protected List<DataEntity> doInBackground(Void... params) {
-            //activity重建时，提前返回
-            if (getActivity() == null || mIsCancelTask) {
-                cancel(true);
-                return null;
-            }
-
-            pageIndex = isRefresh ? 1 : getNextPageIndex();
-            return loadData(pageIndex, getPageSize());
-        }
-
-        @Override
-        protected void onPostExecute(List<DataEntity> baseBusinessListEntity) {
-            //activity重建时，提前返回
-            if (getActivity() == null || mIsCancelTask) {
-                cancel(true);
-                return;
-            }
-            mIsRequestingData = false;
-            if (baseBusinessListEntity == null) {
-                Utils.toast(mBaseApp, getResources().getString(R.string.alert_error));
-
-                if (isRefresh)
-                    mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_FAIL);
-                else
-                    onPostLoadMore();
-
-                return;
-            }
-
-            if (isRefresh) {
-                mLinearLayoutManager.scrollToPosition(0);
-                mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_SUCCESS);
-            } else
-                onPostLoadMore();
-
-            if (baseBusinessListEntity.size() < getPageSize()) {
-                mIsLoadAllData = true;
-            }
-
-            if (isRefresh)
-                mDataList.clear();
-
-            mDataList.addAll(baseBusinessListEntity);
-            mAdapter.notifyDataSetChanged();
         }
     }
 }
