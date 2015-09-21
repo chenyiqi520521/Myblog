@@ -36,8 +36,10 @@ public class BaseSingleWebView extends BaseActivity {
         mWebViewContainer.addView(mWebView);
 
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.addJavascriptInterface(new WebViewJsInterface(this), "Android");
         mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+
+        mWebView.addJavascriptInterface(new WebViewJsInterface(this), "Android");
+
         mWebView.setOnScrollListener(new ScrollWebView.OnScrollListener() {
             @Override
             public void onScroll(int x, int y) {
@@ -63,9 +65,9 @@ public class BaseSingleWebView extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mWebViewContainer.removeAllViews();
         mWebView.destroy();
+        super.onDestroy();
     }
 
     protected void renderProgress(boolean isShow) {

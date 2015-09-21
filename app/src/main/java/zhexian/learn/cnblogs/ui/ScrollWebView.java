@@ -4,11 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 
+import java.lang.ref.WeakReference;
+
 /**
  * 可以滚动的webView
  */
 public class ScrollWebView extends WebView {
-    private OnScrollListener mOnScrollListener;
+    private WeakReference<OnScrollListener> mOnScrollListener;
 
     public ScrollWebView(final Context context) {
         super(context);
@@ -25,11 +27,14 @@ public class ScrollWebView extends WebView {
     @Override
     protected void onScrollChanged(final int l, final int t, final int oldl, final int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-        if (mOnScrollListener != null) mOnScrollListener.onScroll(l, t);
+        OnScrollListener listener = mOnScrollListener.get();
+
+        if (listener != null)
+            listener.onScroll(l, t);
     }
 
     public void setOnScrollListener(final OnScrollListener onScrollListener) {
-        mOnScrollListener = onScrollListener;
+        mOnScrollListener = new WeakReference<>(onScrollListener);
     }
 
     public interface OnScrollListener {
