@@ -2,6 +2,7 @@ package zhexian.learn.cnblogs.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.webkit.WebView;
 
 import java.lang.ref.WeakReference;
@@ -29,8 +30,11 @@ public class ScrollWebView extends WebView {
         super.onScrollChanged(l, t, oldl, oldt);
         OnScrollListener listener = mOnScrollListener.get();
 
-        if (listener != null)
-            listener.onScroll(l, t);
+        if (listener == null) {
+            Log.d("被释放", mOnScrollListener.toString());
+            return;
+        }
+        listener.onScroll(l, t);
     }
 
     public void setOnScrollListener(final OnScrollListener onScrollListener) {

@@ -63,7 +63,7 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         SQLiteHelper.Init(getApp());
         HtmlHelper.init(getApp());
 
-        getApp().autoCleanCache(ConfigConstant.FILE_AVAILABLE_DAYS);
+        getApp().autoCleanCache(ConfigConstant.CACHE_AVAILABLE_DAYS);
     }
 
     private void addFragment(int state) {

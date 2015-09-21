@@ -24,12 +24,12 @@ public class NewsDetailActivity extends BaseSingleWebView {
     private static final String PARAM_NEWS_LIKE_COUNT = "PARAM_NEWS_LIKE_COUNT";
     private static final String PARAM_NEWS_COMMENT_COUNT = "PARAM_NEWS_COMMENT_COUNT";
 
-    private long mDataID;
+    private int mDataID;
     private int mLikeCount;
     private int mCommentCount;
     private String mTitle;
 
-    public static void actionStart(Context context, long newsID, int recommendCount, int commentCount, String title) {
+    public static void actionStart(Context context, int newsID, int recommendCount, int commentCount, String title) {
         Intent intent = new Intent(context, NewsDetailActivity.class);
         intent.putExtra(PARAM_NEWS_ID, newsID);
         intent.putExtra(PARAM_NEWS_LIKE_COUNT, recommendCount);
@@ -44,7 +44,7 @@ public class NewsDetailActivity extends BaseSingleWebView {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        mDataID = intent.getLongExtra(PARAM_NEWS_ID, -1);
+        mDataID = intent.getIntExtra(PARAM_NEWS_ID, -1);
         mLikeCount = intent.getIntExtra(PARAM_NEWS_LIKE_COUNT, 0);
         mCommentCount = intent.getIntExtra(PARAM_NEWS_COMMENT_COUNT, 0);
         mTitle = intent.getStringExtra(PARAM_NEWS_TITLE);
@@ -80,7 +80,7 @@ public class NewsDetailActivity extends BaseSingleWebView {
         return true;
     }
 
-    private class NewsDetailTask extends AsyncTask<Long, Void, NewsDetailEntity> {
+    private class NewsDetailTask extends AsyncTask<Integer, Void, NewsDetailEntity> {
 
         @Override
         protected void onPreExecute() {
@@ -88,8 +88,8 @@ public class NewsDetailActivity extends BaseSingleWebView {
         }
 
         @Override
-        protected NewsDetailEntity doInBackground(Long... longs) {
-            return NewsDal.getNewsDetail(getApp(), longs[0]);
+        protected NewsDetailEntity doInBackground(Integer... integers) {
+            return NewsDal.getNewsDetail(getApp(), integers[0]);
         }
 
         @Override

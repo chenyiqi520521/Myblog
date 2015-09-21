@@ -56,7 +56,7 @@ public class NewsDal {
         return newsList;
     }
 
-    public static NewsDetailEntity getNewsDetail(BaseApplication baseApp, long newsID) {
+    public static NewsDetailEntity getNewsDetail(BaseApplication baseApp, int newsID) {
         NewsDetailEntity entity = null;
         String key = String.format("news_content_%d", newsID);
 

@@ -19,7 +19,7 @@ import java.io.StringReader;
 @JsonObject
 public class NewsDetailEntity implements Serializable {
     @JsonField
-    private long id;
+    private int id;
     @JsonField
     private String title;
     @JsonField
@@ -97,11 +97,11 @@ public class NewsDetailEntity implements Serializable {
         return entity;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

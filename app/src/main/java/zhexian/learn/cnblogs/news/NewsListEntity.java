@@ -21,7 +21,7 @@ import zhexian.learn.cnblogs.lib.ZDate;
 @JsonObject
 public class NewsListEntity extends BaseEntity {
     @JsonField
-    private long newsID;
+    private int newsID;
     @JsonField
     private String title;
     @JsonField
@@ -70,7 +70,7 @@ public class NewsListEntity extends BaseEntity {
                                 break;
                             case "id":
                                 if (newsEntity != null)
-                                    newsEntity.setNewsID(Long.parseLong(parser.nextText()));
+                                    newsEntity.setNewsID(Integer.parseInt(parser.nextText()));
                                 break;
                             case "title":
                                 if (newsEntity != null)
@@ -110,11 +110,11 @@ public class NewsListEntity extends BaseEntity {
         return newsList;
     }
 
-    public long getNewsID() {
+    public int getNewsID() {
         return newsID;
     }
 
-    public void setNewsID(long newsID) {
+    public void setNewsID(int newsID) {
         this.newsID = newsID;
     }
 

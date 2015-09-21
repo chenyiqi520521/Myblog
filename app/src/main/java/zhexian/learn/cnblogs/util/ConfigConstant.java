@@ -21,7 +21,7 @@ public class ConfigConstant {
     /**
      * 缓存文件有效日期
      */
-    public static final int FILE_AVAILABLE_DAYS = 30;
+    public static final int CACHE_AVAILABLE_DAYS = 30;
 
     public static final int ENTITY_TYPE_NORMAL_ITEM = 0;
 

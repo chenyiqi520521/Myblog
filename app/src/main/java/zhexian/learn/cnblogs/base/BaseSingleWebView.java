@@ -16,7 +16,7 @@ import zhexian.learn.cnblogs.util.WebViewJsInterface;
  * Created by Administrator on 2015/9/8.
  * 单个浏览器父类
  */
-public class BaseSingleWebView extends BaseActivity {
+public class BaseSingleWebView extends BaseActivity implements ScrollWebView.OnScrollListener {
     protected ScrollWebView mWebView;
     private FrameLayout mWebViewContainer;
     private View mProgress;
@@ -37,17 +37,9 @@ public class BaseSingleWebView extends BaseActivity {
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
-
         mWebView.addJavascriptInterface(new WebViewJsInterface(this), "Android");
 
-        mWebView.setOnScrollListener(new ScrollWebView.OnScrollListener() {
-            @Override
-            public void onScroll(int x, int y) {
-                switchActionBar(y - mPreviousYPos);
-                mPreviousYPos = y;
-            }
-        });
-
+        mWebView.setOnScrollListener(this);
     }
 
     @Override
@@ -65,6 +57,7 @@ public class BaseSingleWebView extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        mWebView.setOnScrollListener(null);
         mWebViewContainer.removeAllViews();
         mWebView.destroy();
         super.onDestroy();
@@ -75,5 +68,11 @@ public class BaseSingleWebView extends BaseActivity {
             mProgress.setVisibility(View.VISIBLE);
         else
             mProgress.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onScroll(int x, int y) {
+        switchActionBar(y - mPreviousYPos);
+        mPreviousYPos = y;
     }
 }

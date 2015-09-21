@@ -67,7 +67,7 @@ public class BlogDetailActivity extends BaseSingleWebView {
         return true;
     }
 
-    private class BlogDetailTask extends AsyncTask<Long, Void, String> {
+    private class BlogDetailTask extends AsyncTask<Integer, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -75,7 +75,7 @@ public class BlogDetailActivity extends BaseSingleWebView {
         }
 
         @Override
-        protected String doInBackground(Long... params) {
+        protected String doInBackground(Integer... params) {
             return BlogDal.getBlogContent(getApp(), mEntity.getId());
         }
 

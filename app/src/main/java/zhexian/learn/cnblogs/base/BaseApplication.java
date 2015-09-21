@@ -12,6 +12,7 @@ import com.squareup.leakcanary.LeakCanary;
 import zhexian.learn.cnblogs.lib.ZDate;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.DBHelper;
+import zhexian.learn.cnblogs.util.SQLiteHelper;
 import zhexian.learn.cnblogs.util.Utils;
 
 /**
@@ -211,6 +212,7 @@ public class BaseApplication extends Application {
             return;
 
         DBHelper.cache().cleanExpireFile(availableDays);
+        SQLiteHelper.getInstance().cleanHistory(availableDays);
         mLastModifyDays = currentDays;
         mSp.edit().putInt(PARAM_LAST_MODIFY_DAYS, mLastModifyDays).apply();
     }

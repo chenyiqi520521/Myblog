@@ -21,7 +21,7 @@ import zhexian.learn.cnblogs.base.BaseEntity;
 @JsonObject
 public class BlogEntity extends BaseEntity implements Serializable {
     @JsonField
-    private long id;
+    private int id;
 
     @JsonField
     private String title;
@@ -87,7 +87,7 @@ public class BlogEntity extends BaseEntity implements Serializable {
                                 break;
                             case "id":
                                 if (blogEntity != null)
-                                    blogEntity.setId(Long.parseLong(parser.nextText()));
+                                    blogEntity.setId(Integer.parseInt(parser.nextText()));
                                 break;
                             case "title":
                                 if (blogEntity != null)
@@ -143,11 +143,11 @@ public class BlogEntity extends BaseEntity implements Serializable {
         return blogList;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
