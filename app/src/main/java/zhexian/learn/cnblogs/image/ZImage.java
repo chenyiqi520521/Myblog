@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.util.LruCache;
 import android.widget.ImageView;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseApplication;
@@ -22,7 +22,7 @@ import zhexian.learn.cnblogs.util.DBHelper;
 public class ZImage {
 
     private static ZImage mZImage;
-    private LruCache<String, WeakReference<Bitmap>> mMemoryCache;
+    private LruCache<String, SoftReference<Bitmap>> mMemoryCache;
     private BaseApplication mBaseApp;
     private Bitmap placeHolderBitmap;
 
@@ -30,7 +30,7 @@ public class ZImage {
         mBaseApp = baseApp;
         placeHolderBitmap = BitmapFactory.decodeResource(mBaseApp.getResources(), R.mipmap.image_place_holder);
 
-        mMemoryCache = new LruCache<String, WeakReference<Bitmap>>(mBaseApp.getImageCachePoolSize()) {
+        mMemoryCache = new LruCache<String, SoftReference<Bitmap>>(mBaseApp.getImageCachePoolSize()) {
             protected int sizeOf(String key, Bitmap bitmap) {
                 return bitmap.getByteCount();
             }
@@ -111,7 +111,7 @@ public class ZImage {
 
     void putToMemoryCache(String url, Bitmap bitmap) {
         if (bitmap != null && bitmap.getByteCount() > 0)
-            mMemoryCache.put(url, new WeakReference<>(bitmap));
+            mMemoryCache.put(url, new SoftReference<>(bitmap));
     }
 
 
