@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import com.squareup.leakcanary.LeakCanary;
@@ -56,8 +55,8 @@ public class BaseApplication extends Application {
         mIsBigFont = mSp.getBoolean(PARAM_IS_BIG_FONT, false);
         mNetWorkStatus = Utils.GetConnectType(this);
         mImageCachePoolSize = mSp.getInt(PARAM_IMAGE_POOL_SIZE, 0);
-        mFileRootDir = Environment.isExternalStorageEmulated() ? getExternalFilesDir(null).getAbsolutePath() : getFilesDir().getAbsolutePath();
-        mFileRootDir += "/";
+
+        mFileRootDir = Utils.getWritePath(this) + "/";
         mScreenWidth = mSp.getInt(PARAM_SCREEN_WIDTH, 0);
         mScreenHeight = mSp.getInt(PARAM_SCREEN_HEIGHT, 0);
         mScreenWidthDP = mSp.getInt(PARAM_SCREEN_WIDTH_DP, 0);

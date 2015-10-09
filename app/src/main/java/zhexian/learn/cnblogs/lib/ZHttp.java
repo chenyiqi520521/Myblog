@@ -1,5 +1,6 @@
 package zhexian.learn.cnblogs.lib;
 
+import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Request.Builder;
@@ -38,6 +39,11 @@ public class ZHttp {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void AysncExec(String url, Callback callback) {
+        Request request = new Builder().url(url).build();
+        getHttpClient().newCall(request).enqueue(callback);
     }
 
     /**

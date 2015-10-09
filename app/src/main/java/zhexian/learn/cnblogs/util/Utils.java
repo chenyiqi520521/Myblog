@@ -5,10 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import java.util.Date;
+import java.io.File;
 
 /**
  * Created by Administrator on 2015/8/28.
@@ -98,9 +99,17 @@ public class Utils {
         return htmlTag;
     }
 
+    public static String getWritePath(Context context) {
 
-    public static int daysOfTwo(Date originalDate, Date compareDateDate) {
-        return (int) (originalDate.getTime() / 86400000L - compareDateDate.getTime() / 86400000L);
+        //外部有挂载
+        if (Environment.isExternalStorageEmulated()) {
+            File file = context.getExternalFilesDir(null);
+
+            if (file != null)
+                return file.getAbsolutePath();
+        }
+
+        return context.getFilesDir().getAbsolutePath();
     }
 }
 
