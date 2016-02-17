@@ -37,8 +37,8 @@ public abstract class BaseSingleWebView extends BaseActivity implements ScrollWe
         mWebView = new ScrollWebView(this);
         mWebViewContainer.addView(mWebView);
 
+        mWebView.setHorizontalScrollBarEnabled(false);
         mWebView.setVerticalScrollBarEnabled(true);
-        mWebView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         mWebView.addJavascriptInterface(new WebViewJsInterface(this), "Android");
