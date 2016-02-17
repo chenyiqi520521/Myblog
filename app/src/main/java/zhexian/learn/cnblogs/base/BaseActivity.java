@@ -5,46 +5,41 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-import java.util.Date;
-
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.lib.ZBroadcast;
 import zhexian.learn.cnblogs.receiver.NetWorkChangeReceiver;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.ui.SwipeCloseLayout;
 
 public class BaseActivity extends AppCompatActivity {
-
     private BaseApplication mBaseApp = null;
     private WindowManager mWindowManager = null;
     private View mNightView = null;
-    private ActionBar mActionbar;
-
+    private View mTitleBar;
     private boolean mIsAddedView;
-    private int mPreviousDeltaY = -1;
-    private boolean mIsActionbarHide;
-    private Long mLastChangeTime;
     private BroadcastReceiver mNetWorkChangeReceiver;
+    private float currentTitleAlpha;
+    private SwipeCloseLayout mSwipeCloseLayout;
+
+    protected boolean isSwipeToClose() {
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mBaseApp = (BaseApplication) getApplication();
 
         if (mBaseApp.isNightMode())
-            setTheme(R.style.AppTheme_night);
+            setTheme(isSwipeToClose() ? R.style.AppTheme_night_transparent : R.style.AppTheme_night);
         else
-            setTheme(R.style.AppTheme_day);
+            setTheme(isSwipeToClose() ? R.style.AppTheme_day_transparent : R.style.AppTheme_day);
 
         super.onCreate(savedInstanceState);
-
-        mActionbar = getSupportActionBar();
         mIsAddedView = false;
-        mLastChangeTime = new Date().getTime();
 
         if (mBaseApp.isNightMode()) {
             initNightView();
@@ -53,6 +48,27 @@ public class BaseActivity extends AppCompatActivity {
 
         mNetWorkChangeReceiver = new NetWorkChangeReceiver(getApp());
         ZBroadcast.registerNetworkStatusChange(this, mNetWorkChangeReceiver);
+
+        if (isSwipeToClose()) {
+            mSwipeCloseLayout = new SwipeCloseLayout(this);
+        }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        if (isSwipeToClose()) {
+            mSwipeCloseLayout.injectWindow();
+        }
+    }
+
+    @Override
+    public void finish() {
+        if (isSwipeToClose()) {
+            mSwipeCloseLayout.finish();
+        }
+        super.finish();
     }
 
     @Override
@@ -67,31 +83,36 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    public void regScrollTitleBar(View view) {
+        mTitleBar = view;
+        currentTitleAlpha = 1;
+    }
+
     public void switchActionBar(int deltaY) {
+        //向上滑  +
+        //向下    -
 
-        if (Math.abs(deltaY) <= ConfigConstant.MIN_TRIGGER_ACTION_BAR_DISTANCE)
+        if (mTitleBar == null)
             return;
 
-        if (deltaY * mPreviousDeltaY >= 0)
+        //已经透明，不用继续再减透明度了
+        if (currentTitleAlpha <= 0 && deltaY > 0)
             return;
 
-        long curChangeTime = new Date().getTime();
-
-        if (curChangeTime - mLastChangeTime <= ConfigConstant.MIN_CHANGE_DURATION_MILLION_SECONDS)
+        //已经完全不透明，不用继续加透明度了
+        if (currentTitleAlpha >= 1 && deltaY < 0)
             return;
 
-        mLastChangeTime = curChangeTime;
+        currentTitleAlpha = currentTitleAlpha - deltaY * 0.002f;
 
-        if (deltaY < 0 && mIsActionbarHide) {
-            mActionbar.show();
-            mIsActionbarHide = false;
-        }
+        if (currentTitleAlpha < 0)
+            currentTitleAlpha = 0;
 
-        if (deltaY > 0 && !mIsActionbarHide) {
-            mActionbar.hide();
-            mIsActionbarHide = true;
-        }
-        mPreviousDeltaY = deltaY;
+        if (currentTitleAlpha > 1)
+            currentTitleAlpha = 1;
+
+        mTitleBar.setClickable(currentTitleAlpha >= 0.5f);
+        mTitleBar.setAlpha(currentTitleAlpha);
     }
 
     public BaseApplication getApp() {

@@ -33,6 +33,8 @@ public class HtmlHelper {
             mHtmlString = ZIO.readString(mApp.getAssets().open("content.html"));
             mDayCssString = ZIO.readString(mApp.getAssets().open("style_day.css"));
             mNightCssString = ZIO.readString(mApp.getAssets().open("style_night.css"));
+            //webView内容上面距离50dp给标题栏腾出高度
+            mHtmlString = mHtmlString.replace("{chapterMarginTop}", "55");
         } catch (IOException e) {
             e.printStackTrace();
         }

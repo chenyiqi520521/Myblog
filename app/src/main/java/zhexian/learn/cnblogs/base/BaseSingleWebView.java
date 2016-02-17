@@ -2,8 +2,6 @@ package zhexian.learn.cnblogs.base;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.widget.FrameLayout;
@@ -16,50 +14,43 @@ import zhexian.learn.cnblogs.util.WebViewJsInterface;
  * Created by Administrator on 2015/9/8.
  * 单个浏览器父类
  */
-public class BaseSingleWebView extends BaseActivity implements ScrollWebView.OnScrollListener {
+public abstract class BaseSingleWebView extends BaseActivity implements ScrollWebView.OnScrollListener {
     protected ScrollWebView mWebView;
     private FrameLayout mWebViewContainer;
     private View mProgress;
     private int mPreviousYPos;
 
+    @Override
+    protected boolean isSwipeToClose() {
+        return true;
+    }
+
+    protected abstract int getLayoutId();
+
     @SuppressLint("AddJavascriptInterface")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_html_detail);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setContentView(getLayoutId());
         mProgress = findViewById(R.id.news_detail_progress);
-
         mWebViewContainer = (FrameLayout) findViewById(R.id.html_detail_web_view);
-        mWebView = new ScrollWebView(getApp());
+        mWebView = new ScrollWebView(this);
         mWebViewContainer.addView(mWebView);
 
+        mWebView.setVerticalScrollBarEnabled(true);
+        mWebView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         mWebView.addJavascriptInterface(new WebViewJsInterface(this), "Android");
-
         mWebView.setOnScrollListener(this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                this.finish();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onDestroy() {
         mWebView.setOnScrollListener(null);
-        mWebViewContainer.removeAllViews();
         mWebView.destroy();
+        mWebViewContainer.removeAllViews();
         super.onDestroy();
     }
 

@@ -25,6 +25,18 @@ class BlogDal {
     private static final String HOT_URL = String.format("%s/%s/", endPoint, HOT_STRING);
     private static final String DETAIL_URL = String.format("%s/post/body/", endPoint);
 
+    public static List<BlogEntity> getBlogsFromDisk(ConfigConstant.BlogCategory category, int pageIndex, int pageSize) {
+        String key;
+
+        if (category == ConfigConstant.BlogCategory.HOME)
+            key = String.format("%s_blog_%d_%d", HOME_STRING, pageIndex, pageSize);
+        else
+            key = String.format("%s_blog", category == ConfigConstant.BlogCategory.RECOMMEND ? RECOMMEND_STRING : HOT_STRING);
+
+        return DBHelper.cache().getList(key, BlogEntity.class);
+    }
+
+
     /**
      * 分页获取首页博客
      *

@@ -1,82 +1,69 @@
 package zhexian.learn.cnblogs.news;
 
-import android.support.v7.widget.RecyclerView;
+import android.app.Activity;
+import android.content.Context;
 import android.text.Html;
-import android.view.LayoutInflater;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import zhexian.learn.cnblogs.R;
-import zhexian.learn.cnblogs.base.BaseActivity;
-import zhexian.learn.cnblogs.common.LoadingViewHolder;
+import zhexian.learn.cnblogs.base.adapters.EfficientAdapter;
+import zhexian.learn.cnblogs.base.adapters.EfficientRecyclerAdapter;
+import zhexian.learn.cnblogs.base.adapters.EfficientViewHolder;
 import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZDisplay;
-import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.SQLiteHelper;
 
 
-public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int NORMAL_ITEM = 0;
-    private static final int GROUP_ITEM = 1;
-
-    private BaseActivity mContext;
-    private List<NewsListEntity> mDataList;
-    private LayoutInflater mLayoutInflater;
+public class NewsListAdapter extends EfficientRecyclerAdapter<NewsListEntity> {
     private int mImgSize;
 
-    public NewsListAdapter(BaseActivity context, List<NewsListEntity> mDataList) {
-        this.mContext = context;
-        this.mDataList = mDataList;
-        mLayoutInflater = LayoutInflater.from(mContext);
-        mImgSize = mContext.getResources().getDimensionPixelSize(R.dimen.news_img_size);
+    public NewsListAdapter(List<NewsListEntity> objects) {
+        super(objects);
+
+        mImgSize = ZDisplay.getInstance().Dp2Px(90);
+
+        setOnItemClickListener(new OnItemClickListener<NewsListEntity>() {
+            @Override
+            public void onItemClick(EfficientAdapter<NewsListEntity> adapter, View view, NewsListEntity object, int position) {
+                if (object.getNewsID() > 0) {
+                    NewsDetailActivity.actionStart((Activity) view.getContext(), object.getNewsID(), object.getRecommendAmount(), object.getCommentAmount(), object.getTitle());
+
+                    if (!SQLiteHelper.getInstance().isReadNews(object.getNewsID()))
+                        ((TextView) view.findViewById(R.id.news_item_title)).setTextColor(ZDisplay.getInstance().getFontColor(true));
+                }
+            }
+        });
     }
 
-    /**
-     * 渲染具体的ViewHolder
-     *
-     * @param viewGroup ViewHolder的容器
-     * @param i         一个标志，我们根据该标志可以实现渲染不同类型的ViewHolder
-     * @return
-     */
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        if (i == ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER)
-            return new LoadingViewHolder(mLayoutInflater, viewGroup);
-
-        if (i == NORMAL_ITEM)
-            return new NormalItemHolder(mLayoutInflater.inflate(R.layout.news_list_item, viewGroup, false));
-        else
-            return new GroupItemHolder(mLayoutInflater.inflate(R.layout.news_list_group_item, viewGroup, false));
-    }
-
-    /**
-     * 绑定ViewHolder的数据。
-     *
-     * @param viewHolder
-     * @param i          数据源list的下标
-     */
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
-        NewsListEntity entity = mDataList.get(i);
-
-        if (null == entity)
-            return;
-
-        if (viewHolder instanceof GroupItemHolder) {
-            bindGroupItem(entity, (GroupItemHolder) viewHolder);
-        } else if (viewHolder instanceof NormalItemHolder) {
-            NormalItemHolder holder = (NormalItemHolder) viewHolder;
-            bindNormalItem(entity, holder.newsTitle, holder.newsIcon);
+    public int getLayoutResId(int viewType) {
+        switch (viewType) {
+            case NORMAL_ITEM:
+                return R.layout.news_list_item;
+            case GROUP_ITEM:
+                return R.layout.news_list_group_item;
+            case LOADING_MORE_ITEM:
+                return R.layout.base_swipe_item_loading;
         }
+        throw new IllegalArgumentException("不支持类型为" + viewType + "的布局类型");
     }
 
     @Override
-    public int getItemCount() {
-        return mDataList.size();
+    public Class<? extends EfficientViewHolder<? extends NewsListEntity>> getViewHolderClass(int viewType) {
+        switch (viewType) {
+            case NORMAL_ITEM:
+                return NormalItemHolder.class;
+            case GROUP_ITEM:
+                return GroupItemHolder.class;
+            case LOADING_MORE_ITEM:
+                return LoadingMoreViewHolder.class;
+        }
+        throw new IllegalArgumentException("不支持类型为" + viewType + "的元素类型");
     }
 
     /**
@@ -91,66 +78,50 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (position == 0)
             return GROUP_ITEM;
 
-        NewsListEntity entity = mDataList.get(position);
+        NewsListEntity entity = get(position);
 
-        if (entity.getEntityType() == ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER)
-            return ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER;
+        if (entity.getEntityType() == LOADING_MORE_ITEM)
+            return LOADING_MORE_ITEM;
 
         String currentDate = entity.getPublishDate();
         int prevIndex = position - 1;
-        boolean isDifferent = !mDataList.get(prevIndex).getPublishDate().equals(currentDate);
-        return isDifferent ? GROUP_ITEM : NORMAL_ITEM;
+        boolean isGroup = !get(prevIndex).getPublishDate().equals(currentDate);
+        return isGroup ? GROUP_ITEM : NORMAL_ITEM;
     }
 
     @Override
     public long getItemId(int position) {
-        return mDataList.get(position).getNewsID();
+        return get(position).getNewsID();
     }
 
-    void bindNormalItem(NewsListEntity entity, TextView newsTitle, ImageView newsIcon) {
-        if (entity.getIconUrl().isEmpty()) {
-
-            if (newsIcon.getVisibility() != View.GONE)
-                newsIcon.setVisibility(View.GONE);
-        } else {
-
-            ZImage.ready().want(entity.getIconUrl()).reSize(mImgSize, mImgSize).into(newsIcon);
-
-            if (newsIcon.getVisibility() != View.VISIBLE)
-                newsIcon.setVisibility(View.VISIBLE);
-        }
-        boolean isExist = SQLiteHelper.getInstance().isReadNews(entity.getNewsID());
-        newsTitle.setTextColor(ZDisplay.getInstance().getFontColor(isExist));
-        newsTitle.setText(Html.fromHtml(entity.getTitle()));
-    }
-
-    void bindGroupItem(NewsListEntity entity, GroupItemHolder holder) {
-        bindNormalItem(entity, holder.newsTitle, holder.newsIcon);
-        holder.newsTime.setText(entity.getPublishDate());
-    }
-
-    void showNewsDetail(int pos) {
-        NewsListEntity entity = mDataList.get(pos);
-        NewsDetailActivity.actionStart(mContext, entity.getNewsID(), entity.getRecommendAmount(), entity.getCommentAmount(), entity.getTitle());
-    }
 
     /**
      * 新闻标题
      */
-    public class NormalItemHolder extends RecyclerView.ViewHolder {
+    public class NormalItemHolder extends EfficientViewHolder<NewsListEntity> {
         TextView newsTitle;
         ImageView newsIcon;
 
         public NormalItemHolder(View itemView) {
             super(itemView);
-            newsTitle = (TextView) itemView.findViewById(R.id.news_item_title);
-            newsIcon = (ImageView) itemView.findViewById(R.id.news_item_icon);
-            itemView.findViewById(R.id.news_item_container).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showNewsDetail(getPosition());
-                }
-            });
+            newsTitle = findViewByIdEfficient(R.id.news_item_title);
+            newsIcon = findViewByIdEfficient(R.id.news_item_icon);
+        }
+
+        @Override
+        protected void updateView(Context context, NewsListEntity object) {
+            if (TextUtils.isEmpty(object.getIconUrl())) {
+                if (newsIcon.getVisibility() != View.GONE)
+                    newsIcon.setVisibility(View.GONE);
+            } else {
+                ZImage.ready().want(object.getIconUrl()).reSize(mImgSize, mImgSize).into(newsIcon);
+
+                if (newsIcon.getVisibility() != View.VISIBLE)
+                    newsIcon.setVisibility(View.VISIBLE);
+            }
+            boolean isExist = SQLiteHelper.getInstance().isReadNews(object.getNewsID());
+            newsTitle.setTextColor(ZDisplay.getInstance().getFontColor(isExist));
+            newsTitle.setText(Html.fromHtml(object.getTitle()));
         }
     }
 
@@ -158,11 +129,27 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * 带日期新闻标题
      */
     public class GroupItemHolder extends NormalItemHolder {
-        TextView newsTime;
-
         public GroupItemHolder(View itemView) {
             super(itemView);
-            newsTime = (TextView) itemView.findViewById(R.id.news_item_time);
         }
+
+        @Override
+        protected void updateView(Context context, NewsListEntity object) {
+            super.updateView(context, object);
+            setText(R.id.news_item_time, object.getPublishDate());
+        }
+    }
+
+    public class LoadingMoreViewHolder extends EfficientViewHolder<NewsListEntity> {
+
+        public LoadingMoreViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        protected void updateView(Context context, NewsListEntity object) {
+
+        }
+
     }
 }

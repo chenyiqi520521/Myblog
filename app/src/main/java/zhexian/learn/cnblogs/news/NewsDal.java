@@ -22,6 +22,21 @@ public class NewsDal {
     static final String newsDetailUrl = String.format("%s/item/", endPoint);
 
     /**
+     * 从本地获取数据
+     *
+     * @param category
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public static List<NewsListEntity> getNewsListFromDisk(ConfigConstant.NewsCategory category, int pageIndex, int pageSize) {
+        String prefix = category == ConfigConstant.NewsCategory.Recommend ? RECOMMEND_STRING : RECENT_STRING;
+        String key = String.format("%s_news_%d_%d", prefix, pageIndex, pageSize);
+
+        return DBHelper.cache().getList(key, NewsListEntity.class);
+    }
+
+    /**
      * 获取推荐新闻
      * wifi下自动缓存新闻
      *

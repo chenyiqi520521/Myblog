@@ -1,8 +1,32 @@
 <FrameLayout
-    android:id="@+id/comment_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?containerBackground">
+    android:layout_height="match_parent">
+    <FrameLayout
+        style="@style/title_bar"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/title_left_image"
+            style="@style/title_bar_button"
+            android:src="@mipmap/arrow_white_left"
+            />
 
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/md_title_bar_height"
+            android:layout_marginRight="13dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/comment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/md_title_bar_height"
+        android:background="?containerBackground"/>
 </FrameLayout>

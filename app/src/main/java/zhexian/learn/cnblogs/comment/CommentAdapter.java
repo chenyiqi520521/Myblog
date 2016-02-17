@@ -1,93 +1,89 @@
 package zhexian.learn.cnblogs.comment;
 
-import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;
 import android.text.Html;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.List;
 
 import zhexian.learn.cnblogs.R;
-import zhexian.learn.cnblogs.base.BaseActivity;
-import zhexian.learn.cnblogs.common.LoadingViewHolder;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.base.adapters.EfficientAdapter;
+import zhexian.learn.cnblogs.base.adapters.EfficientRecyclerAdapter;
+import zhexian.learn.cnblogs.base.adapters.EfficientViewHolder;
+import zhexian.learn.cnblogs.util.DoAction;
 
 /**
  * Created by Administrator on 2015/8/28.
  */
-public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private BaseActivity mContext;
-    private List<CommentEntity> mDataList;
-    private LayoutInflater mLayoutInflater;
+public class CommentAdapter extends EfficientRecyclerAdapter<CommentEntity> {
 
-    public CommentAdapter(BaseActivity mContext, List<CommentEntity> mDataList) {
-        this.mContext = mContext;
-        this.mDataList = mDataList;
-        mLayoutInflater = LayoutInflater.from(mContext);
+    public CommentAdapter(List<CommentEntity> objects) {
+        super(objects);
+
+        setOnItemClickListener(new OnItemClickListener<CommentEntity>() {
+            @Override
+            public void onItemClick(EfficientAdapter<CommentEntity> adapter, View view, CommentEntity object, int position) {
+                DoAction.jumpToWeb(view.getContext(), object.getUserHomeUrl());
+            }
+        });
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        if (viewType == ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER)
-            return new LoadingViewHolder(mLayoutInflater, parent);
-
-        return new CommentViewHolder(mLayoutInflater.inflate(R.layout.base_comment_item, parent, false));
+    public int getLayoutResId(int viewType) {
+        switch (viewType) {
+            case NORMAL_ITEM:
+                return R.layout.base_comment_item;
+            case LOADING_MORE_ITEM:
+                return R.layout.base_swipe_item_loading;
+        }
+        throw new IllegalArgumentException("不支持类型为" + viewType + "的布局类型");
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-        if (holder instanceof CommentViewHolder)
-            ((CommentViewHolder) holder).bind(mDataList.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataList.size();
+    public Class<? extends EfficientViewHolder<? extends CommentEntity>> getViewHolderClass(int viewType) {
+        switch (viewType) {
+            case NORMAL_ITEM:
+                return CommentViewHolder.class;
+            case LOADING_MORE_ITEM:
+                return LoadingMoreViewHolder.class;
+        }
+        throw new IllegalArgumentException("不支持类型为" + viewType + "的元素类型");
     }
 
     @Override
     public int getItemViewType(int position) {
 
-        CommentEntity entity = mDataList.get(position);
+        CommentEntity entity = get(position);
 
-        if (entity.getEntityType() == ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER)
-            return ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER;
+        if (entity.getEntityType() == LOADING_MORE_ITEM)
+            return LOADING_MORE_ITEM;
 
-        return ConfigConstant.ENTITY_TYPE_NORMAL_ITEM;
-
+        return NORMAL_ITEM;
     }
 
-    public class CommentViewHolder extends RecyclerView.ViewHolder {
-        TextView commentAuthor;
-        TextView commentTime;
-        TextView commentContent;
-        String authorUrl;
-
+    public class CommentViewHolder extends EfficientViewHolder<CommentEntity> {
         public CommentViewHolder(View itemView) {
             super(itemView);
-            commentAuthor = (TextView) itemView.findViewById(R.id.comment_author);
-            commentTime = (TextView) itemView.findViewById(R.id.comment_time);
-            commentContent = (TextView) itemView.findViewById(R.id.comment_content);
-
-            commentAuthor.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(authorUrl);
-                    mContext.startActivity(intent);
-                }
-            });
         }
 
-        public void bind(CommentEntity entity) {
-            commentAuthor.setText(entity.getUserName());
-            commentTime.setText(entity.getPublishTime());
-            commentContent.setText(Html.fromHtml(entity.getContent()));
-            authorUrl = entity.getUserHomeUrl();
+        @Override
+        protected void updateView(Context context, CommentEntity object) {
+            setText(R.id.comment_author, object.getUserName());
+            setText(R.id.comment_time, object.getPublishTime());
+            setText(R.id.comment_content, Html.fromHtml(object.getContent()));
         }
+    }
+
+    public class LoadingMoreViewHolder extends EfficientViewHolder<CommentEntity> {
+
+        public LoadingMoreViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        protected void updateView(Context context, CommentEntity object) {
+
+        }
+
     }
 }

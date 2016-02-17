@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -38,7 +37,11 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, SettingActivity.class);
         context.startActivity(intent);
+    }
 
+    @Override
+    protected boolean isSwipeToClose() {
+        return true;
     }
 
     @Override
@@ -46,7 +49,6 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         emptyStr = getResources().getString(R.string.dir_empty);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         baseApp = getApp();
 
         mCKBIsAutoLoadNews = (CheckBox) findViewById(R.id.setting_is_auto_load_news);
@@ -71,20 +73,16 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         mTVCacheSize = (TextView) findViewById(R.id.setting_cache_size);
         String sizeText = DBHelper.cache().getDirSize();
         mTVCacheSize.setText(sizeText);
-
         mIsCleanAll = sizeText.equals(emptyStr);
-
         mCleanCacheProgress = findViewById(R.id.setting_cache_progress);
+        findViewById(R.id.title_left_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == android.R.id.home) {
-            this.finish();
-        }
-        return true;
-    }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

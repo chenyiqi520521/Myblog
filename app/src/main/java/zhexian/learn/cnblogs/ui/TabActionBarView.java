@@ -1,52 +1,55 @@
 package zhexian.learn.cnblogs.ui;
 
-import android.support.v7.app.ActionBar;
+import android.content.Context;
 import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import zhexian.learn.cnblogs.R;
-import zhexian.learn.cnblogs.base.BaseActivity;
 
 
 /**
  * Created by 陈俊杰 on 2015/6/4.
  * 嵌入在tab上的标签卡
  */
-public class TabActionBarView implements View.OnClickListener {
+public class TabActionBarView extends LinearLayout implements View.OnClickListener {
 
     private static final int LEFT_TAB_INDEX = 0;
     private static final int MIDDLE_TAB_INDEX = 1;
     private static final int RIGHT_TAB_INDEX = 2;
 
     private int mSelectTabIndex = -1;
-    private View mLeftView;
     private TextView mLeftTextView;
-    private View mMiddleView;
     private TextView mMiddleTextView;
-    private View mRightView;
     private TextView mRightTextView;
     private int mTextSelectedColor;
     private int mTextNormalColor;
     private ITabActionCallback mCallback;
 
-    public TabActionBarView(BaseActivity activity) {
-        ActionBar actionBar = activity.getSupportActionBar();
+    public TabActionBarView(Context context) {
+        this(context, null, 0);
+    }
 
-        mTextNormalColor = activity.getResources().getColor(R.color.white);
-        mTextSelectedColor = activity.getResources().getColor(R.color.green_dark);
+    public TabActionBarView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(R.layout.action_item_tab);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        View tabView = actionBar.getCustomView();
+    public TabActionBarView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
 
-        mLeftView = tabView.findViewById(R.id.action_tab_left);
-        mLeftTextView = (TextView) tabView.findViewById(R.id.action_tab_left_text);
-        mMiddleView = tabView.findViewById(R.id.action_tab_middle);
-        mMiddleTextView = (TextView) tabView.findViewById(R.id.action_tab_middle_text);
-        mRightView = tabView.findViewById(R.id.action_tab_right);
-        mRightTextView = (TextView) tabView.findViewById(R.id.action_tab_right_text);
+        mTextNormalColor = context.getResources().getColor(R.color.white);
+        mTextSelectedColor = context.getResources().getColor(R.color.green_dark);
+        setOrientation(HORIZONTAL);
+        setGravity(Gravity.CENTER);
+
+        View view = LayoutInflater.from(context).inflate(R.layout.action_item_tab, this, true);
+        mLeftTextView = (TextView) view.findViewById(R.id.action_tab_left);
+        mMiddleTextView = (TextView) view.findViewById(R.id.action_tab_middle);
+        mRightTextView = (TextView) view.findViewById(R.id.action_tab_right);
     }
 
     public void bindTab(ITabActionCallback callback, String leftText, String rightText) {
@@ -56,34 +59,43 @@ public class TabActionBarView implements View.OnClickListener {
     public void bindTab(ITabActionCallback callback, String leftText, String middleText, String rightText) {
         mCallback = callback;
         mLeftTextView.setText(leftText);
-        mLeftView.setOnClickListener(this);
+        mLeftTextView.setOnClickListener(this);
 
         mRightTextView.setText(rightText);
-        mRightView.setOnClickListener(this);
+        mRightTextView.setOnClickListener(this);
 
         if (TextUtils.isEmpty(middleText))
-            mMiddleView.setVisibility(View.GONE);
+            mMiddleTextView.setVisibility(View.GONE);
         else {
-            mMiddleView.setVisibility(View.VISIBLE);
+            mMiddleTextView.setVisibility(View.VISIBLE);
             mMiddleTextView.setText(middleText);
-            mMiddleView.setOnClickListener(this);
+            mMiddleTextView.setOnClickListener(this);
         }
-        leftClick();
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
         switch (id) {
             case R.id.action_tab_left:
+                if (mSelectTabIndex == LEFT_TAB_INDEX)
+                    return;
+
                 leftClick();
                 break;
 
             case R.id.action_tab_middle:
+                if (mSelectTabIndex == MIDDLE_TAB_INDEX)
+                    return;
+
                 middleClick();
                 break;
 
             case R.id.action_tab_right:
+                if (mSelectTabIndex == RIGHT_TAB_INDEX)
+                    return;
+
                 rightClick();
                 break;
         }
@@ -93,26 +105,23 @@ public class TabActionBarView implements View.OnClickListener {
         switch (mSelectTabIndex) {
 
             case LEFT_TAB_INDEX:
-                mLeftView.setBackgroundResource(R.mipmap.tab_left_normal);
+                mLeftTextView.setBackgroundResource(R.mipmap.tab_left_normal);
                 mLeftTextView.setTextColor(mTextNormalColor);
                 break;
             case MIDDLE_TAB_INDEX:
-                mMiddleView.setBackgroundResource(R.mipmap.tab_middle_normal);
+                mMiddleTextView.setBackgroundResource(R.mipmap.tab_middle_normal);
                 mMiddleTextView.setTextColor(mTextNormalColor);
                 break;
             case RIGHT_TAB_INDEX:
-                mRightView.setBackgroundResource(R.mipmap.tab_right_normal);
+                mRightTextView.setBackgroundResource(R.mipmap.tab_right_normal);
                 mRightTextView.setTextColor(mTextNormalColor);
                 break;
         }
     }
 
     public void leftClick() {
-        if (mSelectTabIndex == LEFT_TAB_INDEX)
-            return;
-
         cleanPreviousStyle();
-        mLeftView.setBackgroundResource(R.mipmap.tab_left_select);
+        mLeftTextView.setBackgroundResource(R.mipmap.tab_left_select);
         mLeftTextView.setTextColor(mTextSelectedColor);
         mCallback.onLeftTabClick();
 
@@ -120,11 +129,8 @@ public class TabActionBarView implements View.OnClickListener {
     }
 
     public void middleClick() {
-        if (mSelectTabIndex == MIDDLE_TAB_INDEX)
-            return;
-
         cleanPreviousStyle();
-        mMiddleView.setBackgroundResource(R.mipmap.tab_middle_select);
+        mMiddleTextView.setBackgroundResource(R.mipmap.tab_middle_select);
         mMiddleTextView.setTextColor(mTextSelectedColor);
         mCallback.onMiddleTabClick();
 
@@ -132,11 +138,8 @@ public class TabActionBarView implements View.OnClickListener {
     }
 
     public void rightClick() {
-        if (mSelectTabIndex == RIGHT_TAB_INDEX)
-            return;
-
         cleanPreviousStyle();
-        mRightView.setBackgroundResource(R.mipmap.tab_right_select);
+        mRightTextView.setBackgroundResource(R.mipmap.tab_right_select);
         mRightTextView.setTextColor(mTextSelectedColor);
         mCallback.onRightClick();
 

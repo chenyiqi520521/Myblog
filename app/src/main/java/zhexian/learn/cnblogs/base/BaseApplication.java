@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.squareup.leakcanary.LeakCanary;
-
 import zhexian.learn.cnblogs.lib.ZDate;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.DBHelper;
@@ -46,7 +44,6 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LeakCanary.install(this);
         mSp = PreferenceManager.getDefaultSharedPreferences(this);
         mIsAutoLoadRecommend = mSp.getBoolean(PARAM_IS_AUTO_LOAD_RECOMMEND, true);
         mIsNightMode = mSp.getBoolean(PARAM_IS_NIGHT_MODE, false);

@@ -22,6 +22,11 @@ public class CommentDal {
         return String.format("%s_comment_%d_%d_%d", prefix, dataID, pageIndex, pageSize);
     }
 
+    public static List<CommentEntity> getCommentFromDisk(ConfigConstant.CommentCategory category, long dataID, int pageIndex, int pageSize) {
+        String key = generateKey(category, dataID, pageIndex, pageSize);
+        return DBHelper.cache().getList(key, CommentEntity.class);
+    }
+
     private static String generateUrl(ConfigConstant.CommentCategory category, long dataID, int pageIndex, int pageSize) {
         if (category == ConfigConstant.CommentCategory.News)
             return String.format("http://wcf.open.cnblogs.com/news/item/%d/comments/%d/%d", dataID, pageIndex, pageSize);

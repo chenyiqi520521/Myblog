@@ -5,6 +5,28 @@
               android:clickable="true"
               android:orientation="vertical">
 
+    <FrameLayout
+        style="@style/title_bar">
+        <ImageButton
+            android:id="@+id/title_left_image"
+            style="@style/title_bar_button"
+            android:src="@mipmap/arrow_white_left"
+            />
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="系统设置"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+    </FrameLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"

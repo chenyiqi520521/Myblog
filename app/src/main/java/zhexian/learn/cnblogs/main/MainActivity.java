@@ -30,6 +30,7 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
     private int currentState = -1;
     private Fragment currentFragment;
     private SparseArray<Fragment> fragmentArray;
+    private boolean mIsNavigatorOpened;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         addFragment(STATE_NEWS);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawerLayout);
-        mDrawerLayout.setDrawerShadow(R.mipmap.drawer_shadow, GravityCompat.START);
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         mNavigatorView = findViewById(R.id.main_navigator);
         NavigatorFragment navigatorFragment = (NavigatorFragment) getSupportFragmentManager().findFragmentById(R.id.main_navigator);
         navigatorFragment.InitDrawToggle(mDrawerLayout);
@@ -78,7 +79,7 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
                     fragment = BlogListFragment.newInstance();
                     break;
                 default:
-                    throw new IllegalArgumentException("指定fragment的类型没用命中，出错位置MainActivity=>addFragment()");
+                    throw new IllegalArgumentException("指定类型 " + state + " 的fragment的类型没用命中，出错位置MainActivity=>addFragment()");
             }
             fragmentArray.put(state, fragment);
         }
@@ -94,17 +95,28 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
     }
 
     @Override
-    public void OpenNavigator() {
+    public void openNavigator() {
         mDrawerLayout.openDrawer(mNavigatorView);
+        mIsNavigatorOpened = true;
     }
 
     @Override
-    public void CloseNavigator() {
+    public void closeNavigator() {
         mDrawerLayout.closeDrawer(mNavigatorView);
+        mIsNavigatorOpened = false;
+    }
+
+    public void switchNavigator() {
+        if (mIsNavigatorOpened)
+            closeNavigator();
+        else
+            openNavigator();
+
+        mIsNavigatorOpened = !mIsNavigatorOpened;
     }
 
     @Override
-    public void OnClickNews() {
+    public void onClickNews() {
         if (currentState == STATE_NEWS)
             return;
 
@@ -114,7 +126,7 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
     }
 
     @Override
-    public void OnClickBlog() {
+    public void onClickBlog() {
         if (currentState == STATE_BLOG)
             return;
 

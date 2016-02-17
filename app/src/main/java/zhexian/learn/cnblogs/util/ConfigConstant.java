@@ -16,14 +16,11 @@ public class ConfigConstant {
     public static final int SWIPE_LOAD_DATA_LOAD_MORE = 1;
 
     public static final int BUFFER_SIZE = 4096;
-    public static final int ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER = -1;
 
     /**
      * 缓存文件有效日期
      */
     public static final int CACHE_AVAILABLE_DAYS = 30;
-
-    public static final int ENTITY_TYPE_NORMAL_ITEM = 0;
 
 
     public static final double HTML_FONT_SIZE_NORMAL = 1.2;

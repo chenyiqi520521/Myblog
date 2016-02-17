@@ -1,12 +1,12 @@
 package zhexian.learn.cnblogs.comment;
 
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import java.util.List;
 
+import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseSwipeListFragment;
+import zhexian.learn.cnblogs.base.adapters.EfficientRecyclerAdapter;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 
 /**
@@ -26,16 +26,15 @@ public class CommentListFragment extends BaseSwipeListFragment<CommentEntity> {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mCategory = (ConfigConstant.CommentCategory) getArguments().getSerializable(CommentActivity.PARAM_CATEGORY);
         mDataID = getArguments().getLong(CommentActivity.PARAM_DATA_ID);
-        onRefresh();
     }
 
     @Override
-    protected RecyclerView.Adapter<RecyclerView.ViewHolder> bindArrayAdapter(List<CommentEntity> list) {
-        return new CommentAdapter(mBaseActivity, list);
+    protected EfficientRecyclerAdapter<CommentEntity> bindArrayAdapter(List<CommentEntity> list) {
+        return new CommentAdapter(list);
     }
 
     @Override
@@ -44,9 +43,24 @@ public class CommentListFragment extends BaseSwipeListFragment<CommentEntity> {
     }
 
     @Override
+    protected List<CommentEntity> loadDataFromDisk(int pageIndex, int pageSize) {
+        return CommentDal.getCommentFromDisk(mCategory, mDataID, pageIndex, pageSize);
+    }
+
+    @Override
     protected CommentEntity getLoadMorePlaceHolder() {
         CommentEntity entity = new CommentEntity();
-        entity.setEntityType(ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER);
+        entity.setEntityType(EfficientRecyclerAdapter.LOADING_MORE_ITEM);
         return entity;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.base_swipe_list;
+    }
+
+    @Override
+    public void bindData() {
+        onRefresh();
     }
 }

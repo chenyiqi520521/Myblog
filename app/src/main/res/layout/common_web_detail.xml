@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/news_detail_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <FrameLayout
+        android:id="@+id/html_detail_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        style="@style/title_bar">
+        <ImageButton
+            android:id="@+id/title_left_image"
+            style="@style/title_bar_button"
+            android:src="@mipmap/arrow_white_left"
+            />
+
+        <LinearLayout
+            android:id="@+id/title_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/md_title_bar_height"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/transparent_gray_circle_selector"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            >
+            <ImageView android:layout_width="32dp"
+                       android:layout_height="32dp"
+                       android:src="@mipmap/comment"/>
+
+            <TextView
+                android:id="@+id/title_comment_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/title_like"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/md_title_bar_height"
+            android:layout_toLeftOf="@id/title_comment"
+            android:background="@drawable/transparent_gray_circle_selector"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            >
+            <ImageView android:layout_width="32dp"
+                       android:layout_height="32dp"
+                       android:src="@mipmap/like"/>
+
+            <TextView
+                android:id="@+id/title_like_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

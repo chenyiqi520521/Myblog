@@ -13,4 +13,7 @@
     <color name="green_dark">#1e3e4a</color>
 
     <color name="night_mask">#90000000</color>
+
+    <color name="gray_darker">#2b2b2b</color>
+    <color name="gray_alpha_light">#90999999</color>
 </resources>

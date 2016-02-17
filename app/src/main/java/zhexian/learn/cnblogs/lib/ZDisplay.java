@@ -1,6 +1,8 @@
 package zhexian.learn.cnblogs.lib;
 
 
+import android.util.DisplayMetrics;
+
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseApplication;
 
@@ -9,6 +11,8 @@ import zhexian.learn.cnblogs.base.BaseApplication;
  */
 public class ZDisplay {
     private static ZDisplay mZDsiplay;
+    private static int mScreenWidthPx;
+    private static int mScreenHeightPx;
     private float mScale;
     private BaseApplication mContext;
     private int dayPrimaryColor;
@@ -18,8 +22,10 @@ public class ZDisplay {
 
     private ZDisplay(BaseApplication context) {
         this.mContext = context;
-
-        mScale = mContext.getResources().getDisplayMetrics().density;
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        mScreenWidthPx = metrics.widthPixels;
+        mScreenHeightPx = metrics.heightPixels;
+        mScale = metrics.density;
         dayPrimaryColor = context.getResources().getColor(R.color.gray_dark);
         nightPrimaryColor = context.getResources().getColor(R.color.white_dark);
         dayMinorColor = context.getResources().getColor(R.color.gray);
@@ -33,6 +39,14 @@ public class ZDisplay {
 
     public static ZDisplay getInstance() {
         return mZDsiplay;
+    }
+
+    public static int getScreenWidthPx() {
+        return mScreenWidthPx;
+    }
+
+    public static int getScreenHeightPx() {
+        return mScreenHeightPx;
     }
 
     public int Dp2Px(float dp) {

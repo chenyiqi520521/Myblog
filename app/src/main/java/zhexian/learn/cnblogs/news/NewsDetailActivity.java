@@ -1,13 +1,11 @@
 package zhexian.learn.cnblogs.news;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
-import android.widget.TextView;
 
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseSingleWebView;
@@ -16,6 +14,7 @@ import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.HtmlHelper;
 import zhexian.learn.cnblogs.util.SQLiteHelper;
 import zhexian.learn.cnblogs.util.Utils;
+import zhexian.learn.cnblogs.util.ZDomHelper;
 
 public class NewsDetailActivity extends BaseSingleWebView {
 
@@ -28,8 +27,9 @@ public class NewsDetailActivity extends BaseSingleWebView {
     private int mLikeCount;
     private int mCommentCount;
     private String mTitle;
+    private View mTitleView;
 
-    public static void actionStart(Context context, int newsID, int recommendCount, int commentCount, String title) {
+    public static void actionStart(Activity context, int newsID, int recommendCount, int commentCount, String title) {
         Intent intent = new Intent(context, NewsDetailActivity.class);
         intent.putExtra(PARAM_NEWS_ID, newsID);
         intent.putExtra(PARAM_NEWS_LIKE_COUNT, recommendCount);
@@ -38,38 +38,39 @@ public class NewsDetailActivity extends BaseSingleWebView {
         context.startActivity(intent);
     }
 
+    @Override
+    protected int getLayoutId() {
+        return R.layout.common_web_detail;
+    }
+
     @SuppressLint("AddJavascriptInterface")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mTitleView = findViewById(R.id.title_bar);
+        mTitleView.setClickable(true);
         Intent intent = getIntent();
         mDataID = intent.getIntExtra(PARAM_NEWS_ID, -1);
         mLikeCount = intent.getIntExtra(PARAM_NEWS_LIKE_COUNT, 0);
         mCommentCount = intent.getIntExtra(PARAM_NEWS_COMMENT_COUNT, 0);
         mTitle = intent.getStringExtra(PARAM_NEWS_TITLE);
-        new NewsDetailTask().execute(mDataID);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_html_detail, menu);
-        View likeItem = menu.findItem(R.id.action_detail_like).getActionView();
-        ((TextView) likeItem.findViewById(R.id.action_item_like_text)).setText(String.valueOf(mLikeCount));
-        likeItem.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.title_left_image).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Utils.toast(getApp(), "TODO：点击喜爱，会收藏到本地");
+            public void onClick(View v) {
+                if (!mTitleView.isClickable())
+                    return;
+
+                finish();
             }
         });
 
-        View commentItem = menu.findItem(R.id.action_detail_comment).getActionView();
-        ((TextView) commentItem.findViewById(R.id.action_item_comment_text)).setText(String.valueOf(mCommentCount));
-
-        commentItem.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.title_comment).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
+                if (!mTitleView.isClickable())
+                    return;
+
                 if (mCommentCount == 0) {
                     Utils.toast(getApp(), R.string.alert_no_comment);
                     return;
@@ -77,7 +78,21 @@ public class NewsDetailActivity extends BaseSingleWebView {
                 CommentActivity.actionStart(NewsDetailActivity.this, ConfigConstant.CommentCategory.News, mDataID, mTitle);
             }
         });
-        return true;
+
+        findViewById(R.id.title_like).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mTitleView.isClickable())
+                    return;
+
+                Utils.toast(NewsDetailActivity.this, R.string.function_building);
+            }
+        });
+
+        ZDomHelper.setText(this, R.id.title_comment_text, String.valueOf(mCommentCount));
+        ZDomHelper.setText(this, R.id.title_like_text, String.valueOf(mLikeCount));
+        new NewsDetailTask().execute(mDataID);
+        regScrollTitleBar(findViewById(R.id.title_bar));
     }
 
     private class NewsDetailTask extends AsyncTask<Integer, Void, NewsDetailEntity> {

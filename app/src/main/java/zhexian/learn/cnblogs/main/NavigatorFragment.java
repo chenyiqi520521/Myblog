@@ -7,8 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -125,24 +123,20 @@ public class NavigatorFragment extends Fragment implements View.OnClickListener 
         if (mINavigatorCallBack == null)
             return;
 
-        mINavigatorCallBack.CloseNavigator();
+        mINavigatorCallBack.closeNavigator();
         int navigatorID = (int) mNavigatorAdapter.getItemId(position);
 
         switch (navigatorID) {
             case NavigatorDal.ID_NEWS:
-                mINavigatorCallBack.OnClickNews();
+                mINavigatorCallBack.onClickNews();
                 break;
             case NavigatorDal.ID_BLOGS:
-                mINavigatorCallBack.OnClickBlog();
+                mINavigatorCallBack.onClickBlog();
                 break;
         }
     }
 
     void InitDrawToggle(DrawerLayout drawerLayout) {
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.mipmap.ic_drawer);
-
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, R.mipmap.ic_drawer, R.string.open_navigator, R.string.close_navigator) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -164,7 +158,7 @@ public class NavigatorFragment extends Fragment implements View.OnClickListener 
         };
 
         if (!mIsUserLearnedNavigator && !mIsFromSavedInstance)
-            mINavigatorCallBack.OpenNavigator();
+            mINavigatorCallBack.openNavigator();
 
         drawerLayout.post(new Runnable() {
             @Override
@@ -181,13 +175,13 @@ public class NavigatorFragment extends Fragment implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.navigator_setting: {
-                mINavigatorCallBack.CloseNavigator();
+                mINavigatorCallBack.closeNavigator();
                 SettingActivity.actionStart(mBaseActivity);
             }
             break;
 
             case R.id.navigator_my_favorite:
-                //   mINavigatorCallBack.CloseNavigator();
+                //   mINavigatorCallBack.closeNavigator();
 
                 break;
         }

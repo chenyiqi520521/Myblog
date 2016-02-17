@@ -26,5 +26,6 @@
 
     <View
         style="@style/split_list_horizontal_view"
-        android:layout_below="@id/comment_content"/>
+        android:layout_below="@id/comment_content"
+        android:layout_marginLeft="8dp"/>
 </RelativeLayout>

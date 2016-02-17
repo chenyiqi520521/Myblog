@@ -232,6 +232,10 @@ public class PullToRefreshView extends ViewGroup {
                 mIsBeingDragged = false;
                 if (overScrollTop > mTotalDragDistance) {
                     changeStatus(STATUS_REFRESHING);
+
+                    if (mListener != null)
+                        mListener.onRefresh();
+
                 } else {
                     changeStatus(STATUS_IDLE);
                 }
@@ -264,9 +268,6 @@ public class PullToRefreshView extends ViewGroup {
         mRefreshView.clearAnimation();
         mRefreshView.startAnimation(mAnimateToCorrectPosition);
         mBaseRefreshView.start();
-
-        if (mListener != null)
-            mListener.onRefresh();
 
         mCurrentOffsetTop = mTarget.getTop();
         mTarget.setPadding(mTargetPaddingLeft, mTargetPaddingTop, mTargetPaddingRight, mTotalDragDistance);

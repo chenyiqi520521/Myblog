@@ -3,18 +3,16 @@ package zhexian.learn.cnblogs.base;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import zhexian.learn.cnblogs.R;
+import zhexian.learn.cnblogs.base.adapters.EfficientRecyclerAdapter;
 import zhexian.learn.cnblogs.ui.PullToRefreshView;
 import zhexian.learn.cnblogs.util.Utils;
 
@@ -23,15 +21,15 @@ import zhexian.learn.cnblogs.util.Utils;
  * 下拉刷新列表View的基类
  * 提供了下拉刷新、上拉加载数据的功能
  */
-public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> extends Fragment
+public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> extends BaseFragment
         implements PullToRefreshView.OnRefreshListener {
     protected BaseApplication mBaseApp;
     protected BaseActivity mBaseActivity;
-
+    private ZOnScrollListener mRecyclerViewScrollListener;
     private PullToRefreshView mPullToRefresh;
     private RecyclerView mRecyclerView;
 
-    private RecyclerView.Adapter<RecyclerView.ViewHolder> mAdapter;
+    private EfficientRecyclerAdapter<DataEntity> mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private List<DataEntity> mDataList;
     private boolean mIsRequestingData = false;
@@ -43,7 +41,7 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
     /**
      * 绑定列表的数据源
      */
-    protected abstract RecyclerView.Adapter<RecyclerView.ViewHolder> bindArrayAdapter(List<DataEntity> list);
+    protected abstract EfficientRecyclerAdapter<DataEntity> bindArrayAdapter(List<DataEntity> list);
 
     /**
      * 获取数据，具体是从缓存中获取，还是从网络中获取，取决于子类决策
@@ -53,6 +51,15 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
      * @return 数据列表
      */
     protected abstract List<DataEntity> loadData(int pageIndex, int pageSize);
+
+    /**
+     * 从磁盘中获取数据，避免列表空白
+     *
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    protected abstract List<DataEntity> loadDataFromDisk(int pageIndex, int pageSize);
 
     protected abstract DataEntity getLoadMorePlaceHolder();
 
@@ -66,8 +73,8 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mBaseActivity = (BaseActivity) getActivity();
         mBaseApp = mBaseActivity.getApp();
         mLoadMorePlaceHolder = getLoadMorePlaceHolder();
@@ -75,7 +82,6 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         mIsLoadAllData = false;
         mIsCancelTask = false;
         mDataList = new ArrayList<>();
-        return inflater.inflate(R.layout.base_swipe_list, null);
     }
 
     @Override
@@ -83,15 +89,12 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
         mPullToRefresh = (PullToRefreshView) view.findViewById(R.id.base_swipe_container);
         mPullToRefresh.setTextColor(mBaseApp.isNightMode() ? R.color.green_light : R.color.gray);
         mPullToRefresh.setOnRefreshListener(this);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.base_swipe_list);
-        initListView();
-    }
 
-    private void initListView() {
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.base_swipe_list);
         mLinearLayoutManager = new LinearLayoutManager(mBaseActivity);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        ZOnScrollListener scrollListener = new ZOnScrollListener();
-        mRecyclerView.setOnScrollListener(scrollListener);
+        mRecyclerViewScrollListener = new ZOnScrollListener();
+        mRecyclerView.addOnScrollListener(mRecyclerViewScrollListener);
 
         mAdapter = bindArrayAdapter(mDataList);
         mRecyclerView.setAdapter(mAdapter);
@@ -110,11 +113,16 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mRecyclerView.removeOnScrollListener(mRecyclerViewScrollListener);
         mLoadMorePlaceHolder = null;
         mLoadTask = null;
         mDataList = null;
         mBaseActivity = null;
         mBaseApp = null;
+    }
+
+    public boolean isNetworkAvailable() {
+        return mBaseApp.isNetworkAvailable();
     }
 
     public void cancelLoadingTask() {
@@ -178,9 +186,19 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
             fragment.mIsRequestingData = true;
             fragment.mIsLoadAllData = false;
 
-            if (isRefresh)
+            if (isRefresh) {
+                //没数据，默认展示本地
+                if (fragment.mDataList.isEmpty()) {
+
+                    List<T> dataList = fragment.loadDataFromDisk(1, fragment.getPageSize());
+
+                    if (dataList != null && !dataList.isEmpty()) {
+                        fragment.mDataList.addAll(dataList);
+                        fragment.mAdapter.notifyDataSetChanged();
+                    }
+                }
                 fragment.mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESHING);
-            else
+            } else
                 fragment.onPreLoadMore();
         }
 
@@ -216,7 +234,11 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
 
             fragment.mIsRequestingData = false;
             if (baseBusinessListEntity == null) {
-                Utils.toast(fragment.mBaseApp, fragment.getResources().getString(R.string.alert_error));
+
+                if (swipeFragment.get().isNetworkAvailable())
+                    Utils.toast(fragment.mBaseApp, R.string.alert_error);
+                else
+                    Utils.toast(fragment.mBaseApp, R.string.net_work_disconnected);
 
                 if (isRefresh)
                     fragment.mPullToRefresh.changeStatus(PullToRefreshView.STATUS_REFRESH_FAIL);

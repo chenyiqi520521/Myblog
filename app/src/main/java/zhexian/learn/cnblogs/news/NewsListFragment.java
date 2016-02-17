@@ -2,15 +2,16 @@ package zhexian.learn.cnblogs.news;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.List;
 
-import zhexian.learn.cnblogs.base.BaseActivity;
+import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseSwipeListFragment;
+import zhexian.learn.cnblogs.base.adapters.EfficientRecyclerAdapter;
 import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZDate;
+import zhexian.learn.cnblogs.main.MainActivity;
 import zhexian.learn.cnblogs.ui.TabActionBarView;
 import zhexian.learn.cnblogs.util.ConfigConstant;
 import zhexian.learn.cnblogs.util.DBHelper;
@@ -22,21 +23,34 @@ import zhexian.learn.cnblogs.util.DBHelper;
 public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> implements TabActionBarView.ITabActionCallback {
 
     private ConfigConstant.NewsCategory mCategory;
+    private TabActionBarView mActionBarView;
 
     public static NewsListFragment newInstance() {
         return new NewsListFragment();
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        TabActionBarView actionBarView = new TabActionBarView((BaseActivity) getActivity());
-        actionBarView.bindTab(this, "精选", "最新");
+    protected int getLayoutId() {
+        return R.layout.news_list;
     }
 
     @Override
-    protected RecyclerView.Adapter<RecyclerView.ViewHolder> bindArrayAdapter(List<NewsListEntity> list) {
-        return new NewsListAdapter(mBaseActivity, list);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mActionBarView = (TabActionBarView) view.findViewById(R.id.title_tab_bar);
+        mActionBarView.bindTab(this, "精选", "最新");
+        final MainActivity activity = (MainActivity) getActivity();
+        findViewById(R.id.title_left_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.switchNavigator();
+            }
+        });
+    }
+
+    @Override
+    protected EfficientRecyclerAdapter<NewsListEntity> bindArrayAdapter(List<NewsListEntity> list) {
+        return new NewsListAdapter(list);
     }
 
     @Override
@@ -53,9 +67,14 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
     }
 
     @Override
+    protected List<NewsListEntity> loadDataFromDisk(int pageIndex, int pageSize) {
+        return NewsDal.getNewsListFromDisk(mCategory, pageIndex, pageSize);
+    }
+
+    @Override
     protected NewsListEntity getLoadMorePlaceHolder() {
         NewsListEntity entity = new NewsListEntity();
-        entity.setEntityType(ConfigConstant.ENTITY_TYPE_LOAD_MORE_PLACE_HOLDER);
+        entity.setEntityType(EfficientRecyclerAdapter.LOADING_MORE_ITEM);
         return entity;
     }
 
@@ -76,6 +95,11 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
         onRefresh();
     }
 
+    @Override
+    public void bindData() {
+        mActionBarView.leftClick();
+    }
+
     private class AsyncCacheNews extends AsyncTask<List<NewsListEntity>, Void, Void> {
 
         @Override
@@ -89,7 +113,6 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
 
                 if (entity == null)
                     continue;
-
 
                 String key = String.format("news_content_%d", entity.getNewsID());
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        style="@style/title_bar">
+        <ImageButton
+            android:id="@+id/title_left_image"
+            style="@style/title_bar_button"
+            android:padding="17dp"
+            android:src="@mipmap/ic_drawer"
+            />
+
+        <zhexian.learn.cnblogs.ui.TabActionBarView
+            android:id="@+id/title_tab_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <include layout="@layout/base_swipe_list"/>
+</LinearLayout>
