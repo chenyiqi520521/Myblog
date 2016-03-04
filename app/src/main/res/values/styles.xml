@@ -37,13 +37,14 @@
         <item name="android:windowAnimationStyle">@style/transparentAnimation</item>
     </style>
 
+    <!--普通有底色的Activity动画-->
     <style name="normalAnimation" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_right_in</item>
         <item name="android:activityOpenExitAnimation">@anim/slide_left_out</item>
         <item name="android:activityCloseEnterAnimation">@anim/slide_left_in</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>
     </style>
-
+    <!--透明的Activity动画-->
     <style name="transparentAnimation" parent="@android:style/Animation.Translucent">
         <item name="android:windowEnterAnimation">@anim/slide_right_in</item>
         <item name="android:windowExitAnimation">@anim/slide_right_out</item>
