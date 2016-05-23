@@ -7,16 +7,16 @@ import java.util.List;
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseSwipeListFragment;
 import zhexian.learn.cnblogs.base.adapters.EfficientRecyclerAdapter;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.Constant;
 
 /**
  * Created by Administrator on 2015/8/28.
  */
 public class CommentListFragment extends BaseSwipeListFragment<CommentEntity> {
-    private ConfigConstant.CommentCategory mCategory;
+    private Constant.CommentCategory mCategory;
     private long mDataID;
 
-    public static CommentListFragment fragmentStart(ConfigConstant.CommentCategory category, long dataID) {
+    public static CommentListFragment fragmentStart(Constant.CommentCategory category, long dataID) {
         CommentListFragment fragment = new CommentListFragment();
         Bundle args = new Bundle();
         args.putSerializable(CommentActivity.PARAM_CATEGORY, category);
@@ -28,7 +28,7 @@ public class CommentListFragment extends BaseSwipeListFragment<CommentEntity> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCategory = (ConfigConstant.CommentCategory) getArguments().getSerializable(CommentActivity.PARAM_CATEGORY);
+        mCategory = (Constant.CommentCategory) getArguments().getSerializable(CommentActivity.PARAM_CATEGORY);
         mDataID = getArguments().getLong(CommentActivity.PARAM_DATA_ID);
     }
 

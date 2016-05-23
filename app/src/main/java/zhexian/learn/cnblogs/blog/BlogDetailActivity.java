@@ -9,7 +9,7 @@ import android.view.View;
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseSingleWebView;
 import zhexian.learn.cnblogs.comment.CommentActivity;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.Constant;
 import zhexian.learn.cnblogs.util.HtmlHelper;
 import zhexian.learn.cnblogs.util.SQLiteHelper;
 import zhexian.learn.cnblogs.util.Utils;
@@ -60,7 +60,7 @@ public class BlogDetailActivity extends BaseSingleWebView {
                     Utils.toast(getApp(), R.string.alert_no_comment);
                     return;
                 }
-                CommentActivity.actionStart(BlogDetailActivity.this, ConfigConstant.CommentCategory.Blog, mEntity.getId(), mEntity.getTitle());
+                CommentActivity.actionStart(BlogDetailActivity.this, Constant.CommentCategory.Blog, mEntity.getId(), mEntity.getTitle());
             }
         });
 

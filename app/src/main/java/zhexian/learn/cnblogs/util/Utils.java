@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Administrator on 2015/8/28.
@@ -57,7 +58,7 @@ public class Utils {
         return BitmapFactory.decodeByteArray(data, 0, data.length, options);
     }
 
-    public static ConfigConstant.NetworkStatus GetConnectType(Context context) {
+    public static Constant.NetworkStatus GetConnectType(Context context) {
         ConnectivityManager connMgr =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -65,11 +66,11 @@ public class Utils {
 
         if (activeInfo != null && activeInfo.isConnected()) {
             if (activeInfo.getType() == ConnectivityManager.TYPE_WIFI)
-                return ConfigConstant.NetworkStatus.Wifi;
+                return Constant.NetworkStatus.Wifi;
             else if (activeInfo.getType() == ConnectivityManager.TYPE_MOBILE)
-                return ConfigConstant.NetworkStatus.Mobile;
+                return Constant.NetworkStatus.Mobile;
         }
-        return ConfigConstant.NetworkStatus.DisConnect;
+        return Constant.NetworkStatus.DisConnect;
     }
 
     public static String transToLocal(String url) {
@@ -110,6 +111,14 @@ public class Utils {
         }
 
         return context.getFilesDir().getAbsolutePath();
+    }
+
+    public static boolean isEmpty(List list) {
+        return list == null || list.isEmpty();
+    }
+
+    public static boolean isEmpty(String[] list) {
+        return list == null || list.length == 0;
     }
 }
 

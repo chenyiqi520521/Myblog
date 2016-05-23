@@ -6,8 +6,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import zhexian.learn.cnblogs.base.permission.RxPermissions;
 import zhexian.learn.cnblogs.lib.ZDate;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.Constant;
 import zhexian.learn.cnblogs.util.DBHelper;
 import zhexian.learn.cnblogs.util.SQLiteHelper;
 import zhexian.learn.cnblogs.util.Utils;
@@ -37,13 +38,14 @@ public class BaseApplication extends Application {
     private int mScreenWidth;
     private int mScreenHeight;
     private int mLastModifyDays;
-    private ConfigConstant.NetworkStatus mNetWorkStatus;
+    private Constant.NetworkStatus mNetWorkStatus;
     private int mScreenWidthDP;
     private String mFileRootDir;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        RxPermissions.init(this);
         mSp = PreferenceManager.getDefaultSharedPreferences(this);
         mIsAutoLoadRecommend = mSp.getBoolean(PARAM_IS_AUTO_LOAD_RECOMMEND, true);
         mIsNightMode = mSp.getBoolean(PARAM_IS_NIGHT_MODE, false);
@@ -61,7 +63,6 @@ public class BaseApplication extends Application {
 
         if (mImageCachePoolSize == 0)
             setImageCachePoolSize();
-
     }
 
     public boolean isAutoLoadRecommend() {
@@ -124,25 +125,25 @@ public class BaseApplication extends Application {
         mSp.edit().putBoolean(PARAM_IS_IMG_ONLY_WIFI, mIsImgOnlyWifi).apply();
     }
 
-    public ConfigConstant.NetworkStatus getNetworkStatus() {
+    public Constant.NetworkStatus getNetworkStatus() {
         return mNetWorkStatus;
     }
 
-    public void setNetworkStatus(ConfigConstant.NetworkStatus mNetworkStatus) {
+    public void setNetworkStatus(Constant.NetworkStatus mNetworkStatus) {
         this.mNetWorkStatus = mNetworkStatus;
     }
 
     public boolean isNetworkAvailable() {
-        return mNetWorkStatus != ConfigConstant.NetworkStatus.DisConnect;
+        return mNetWorkStatus != Constant.NetworkStatus.DisConnect;
     }
 
     public boolean isNetworkWifi() {
-        return mNetWorkStatus == ConfigConstant.NetworkStatus.Wifi;
+        return mNetWorkStatus == Constant.NetworkStatus.Wifi;
     }
 
     public boolean canRequestImage() {
-        return mNetWorkStatus == ConfigConstant.NetworkStatus.Wifi ||
-                (mNetWorkStatus == ConfigConstant.NetworkStatus.Mobile && !mIsImgOnlyWifi);
+        return mNetWorkStatus == Constant.NetworkStatus.Wifi ||
+                (mNetWorkStatus == Constant.NetworkStatus.Mobile && !mIsImgOnlyWifi);
     }
 
 

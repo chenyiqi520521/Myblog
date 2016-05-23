@@ -7,7 +7,7 @@ import java.util.List;
 import zhexian.learn.cnblogs.base.BaseApplication;
 import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZHttp;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.Constant;
 import zhexian.learn.cnblogs.util.DBHelper;
 
 /**
@@ -29,8 +29,8 @@ public class NewsDal {
      * @param pageSize
      * @return
      */
-    public static List<NewsListEntity> getNewsListFromDisk(ConfigConstant.NewsCategory category, int pageIndex, int pageSize) {
-        String prefix = category == ConfigConstant.NewsCategory.Recommend ? RECOMMEND_STRING : RECENT_STRING;
+    public static List<NewsListEntity> getNewsListFromDisk(Constant.NewsCategory category, int pageIndex, int pageSize) {
+        String prefix = category == Constant.NewsCategory.Recommend ? RECOMMEND_STRING : RECENT_STRING;
         String key = String.format("%s_news_%d_%d", prefix, pageIndex, pageSize);
 
         return DBHelper.cache().getList(key, NewsListEntity.class);
@@ -44,7 +44,7 @@ public class NewsDal {
      * @param pageSize
      * @return
      */
-    public static List<NewsListEntity> getNewsList(BaseApplication baseApp, ConfigConstant.NewsCategory category, int pageIndex, int pageSize) {
+    public static List<NewsListEntity> getNewsList(BaseApplication baseApp, Constant.NewsCategory category, int pageIndex, int pageSize) {
         if (baseApp == null)
             return null;
 
@@ -53,7 +53,7 @@ public class NewsDal {
         String prefix = RECENT_STRING;
         String requestUrl = recentNewsUrl;
 
-        if (category == ConfigConstant.NewsCategory.Recommend) {
+        if (category == Constant.NewsCategory.Recommend) {
             prefix = RECOMMEND_STRING;
             requestUrl = recommendNewsUrl;
         }

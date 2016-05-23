@@ -10,14 +10,14 @@ import zhexian.learn.cnblogs.base.BaseSwipeListFragment;
 import zhexian.learn.cnblogs.base.adapters.EfficientRecyclerAdapter;
 import zhexian.learn.cnblogs.main.MainActivity;
 import zhexian.learn.cnblogs.ui.TabActionBarView;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.Constant;
 
 /**
  * Created by 陈俊杰 on 2015/8/30.
  * 博客列表
  */
 public class BlogListFragment extends BaseSwipeListFragment<BlogEntity> implements TabActionBarView.ITabActionCallback {
-    ConfigConstant.BlogCategory mCategory = ConfigConstant.BlogCategory.HOME;
+    Constant.BlogCategory mCategory = Constant.BlogCategory.HOME;
     private TabActionBarView mActionBarView;
 
     public static BlogListFragment newInstance() {
@@ -31,7 +31,7 @@ public class BlogListFragment extends BaseSwipeListFragment<BlogEntity> implemen
 
     @Override
     protected int getPageSize() {
-        if (mCategory == ConfigConstant.BlogCategory.HOME)
+        if (mCategory == Constant.BlogCategory.HOME)
             return super.getPageSize();
         else
             return 100;
@@ -64,15 +64,15 @@ public class BlogListFragment extends BaseSwipeListFragment<BlogEntity> implemen
             return null;
 
         //分页获取首页信息
-        if (mCategory == ConfigConstant.BlogCategory.HOME)
+        if (mCategory == Constant.BlogCategory.HOME)
             return BlogDal.getHomeBlogs(mBaseApp, pageIndex, pageSize);
 
         //获取全部热门信息
-        if (mCategory == ConfigConstant.BlogCategory.HOT)
+        if (mCategory == Constant.BlogCategory.HOT)
             return BlogDal.getHotBlogs(mBaseApp);
 
         //获取全部推荐信息
-        if (mCategory == ConfigConstant.BlogCategory.RECOMMEND)
+        if (mCategory == Constant.BlogCategory.RECOMMEND)
             return BlogDal.getRecommendBlogs(mBaseApp);
 
         return null;
@@ -85,7 +85,7 @@ public class BlogListFragment extends BaseSwipeListFragment<BlogEntity> implemen
 
     @Override
     protected BlogEntity getLoadMorePlaceHolder() {
-        if (mCategory != ConfigConstant.BlogCategory.HOME)
+        if (mCategory != Constant.BlogCategory.HOME)
             return null;
 
         BlogEntity entity = new BlogEntity();
@@ -95,19 +95,19 @@ public class BlogListFragment extends BaseSwipeListFragment<BlogEntity> implemen
 
     @Override
     public void onLeftTabClick() {
-        mCategory = ConfigConstant.BlogCategory.RECOMMEND;
+        mCategory = Constant.BlogCategory.RECOMMEND;
         onRefresh();
     }
 
     @Override
     public void onMiddleTabClick() {
-        mCategory = ConfigConstant.BlogCategory.HOT;
+        mCategory = Constant.BlogCategory.HOT;
         onRefresh();
     }
 
     @Override
     public void onRightClick() {
-        mCategory = ConfigConstant.BlogCategory.HOME;
+        mCategory = Constant.BlogCategory.HOME;
         onRefresh();
     }
 

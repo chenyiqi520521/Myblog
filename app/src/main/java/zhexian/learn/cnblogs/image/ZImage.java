@@ -95,7 +95,7 @@ public class ZImage {
         imageView.setImageBitmap(placeHolderBitmap);
     }
 
-    Bitmap getFromMemoryCache(String url) {
+    public Bitmap getFromMemoryCache(String url) {
 
         if (mMemoryCache.get(url) == null)
             return null;
@@ -156,6 +156,10 @@ public class ZImage {
 
         if (canQueryHttp)
             ImageTaskManager.getInstance().addTask(new LoadImageTask(mBaseApp, imageView, url, width, height, cacheType), workType);
+    }
+
+    private void loadBitmap(String url, CommonCallBack<Bitmap> callBack, int width, int height) {
+        ImageTaskManager.getInstance().addTask(new LoadBitmapTask(mBaseApp, url, width, height, callBack), ImageTaskManager.WorkType.LIFO);
     }
 
     /**
@@ -287,6 +291,10 @@ public class ZImage {
          */
         public void into(ImageView imageView) {
             mZImage.load(url, imageView, width, height, cacheType, priority, placeHolder, canQueryByHttp);
+        }
+
+        public void getBitmap(CommonCallBack<Bitmap> callBack) {
+            mZImage.loadBitmap(url, callBack, width, height);
         }
 
         /**

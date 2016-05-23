@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ee000000">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/imagePreview_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <FrameLayout
+        android:id="@+id/imagePreview_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/imagePreview_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/imagePreview_buttonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/imagePreview_SaveImage"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@drawable/xl_round_square_gray_selector"
+                android:text="保存到手机"
+                android:textColor="#0779fd"
+                android:textSize="18sp"/>
+
+            <Button
+                android:id="@+id/imagePreview_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/xl_round_square_white_selector"
+                android:text="取消"
+                android:textColor="#027aff"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

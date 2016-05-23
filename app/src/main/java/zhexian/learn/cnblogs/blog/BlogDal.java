@@ -6,7 +6,7 @@ import java.util.List;
 
 import zhexian.learn.cnblogs.base.BaseApplication;
 import zhexian.learn.cnblogs.lib.ZHttp;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.Constant;
 import zhexian.learn.cnblogs.util.DBHelper;
 import zhexian.learn.cnblogs.util.Utils;
 
@@ -25,13 +25,13 @@ class BlogDal {
     private static final String HOT_URL = String.format("%s/%s/", endPoint, HOT_STRING);
     private static final String DETAIL_URL = String.format("%s/post/body/", endPoint);
 
-    public static List<BlogEntity> getBlogsFromDisk(ConfigConstant.BlogCategory category, int pageIndex, int pageSize) {
+    public static List<BlogEntity> getBlogsFromDisk(Constant.BlogCategory category, int pageIndex, int pageSize) {
         String key;
 
-        if (category == ConfigConstant.BlogCategory.HOME)
+        if (category == Constant.BlogCategory.HOME)
             key = String.format("%s_blog_%d_%d", HOME_STRING, pageIndex, pageSize);
         else
-            key = String.format("%s_blog", category == ConfigConstant.BlogCategory.RECOMMEND ? RECOMMEND_STRING : HOT_STRING);
+            key = String.format("%s_blog", category == Constant.BlogCategory.RECOMMEND ? RECOMMEND_STRING : HOT_STRING);
 
         return DBHelper.cache().getList(key, BlogEntity.class);
     }
@@ -70,7 +70,7 @@ class BlogDal {
      * @return
      */
     public static List<BlogEntity> getRecommendBlogs(BaseApplication baseApp) {
-        return getList(baseApp, ConfigConstant.BlogCategory.RECOMMEND);
+        return getList(baseApp, Constant.BlogCategory.RECOMMEND);
     }
 
     /**
@@ -80,7 +80,7 @@ class BlogDal {
      * @return
      */
     public static List<BlogEntity> getHotBlogs(BaseApplication baseApp) {
-        return getList(baseApp, ConfigConstant.BlogCategory.HOT);
+        return getList(baseApp, Constant.BlogCategory.HOT);
     }
 
     /**
@@ -90,17 +90,17 @@ class BlogDal {
      * @param category
      * @return
      */
-    private static List<BlogEntity> getList(BaseApplication baseApp, ConfigConstant.BlogCategory category) {
+    private static List<BlogEntity> getList(BaseApplication baseApp, Constant.BlogCategory category) {
         if (baseApp == null)
             return null;
 
         String prefix;
         String requestUrl;
 
-        if (category == ConfigConstant.BlogCategory.RECOMMEND) {
+        if (category == Constant.BlogCategory.RECOMMEND) {
             prefix = RECOMMEND_STRING;
             requestUrl = RECOMMEND_URL;
-        } else if (category == ConfigConstant.BlogCategory.HOT) {
+        } else if (category == Constant.BlogCategory.HOT) {
             prefix = HOT_STRING;
             requestUrl = HOT_URL;
         } else

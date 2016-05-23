@@ -15,8 +15,9 @@ import zhexian.learn.cnblogs.blog.BlogListFragment;
 import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZDisplay;
 import zhexian.learn.cnblogs.news.NewsListFragment;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.Constant;
 import zhexian.learn.cnblogs.util.DBHelper;
+import zhexian.learn.cnblogs.util.DisplayUtil;
 import zhexian.learn.cnblogs.util.HtmlHelper;
 import zhexian.learn.cnblogs.util.SQLiteHelper;
 
@@ -36,6 +37,7 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        DisplayUtil.init(this);
         mIsNightMode = getApp().isNightMode();
         fragmentArray = new SparseArray<>(2);
 
@@ -64,7 +66,7 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         SQLiteHelper.Init(getApp());
         HtmlHelper.init(getApp());
 
-        getApp().autoCleanCache(ConfigConstant.CACHE_AVAILABLE_DAYS);
+        getApp().autoCleanCache(Constant.CACHE_AVAILABLE_DAYS);
     }
 
     private void addFragment(int state) {

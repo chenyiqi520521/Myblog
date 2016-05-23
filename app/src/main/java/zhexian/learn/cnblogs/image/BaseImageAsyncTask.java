@@ -8,6 +8,7 @@ abstract class BaseImageAsyncTask implements Runnable {
     static final int LOAD_IMAGE_TASK_ID = 2;
     static final int CACHE_PACK_IMAGE_TASK_ID = 3;
     static final int CACHE_IMAGE_TASK_ID = 4;
+    static final int QUERY_BITMAP_TASK_ID = 5;
 
     public abstract int getTaskId();
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="zhexian.learn.cnblogs"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="zhexian.learn.cnblogs">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -40,6 +40,9 @@
             android:name=".blog.BlogDetailActivity"
             android:label="">
         </activity>
+        <activity
+            android:name=".ui.image.XLImagePreviewActivity"
+            android:theme="@style/AppTheme.fullScreen"/>
     </application>
 
 </manifest>

@@ -1,7 +1,12 @@
 package zhexian.learn.cnblogs.util;
 
 
-public class ConfigConstant {
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+public class Constant {
 
     public static final int MESSAGE_WHAT_NORMAL = -1;
 
@@ -27,6 +32,14 @@ public class ConfigConstant {
     public static final double HTML_FONT_SIZE_BIG = 1.4;
     public static final long MIN_CHANGE_DURATION_MILLION_SECONDS = 500;
     public static final long MIN_TRIGGER_ACTION_BAR_DISTANCE = 10;
+    /**
+     * 闲置
+     */
+    public static final int IDLE = 0;
+    /**
+     * 进行中
+     */
+    public static final int RUNNING = 1;
 
     public enum NetworkStatus {
         DisConnect,
@@ -35,6 +48,7 @@ public class ConfigConstant {
 
         Wifi
     }
+
 
     public enum BlogCategory {
 
@@ -60,12 +74,18 @@ public class ConfigConstant {
 
         Recent
     }
-
-
     public enum CommentCategory {
 
         News,
 
         Blog
+    }
+
+    /**
+     * 动画状态
+     */
+    @IntDef({IDLE, RUNNING})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface AnimationState {
     }
 }

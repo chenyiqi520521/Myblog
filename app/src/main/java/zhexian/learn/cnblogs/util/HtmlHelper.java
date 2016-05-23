@@ -13,6 +13,7 @@ import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZDate;
 import zhexian.learn.cnblogs.lib.ZIO;
 import zhexian.learn.cnblogs.news.NewsDetailEntity;
+import zhexian.learn.cnblogs.ui.image.ImagePreviewHelper;
 
 /**
  * Created by Administrator on 2015/8/29.
@@ -121,7 +122,7 @@ public class HtmlHelper {
     }
 
     public String getFontSize() {
-        double fontSize = mApp.isBigFont() ? ConfigConstant.HTML_FONT_SIZE_BIG : ConfigConstant.HTML_FONT_SIZE_NORMAL;
+        double fontSize = mApp.isBigFont() ? Constant.HTML_FONT_SIZE_BIG : Constant.HTML_FONT_SIZE_NORMAL;
         return String.valueOf(fontSize);
     }
 
@@ -129,6 +130,8 @@ public class HtmlHelper {
     public String decorateIMGTag(String htmlContent, int screenWidth, boolean isNight) {
         if (TextUtils.isEmpty(htmlContent))
             return null;
+
+        ImagePreviewHelper.getInstance().clearImageList();
 
         Pattern patternImgSrc = Pattern.compile("<img(.+?)src=\"(.+?)\"(.+?)/>");
         Matcher localMatcher = patternImgSrc.matcher(htmlContent);
@@ -143,6 +146,7 @@ public class HtmlHelper {
             String src;
 
             String imageUrl = localMatcher.group(2);
+            ImagePreviewHelper.getInstance().addImageUrl(imageUrl);
 
             if (DBHelper.cache().exist(imageUrl))
                 src = Utils.transToLocal(imageUrl);

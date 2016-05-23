@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.Constant;
 
 /**
  * Created by Administrator on 2015/8/28.
@@ -227,10 +227,10 @@ public class ZIO {
     public static byte[] InputStreamToByte(InputStream in) {
 
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        byte[] data = new byte[ConfigConstant.BUFFER_SIZE];
+        byte[] data = new byte[Constant.BUFFER_SIZE];
         int count;
         try {
-            while ((count = in.read(data, 0, ConfigConstant.BUFFER_SIZE)) != -1)
+            while ((count = in.read(data, 0, Constant.BUFFER_SIZE)) != -1)
                 outStream.write(data, 0, count);
 
             data = null;

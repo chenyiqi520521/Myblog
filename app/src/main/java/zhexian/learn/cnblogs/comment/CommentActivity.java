@@ -9,14 +9,14 @@ import android.widget.TextView;
 
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseActivity;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.Constant;
 
 public class CommentActivity extends BaseActivity {
     public static final String PARAM_CATEGORY = "zhexian.app.zoschina.comment.PARAM_CATEGORY";
     public static final String PARAM_DATA_ID = "zhexian.app.zoschina.comment.PARAM_DATA_ID";
     public static final String PARAM_TITLE = "zhexian.app.zoschina.comment.PARAM_TITLE";
 
-    public static void actionStart(Context context, ConfigConstant.CommentCategory category, long dataID, String title) {
+    public static void actionStart(Context context, Constant.CommentCategory category, long dataID, String title) {
         Intent intent = new Intent(context, CommentActivity.class);
         intent.putExtra(PARAM_CATEGORY, category);
         intent.putExtra(PARAM_DATA_ID, dataID);
@@ -44,7 +44,7 @@ public class CommentActivity extends BaseActivity {
             });
 
             ((TextView) findViewById(R.id.title_text)).setText(intent.getStringExtra(PARAM_TITLE));
-            ConfigConstant.CommentCategory category = (ConfigConstant.CommentCategory) intent.getSerializableExtra(PARAM_CATEGORY);
+            Constant.CommentCategory category = (Constant.CommentCategory) intent.getSerializableExtra(PARAM_CATEGORY);
             long dataID = intent.getLongExtra(PARAM_DATA_ID, 0);
 
             getSupportFragmentManager().beginTransaction()

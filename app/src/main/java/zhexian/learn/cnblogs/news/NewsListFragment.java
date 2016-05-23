@@ -13,7 +13,7 @@ import zhexian.learn.cnblogs.image.ZImage;
 import zhexian.learn.cnblogs.lib.ZDate;
 import zhexian.learn.cnblogs.main.MainActivity;
 import zhexian.learn.cnblogs.ui.TabActionBarView;
-import zhexian.learn.cnblogs.util.ConfigConstant;
+import zhexian.learn.cnblogs.util.Constant;
 import zhexian.learn.cnblogs.util.DBHelper;
 
 
@@ -22,7 +22,7 @@ import zhexian.learn.cnblogs.util.DBHelper;
  */
 public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> implements TabActionBarView.ITabActionCallback {
 
-    private ConfigConstant.NewsCategory mCategory;
+    private Constant.NewsCategory mCategory;
     private TabActionBarView mActionBarView;
 
     public static NewsListFragment newInstance() {
@@ -60,7 +60,7 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
         if (mBaseApp == null)
             return null;
 
-        if (list != null && mCategory == ConfigConstant.NewsCategory.Recommend && mBaseApp.isNetworkWifi() && mBaseApp.isAutoLoadRecommend())
+        if (list != null && mCategory == Constant.NewsCategory.Recommend && mBaseApp.isNetworkWifi() && mBaseApp.isAutoLoadRecommend())
             new AsyncCacheNews().execute(list);
 
         return list;
@@ -80,7 +80,7 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
 
     @Override
     public void onLeftTabClick() {
-        mCategory = ConfigConstant.NewsCategory.Recommend;
+        mCategory = Constant.NewsCategory.Recommend;
         onRefresh();
     }
 
@@ -91,7 +91,7 @@ public class NewsListFragment extends BaseSwipeListFragment<NewsListEntity> impl
 
     @Override
     public void onRightClick() {
-        mCategory = ConfigConstant.NewsCategory.Recent;
+        mCategory = Constant.NewsCategory.Recent;
         onRefresh();
     }
 
