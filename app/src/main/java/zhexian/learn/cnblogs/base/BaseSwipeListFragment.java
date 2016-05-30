@@ -69,7 +69,10 @@ public abstract class BaseSwipeListFragment<DataEntity extends BaseEntity> exten
      * @return
      */
     protected int getPageSize() {
-        return mBaseApp.getPageSize();
+        if (mBaseApp != null)
+            return mBaseApp.getPageSize();
+
+        return 0;
     }
 
     @Override

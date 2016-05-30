@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/navigator_item_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navigator_item_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?selectorBtn"
-
     android:padding="10dp">
 
     <TextView

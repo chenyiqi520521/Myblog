@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,6 +13,7 @@ import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.lib.ZBroadcast;
 import zhexian.learn.cnblogs.receiver.NetWorkChangeReceiver;
 import zhexian.learn.cnblogs.ui.SwipeCloseLayout;
+import zhexian.learn.cnblogs.util.ActivityCollection;
 
 public class BaseActivity extends AppCompatActivity {
     private BaseApplication mBaseApp = null;
@@ -31,6 +31,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ActivityCollection.addActivity(this);
         mBaseApp = (BaseApplication) getApplication();
 
         if (mBaseApp.isNightMode())
@@ -80,6 +81,7 @@ public class BaseActivity extends AppCompatActivity {
             mNightView = null;
         }
         ZBroadcast.unRegister(this, mNetWorkChangeReceiver);
+        ActivityCollection.removeActivity(this);
         super.onDestroy();
     }
 
@@ -127,21 +129,9 @@ public class BaseActivity extends AppCompatActivity {
     protected void ChangeToNight() {
         mBaseApp.setIsNightMode(true);
         initNightView();
-        mNightView.setBackgroundResource(R.color.night_mask);
     }
 
-    /**
-     * wait a time until the onresume finish
-     */
-    protected void recreateOnResume() {
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                recreate();
-            }
-        }, 100);
-    }
-
-    private void initNightView() {
+    protected void initNightView() {
         if (mIsAddedView)
             return;
         LayoutParams mNightViewParam = new LayoutParams(

@@ -16,12 +16,15 @@ import android.widget.TextView;
 import zhexian.learn.cnblogs.R;
 import zhexian.learn.cnblogs.base.BaseActivity;
 import zhexian.learn.cnblogs.base.BaseApplication;
+import zhexian.learn.cnblogs.base.CaptureActivity;
 import zhexian.learn.cnblogs.util.DBHelper;
+import zhexian.learn.cnblogs.util.MemCacheHelper;
+import zhexian.learn.cnblogs.util.UIUtils;
 import zhexian.learn.cnblogs.util.Utils;
 
 
 public class SettingActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
-
+    public static final String KEY_SCREEN_CAPTURE = "KEY_SCREEN_CAPTURE";
     private CheckBox mCKBIsAutoLoadNews;
     private CheckBox mCKBImageOnlyWifi;
     private CheckBox mCKBIsBigFont;
@@ -104,13 +107,15 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     }
 
     void changeViewMode() {
+        MemCacheHelper.getInstance().put(KEY_SCREEN_CAPTURE, UIUtils.captureContent(this));
         boolean isNight = getApp().isNightMode();
+
         if (isNight)
             ChangeToDay();
         else
             ChangeToNight();
 
-        recreate();
+        CaptureActivity.start(this, KEY_SCREEN_CAPTURE);
     }
 
     @Override

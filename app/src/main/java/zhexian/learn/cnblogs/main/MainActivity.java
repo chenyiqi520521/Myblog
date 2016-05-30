@@ -27,7 +27,6 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
     private static final int STATE_BLOG = 2;
     private DrawerLayout mDrawerLayout;
     private View mNavigatorView;
-    private boolean mIsNightMode = false;
     private int currentState = -1;
     private Fragment currentFragment;
     private SparseArray<Fragment> fragmentArray;
@@ -38,7 +37,6 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DisplayUtil.init(this);
-        mIsNightMode = getApp().isNightMode();
         fragmentArray = new SparseArray<>(2);
 
         addFragment(STATE_BLOG);
@@ -84,15 +82,6 @@ public class MainActivity extends BaseActivity implements INavigatorCallback {
                     throw new IllegalArgumentException("指定类型 " + state + " 的fragment的类型没用命中，出错位置MainActivity=>addFragment()");
             }
             fragmentArray.put(state, fragment);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (mIsNightMode != getApp().isNightMode()) {
-            recreateOnResume();
         }
     }
 

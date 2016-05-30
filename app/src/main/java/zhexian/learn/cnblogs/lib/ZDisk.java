@@ -87,6 +87,35 @@ public class ZDisk {
         return ZIO.writeToFile(url, content);
     }
 
+    public boolean save(String url, Bitmap bitmap) {
+        url = trans2Local(url);
+        File f = new File(url);
+
+        if (f.exists()) {
+            f.delete();
+        }
+
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(f);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (out == null)
+            return false;
+
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+
+        try {
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
     /**
      * 写入bytes
      *

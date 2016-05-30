@@ -181,7 +181,7 @@ public class NavigatorFragment extends Fragment implements View.OnClickListener 
             break;
 
             case R.id.navigator_my_favorite:
-                //   mINavigatorCallBack.closeNavigator();
+
 
                 break;
         }
