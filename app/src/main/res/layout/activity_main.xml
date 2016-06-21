@@ -1,4 +1,5 @@
 <android.support.v4.widget.DrawerLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_drawerLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -17,7 +18,8 @@
         android:name="zhexian.learn.cnblogs.main.NavigatorFragment"
         android:layout_width="260dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"/>
+        android:layout_gravity="start"
+        tools:layout="@layout/fragment_main_navigator"/>
 
 
 </android.support.v4.widget.DrawerLayout>
